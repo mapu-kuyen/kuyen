@@ -1,0 +1,100 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  suite:
+    name: suite (py${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: product suite
+        run: python -m pytest -m "not openviking"
+      - name: import outside the source tree
+        run: |
+          cd "$RUNNER_TEMP"
+          python -c "import kuyen; print(kuyen.__version__)"
+
+  artifacts:
+    name: wheel and sdist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: build
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: inspect artifacts
+        run: |
+          python - <<'PY'
+          import glob, tarfile, zipfile
+          wheel = glob.glob("dist/*.whl")[0]
+          sdist = glob.glob("dist/*.tar.gz")[0]
+          names = zipfile.ZipFile(wheel).namelist()
+          assert not [n for n in names if n.startswith(("experiments/", "tests/", "runs/"))], names
+          assert any(n.endswith("schemas/kuyen.schema.json") for n in names)
+          sdist_names = tarfile.open(sdist).getnames()
+          assert not [n for n in sdist_names if "/experiments/" in n or "/runs/" in n]
+          print(f"wheel files={len(names)} sdist files={len(sdist_names)}")
+          PY
+      - name: install wheel in a clean environment
+        run: |
+          python -m venv /tmp/venv-wheel
+          /tmp/venv-wheel/bin/pip install dist/*.whl
+          cd "$RUNNER_TEMP"
+          /tmp/venv-wheel/bin/python -c "import kuyen; from kuyen import KuyenMemory; print(kuyen.__version__)"
+      - name: install sdist in a clean environment
+        run: |
+          python -m venv /tmp/venv-sdist
+          /tmp/venv-sdist/bin/pip install dist/*.tar.gz
+          cd "$RUNNER_TEMP"
+          /tmp/venv-sdist/bin/python -c "import kuyen; print(kuyen.__version__)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+  hygiene:
+    name: secrets and metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: forbidden files
+        run: |
+          test -z "$(find . -name '.env*' -not -path './.git/*' | head -1)"
+          test -z "$(find . -name '*.pem' -o -name '*.key' | head -1)"
+      - name: version agrees
+        run: |
+          python -c "import kuyen; assert kuyen.__version__ == open('VERSION').read().strip(), kuyen.__version__"
+      - name: licence agrees
+        run: |
+          python - <<'PY'
+          import hashlib, tomllib
+          data = open("LICENSE", "rb").read()
+          assert hashlib.sha256(data).hexdigest() == "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          project = tomllib.loads(open("pyproject.toml").read())["project"]
+          assert project["license"] == "Apache-2.0", project["license"]
+          assert "LICENSE" in project["license-files"]
+          PY

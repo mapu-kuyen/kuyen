@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/publication_manifest.schema.json",
+  "title": "KÜYEN publication closure manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "publication_id", "kuyen_id", "content_digest", "publication_digest", "target_uri", "state", "closed", "files"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "publication_id": {"type": "string"},
+    "kuyen_id": {"type": "string"},
+    "local_version": {"type": "string"},
+    "content_digest": {"type": "string"},
+    "publication_digest": {"type": "string"},
+    "target_uri": {"type": "string"},
+    "access_profile": {"type": "string"},
+    "source_policy": {"type": "string"},
+    "state": {"const": "COMPLETE"},
+    "closed": {"const": true},
+    "files": {"type": "array", "items": {"type": "object"}}
+  }
+}

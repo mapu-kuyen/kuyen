@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/result.schema.json",
+  "title": "KÜYEN build result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["kuyen_id", "request_key", "execution_id", "status", "version", "graph_uri", "entity_count", "relation_count", "coverage", "validation", "provenance_manifest", "content_digest", "reused", "error"],
+  "properties": {
+    "kuyen_id": {"type": ["string", "null"]},
+    "request_key": {"type": "string", "pattern": "^req_[a-f0-9]{32}$"},
+    "execution_id": {"type": "string", "pattern": "^exec_"},
+    "status": {"enum": ["ACCEPTED", "REJECTED", "BLOCKED"]},
+    "version": {"type": "string"},
+    "graph_uri": {"type": ["string", "null"]},
+    "entity_count": {"type": "integer", "minimum": 0},
+    "relation_count": {"type": "integer", "minimum": 0},
+    "coverage": {"type": "object"},
+    "validation": {"type": "object"},
+    "provenance_manifest": {"type": ["string", "null"]},
+    "content_digest": {"type": ["string", "null"]},
+    "reused": {"type": "boolean"},
+    "error": {"type": ["object", "null"]}
+  }
+}

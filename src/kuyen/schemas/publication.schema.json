@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/publication.schema.json",
+  "title": "KÜYEN publication record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "publication_id",
+    "kuyen_id",
+    "version",
+    "content_digest",
+    "publication_digest",
+    "target_uri",
+    "actor",
+    "build_status",
+    "publication_status",
+    "created_at",
+    "updated_at",
+    "expected_files",
+    "written_files",
+    "verified_files",
+    "transitions"
+  ],
+  "properties": {
+    "publication_id": {
+      "type": "string",
+      "pattern": "^PUB-"
+    },
+    "kuyen_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "content_digest": {
+      "type": "string"
+    },
+    "publication_digest": {
+      "type": "string"
+    },
+    "target_uri": {
+      "type": "string",
+      "pattern": "^viking://resources/"
+    },
+    "actor": {
+      "type": "object"
+    },
+    "build_status": {
+      "type": "string"
+    },
+    "publication_status": {
+      "enum": [
+        "NOT_PUBLISHED",
+        "PUBLISHING",
+        "VERIFYING",
+        "PUBLISHED",
+        "VERIFIED",
+        "PUBLICATION_PARTIAL",
+        "PUBLICATION_FAILED",
+        "VERIFICATION_FAILED"
+      ]
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "expected_files": {
+      "type": "array"
+    },
+    "written_files": {
+      "type": "array"
+    },
+    "verified_files": {
+      "type": "array"
+    },
+    "acl": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "verification": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "error": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "transitions": {
+      "type": "array"
+    },
+    "source_policy": {
+      "type": "string"
+    }
+  }
+}

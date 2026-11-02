@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kuyen"
+dynamic = ["version"]
+description = "KUYEN: governed canonical memory and knowledge for Leftraru agents"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "KUYEN maintainers"}]
+keywords = ["knowledge-graph", "canonical-memory", "provenance", "versioning", "agents"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Operating System :: POSIX",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed",
+]
+dependencies = ["jsonschema>=4.0", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+openviking = ["httpx>=0.25"]
+dev = ["pytest>=7.0", "build>=1.0", "twine>=5.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["kuyen*"]
+
+# Contract schemas, the ontology profiles and the versioned Skill are runtime
+# assets of the installed package, not loose files of a source checkout.
+[tool.setuptools.package-data]
+kuyen = [
+  "schemas/*.json",
+  "config/ontologies/*.yaml",
+  "config/ontologies/profiles/*.yaml",
+  "skills/knowledge-graph/*",
+  "py.typed",
+]
+
+# Single source of truth for the version: the VERSION file at the project root.
+[tool.setuptools.dynamic]
+version = {file = "VERSION"}
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+markers = [
+  "openviking: needs a running OpenViking instance; excluded from the default run",
+  "installed: only meaningful against an installed wheel or sdist",
+]
+
+[tool.coverage.run]
+source = ["kuyen"]

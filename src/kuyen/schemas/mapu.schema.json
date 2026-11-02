@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/mapu.schema.json",
+  "title": "KÜYEN MAPU v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mapu_id", "version", "source_uri", "sha256", "media_type", "source_type", "source_identity", "ingestion_timestamp", "trust_level", "access_policy"],
+  "properties": {
+    "mapu_id": {"type": "string", "pattern": "^MAPU-[A-Za-z0-9._-]+$"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "source_uri": {"type": "string", "pattern": "^viking://"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "content": {"type": "string"},
+    "media_type": {"type": "string", "minLength": 1},
+    "source_type": {"type": "string", "minLength": 1},
+    "source_identity": {"type": "string", "minLength": 1},
+    "license": {"type": ["string", "null"]},
+    "source_timestamp": {"type": ["string", "null"]},
+    "ingestion_timestamp": {"type": "string", "minLength": 1},
+    "trust_level": {"enum": ["UNVERIFIED", "SINGLE_SOURCE", "CORROBORATED", "AUTHORITATIVE"]},
+    "access_policy": {"type": "string", "minLength": 1},
+    "metadata": {"type": "object"}
+  }
+}

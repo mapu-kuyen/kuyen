@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/execution.schema.json",
+  "title": "KÜYEN execution record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["execution_id", "request_key", "antu_id", "mapu_ids", "actor", "state", "created_at", "updated_at", "transitions"],
+  "properties": {
+    "execution_id": {"type": "string", "pattern": "^exec_"},
+    "request_key": {"type": "string", "pattern": "^req_"},
+    "antu_id": {"type": "string"},
+    "mapu_ids": {"type": "array", "items": {"type": "string"}},
+    "actor": {"type": "object"},
+    "state": {"enum": ["PENDING", "RUNNING", "CANDIDATE_READY", "VALIDATING", "ACCEPTED", "REJECTED", "FAILED"]},
+    "created_at": {"type": "string"},
+    "updated_at": {"type": "string"},
+    "task_id": {"type": ["string", "null"]},
+    "compile_status": {"type": ["string", "null"]},
+    "validation_status": {"type": ["string", "null"]},
+    "error": {"type": ["object", "null"]},
+    "result": {"type": ["object", "null"]},
+    "manifest_path": {"type": ["string", "null"]},
+    "graph_uri": {"type": ["string", "null"]},
+    "version": {"type": ["string", "null"]},
+    "transitions": {"type": "array", "items": {"type": "object"}}
+  }
+}

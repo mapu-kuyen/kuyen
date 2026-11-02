@@ -1,0 +1,77 @@
+profile: wine-tourism-v1
+version: 1.0.0
+extends: ../generic-v1.yaml
+description: >-
+  Domain profile for the Chilean wine sector and wine tourism. It extends the
+  generic ontology with the economic and tourism vocabulary that the Micro 10
+  graph expresses, preserving the original direction and meaning of each term.
+domain: wine-tourism
+status: domain-profile
+schema_compatibility:
+  antu_schema_versions: ["1.1.0"]
+  output_profiles: ["kuyen-native-v1"]
+  construction_compatible: true
+  historical_import_compatible: true
+origin:
+  kind: domain-vocabulary
+  systems:
+    - name: MICROPRUEBA_10_DOCUMENT_SCALE
+      artifact: experiments/MICROPRUEBA_10_DOCUMENT_SCALE/artifacts/compiled_output
+      observed_terms: [industry, tourism, tourism_route, produces, promotes, hosts]
+      evidence_available: section URIs only, no quote or offsets
+  references:
+    - "Vino de Chile, Wikipedia revision 173936623, CC BY-SA 4.0"
+evidence_policy:
+  exact_span: required_for_construction_acceptance
+  document_reference: import_only
+  section_reference: import_only
+  missing: preserved_as_limitation
+entity_types:
+  industry:
+    description: >-
+      An economic sector organized around producing and trading a class of goods.
+      It is not a single company and not a generic organization.
+  tourism:
+    description: >-
+      A domain of visitor activity and its services, not a place and not an event.
+  tourism_route:
+    description: >-
+      A named, organized itinerary that links wine-related places and activities.
+      It is a durable offering, not a one-off event.
+relation_types:
+  produces:
+    label: produce
+    from_types: [industry, organization, group, place]
+    to_types: [product, concept]
+    directed: true
+    description: The subject makes the object as part of its economic activity.
+  promotes:
+    label: promueve
+    from_types: [tourism_route, organization, event, place]
+    to_types: [tourism, event, concept, product]
+    directed: true
+    description: The subject actively fosters the object; it does not create it.
+  hosts:
+    label: alberga
+    from_types: [place, organization]
+    to_types: [event, tourism_route, organization]
+    directed: true
+    description: The subject physically contains or stages the object.
+  located_in:
+    label: se ubica en
+    from_types: [organization, group, place, event, product, tourism_route, industry]
+    to_types: [place]
+    directed: true
+    description: >-
+      Inherited predicate specialized for this domain so that a route or an
+      industry can be located in a place without retyping the subject.
+known_native_limitations:
+  - term: evidence
+    issue: >-
+      The Micro 10 native graph references section URIs only. Import records
+      SECTION_REFERENCE and cannot be accepted under evidence_policy=strict.
+  - term: graph-size
+    issue: >-
+      The native graph contains 6 entities and 4 relations for a 25,310-character
+      document; the profile does not treat that as complete coverage.
+migration_rules: {}

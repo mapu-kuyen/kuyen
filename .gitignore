@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local memory, backups and recovery output (created in the working directory).
+# Anchored to the repository root: unanchored patterns would also hide the
+# product module src/kuyen/recovery/ and the tests in tests/recovery/.
+/*.kuyen/
+/memory/
+/backup-kuyen/
+/recovery/
+/data/
+
+# Secrets and environment
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/

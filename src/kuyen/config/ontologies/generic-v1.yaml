@@ -1,0 +1,107 @@
+profile: generic-v1
+version: 1.0.0
+description: Baseline ontology for KÜYEN deterministic graph construction.
+entity_types:
+  person:
+    description: A named human or attributed persona.
+  organization:
+    description: A formal or informal organized body.
+  group:
+    description: A bounded collection of members.
+  place:
+    description: A geographic or administrative location.
+  event:
+    description: A bounded occurrence in time.
+  concept:
+    description: A domain concept or category.
+  document:
+    description: A source or authored document.
+  product:
+    description: A product, service, or artifact.
+  role:
+    description: A responsibility held by a person or organization.
+  temporal_value:
+    description: Explicit temporal literal, not an entity unless Antü allows it.
+  quantity_value:
+    description: Explicit numeric literal with optional unit.
+relation_types:
+  member_of:
+    label: pertenece a
+    from_types: [person, organization, group]
+    to_types: [group, organization]
+    directed: true
+  has_member:
+    label: tiene integrante
+    from_types: [group, organization]
+    to_types: [person, organization]
+    directed: true
+  has_member_count:
+    label: tiene cantidad de integrantes
+    from_types: [group, organization]
+    to_types: [quantity_value]
+    directed: true
+  located_in:
+    label: se ubica en
+    from_types: [organization, group, place, event, product]
+    to_types: [place]
+    directed: true
+  headquartered_in:
+    label: tiene sede en
+    from_types: [organization, group]
+    to_types: [place]
+    directed: true
+  coordinates:
+    label: coordina
+    from_types: [person, role]
+    to_types: [organization, group, event]
+    directed: true
+  participates_in:
+    label: participa en
+    from_types: [person, organization, group]
+    to_types: [event, organization, group]
+    directed: true
+  started_operation_in:
+    label: comenzó a operar en
+    from_types: [organization, group, product, event]
+    to_types: [temporal_value]
+    directed: true
+  related_to:
+    label: se relaciona con
+    from_types: []
+    to_types: []
+    directed: true
+  part_of:
+    label: es parte de
+    from_types: [concept, organization, group, place, document]
+    to_types: [concept, organization, group, place, document]
+    directed: true
+  has_role:
+    label: tiene rol
+    from_types: [person, organization]
+    to_types: [role]
+    directed: true
+  created_by:
+    label: fue creado por
+    from_types: [document, product, concept]
+    to_types: [person, organization, group]
+    directed: true
+  supports:
+    label: respalda
+    from_types: [document, concept, event]
+    to_types: [concept, document, event]
+    directed: true
+  contradicts:
+    label: contradice
+    from_types: [concept, document, event, organization, person]
+    to_types: [concept, document, event, organization, person]
+    directed: true
+scalar_predicates:
+  has_member_count:
+    label: tiene cantidad de integrantes
+    value_types: [integer, number]
+  started_operation_in:
+    label: comenzó a operar en
+    value_types: [date, year]
+  has_value:
+    label: tiene valor
+    value_types: [string, integer, number, date, year, quantity, percentage]

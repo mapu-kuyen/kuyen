@@ -1,0 +1,73 @@
+profile: historical-native-v1
+version: 1.0.0
+extends: ../generic-v1.yaml
+description: >-
+  Compatibility profile for native knowledge graphs exported by earlier LeftraruOS
+  micro-tests. It preserves the original terms and does not claim that the native
+  evidence is equivalent to a verified span when it is not.
+domain: historical-native-graphs
+status: compatibility-profile
+schema_compatibility:
+  antu_schema_versions: ["1.1.0"]
+  output_profiles: ["kuyen-native-v1"]
+  construction_compatible: false
+  historical_import_compatible: true
+origin:
+  kind: exported-native-graph
+  systems:
+    - name: MICROPRUEBA_08_KG_EVIDENCE_ONLY
+      artifact: experiments/MICROPRUEBA_08_KG_EVIDENCE_ONLY/artifacts/compiled_output
+      observed_terms: [collaborates_with, operates_since]
+      evidence_available: exact quote and offsets on relation lines
+  source_fields: [id, title, entity_type, description, sources]
+  relation_fields: [from, relation, label, to, evidence]
+evidence_policy:
+  exact_span: allowed
+  document_reference: import_only
+  section_reference: import_only
+  missing: preserved_as_limitation
+  strict_acceptance: not_granted_by_profile
+entity_types: {}
+relation_types:
+  collaborates_with:
+    label: colabora con
+    from_types: [organization, group]
+    to_types: [organization, group]
+    directed: true
+    description: >-
+      Cooperative relation between two organized bodies. It is not a membership
+      or a coordination relation and must not be rewritten as one.
+  operates_since:
+    label: opera desde
+    from_types: [organization, group, product]
+    to_types: [event, temporal_value]
+    directed: true
+    description: >-
+      Start of operation with a reified year. Native exports typed the year as an
+      event; that reification is preserved. The literal equivalent is the scalar
+      predicate started_operation_in, which is a mapping candidate, not a silent
+      substitution.
+scalar_predicates:
+  operates_since:
+    label: opera desde
+    value_types: [year, date]
+known_native_limitations:
+  - term: has_member_count
+    issue: >-
+      The native graph reified the count as an entity typed group. generic-v1
+      expects quantity_value. The predicate is preserved and the domain/range
+      mismatch is reported as DOMAIN_RANGE_INCOMPATIBLE_NATIVE instead of
+      retyping or deleting the entity.
+  - term: entity-evidence
+    issue: >-
+      Native entity files carry only section/document sources, not quote spans.
+      Import records DOCUMENT_REFERENCE and never presents it as an exact span.
+  - term: duplicate-count-entities
+    issue: >-
+      The native export contains both 9 and nueve-integrantes. Both identities are
+      preserved; the importer does not merge them.
+migration_rules:
+  operates_since:
+    candidate_mapping: started_operation_in
+    applied_automatically: false
+    note: Preserve the native predicate; a migration requires an explicit review.

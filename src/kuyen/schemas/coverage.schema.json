@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://leftraru.local/kuyen/coverage.schema.json",
+  "title": "KÜYEN coverage unit v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source_uri", "mapu_id", "unit_id", "state"],
+  "properties": {
+    "source_uri": {"type": "string", "pattern": "^viking://"},
+    "mapu_id": {"type": "string", "pattern": "^MAPU-[A-Za-z0-9._-]+$"},
+    "unit_id": {"type": "string", "minLength": 1},
+    "section": {"type": ["string", "null"]},
+    "state": {"enum": ["PROCESSED_WITH_OUTPUT", "PROCESSED_NO_GRAPH_FACTS", "FAILED", "SKIPPED_WITH_REASON", "NOT_ATTEMPTED"]},
+    "content_sha256": {"type": ["string", "null"]},
+    "entity_ids": {"type": "array", "items": {"type": "string"}},
+    "relation_ids": {"type": "array", "items": {"type": "string"}},
+    "reason": {"type": ["string", "null"]}
+  }
+}

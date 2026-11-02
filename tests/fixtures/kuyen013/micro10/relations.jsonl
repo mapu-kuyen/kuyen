@@ -1,0 +1,4 @@
+{"from":"industria-vitivinicola-chilena","relation":"produces","label":"produce","to":"vino-de-chile","evidence":["viking://resources/micro10-source/MAPU-10/MAPU-10_3more_c6fa352c.md"]}
+{"from":"ruta-del-vino-de-colchagua","relation":"located_in","label":"se sitúa en","to":"colchagua","evidence":["viking://resources/micro10-source/MAPU-10/Turismo_9more_a13c823f.md"]}
+{"from":"ruta-del-vino-de-colchagua","relation":"promotes","label":"promueve","to":"turismo-del-vino","evidence":["viking://resources/micro10-source/MAPU-10/Turismo_9more_a13c823f.md"]}
+{"from":"santa-cruz-chile","relation":"hosts","label":"alberga","to":"ruta-del-vino-de-colchagua","evidence":["viking://resources/micro10-source/MAPU-10/Turismo_9more_a13c823f.md"]}

@@ -240,7 +240,12 @@ Ver `MANIFEST.json` (sha256 de cada archivo de `evidence/` y `logs/`).
 | `c6c398c` | `fix(evidence)`: identidad MAPU, autoridad de la cita, polaridad sin default, `kuyen-provider-result-v2`, `read_candidate` sin duplicación, `test_021` |
 | `ea5c87d` | `feat(semantics)`: procedencia explícita (`origin`), invariantes en `validation/canonical.py`, origen documental en el normalizador |
 | `92ca99f` | `feat(editing)`: editor de grafo por ANTÜ, validador, aplicador, diff, `apply_antu`, `product`, pruebas de §8.2/§8.3 |
-| (este) | `docs/experiment`: contratos ES/EN, documentación actualizada, informe y evidencia |
+| `5f586fd` | `docs(experiment)`: contratos ES/EN, documentación actualizada, informe y evidencia |
+| `f542db1` | estado de git final, hashes del manifiesto e imports de las pruebas de edición |
+| `1e7319d` | corrección del ejemplo de uso y actualización del manifiesto |
+
+La lista autoritativa es `git log --oneline 9a5e512..HEAD`; `git_state_final.txt` se capturó
+inmediatamente antes del commit de cierre.
 
 `b6ad5fc` y `9a5e512` permanecen intactos en la historia.
 

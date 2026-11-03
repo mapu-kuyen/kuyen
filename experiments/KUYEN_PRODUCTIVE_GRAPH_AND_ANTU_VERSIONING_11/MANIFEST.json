@@ -1,12 +1,12 @@
 {
   "base_commit": "9a5e512",
   "branch": "work/kuyen-free-text-graph",
-  "commits_authoritative_source": "git_state_final.txt and `git log 9a5e512..HEAD`",
+  "commits_authoritative_source": "git log --oneline 9a5e512..HEAD",
   "experiment": "KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11",
   "files": {
     "REPORT.md": {
-      "bytes": 16026,
-      "sha256": "7a1715019173cd937c84b43378c5e4a37c80b8d8094f4592e8c8c19920116364"
+      "bytes": 16343,
+      "sha256": "cb3c5bd756cf4b691583f73045d12c141d49ef8fc0229a443ef5350111565933"
     },
     "evidence/distribution_verification.json": {
       "bytes": 9475,
@@ -37,8 +37,8 @@
       "sha256": "48ccb63401b7744e689a24105740140a76ee9e96e8fbcd6e6cdd6bdd7ffbc09b"
     },
     "git_state_final.txt": {
-      "bytes": 2952,
-      "sha256": "c1ad186e0226e0b8f5dc6317ceafa124d78e4cfb1690b249c2cc706d428f59ad"
+      "bytes": 3100,
+      "sha256": "74889fbca916c2b08aec80c2a0304e24d7a18e146f9bdadfe2c7b0ed32a6abac"
     },
     "logs/distribution.log": {
       "bytes": 294,
@@ -62,7 +62,6 @@
     }
   },
   "inferences": 0,
-  "note": "hashes are of this snapshot; the docs commit that follows only regenerates this file",
   "pushed": false,
   "suite": {
     "failed": 0,

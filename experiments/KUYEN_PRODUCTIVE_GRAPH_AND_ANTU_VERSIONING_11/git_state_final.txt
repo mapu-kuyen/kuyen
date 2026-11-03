@@ -3,6 +3,7 @@
  M SIDECAR.md
  M VERSION
  M examples/quickstart.py
+ M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/REPORT.md
  M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/git_state_final.txt
  M pyproject.toml
  M src/kuyen/adapters/openviking.py
@@ -19,8 +20,6 @@
  M src/kuyen/storage/registry.py
  M src/kuyen/storage/store.py
  M src/kuyen/storage/versions.py
- M tests/editing/test_022_graph_edit.py
- M tests/editing/test_023_versioning.py
  M tests/unit/test_013_ingestion.py
 ?? MANIFEST.in
 ?? docs/KUYEN_OPENVIKING_VLM_CONFIGURATION_05.md
@@ -59,14 +58,16 @@
 ?? tests/storage/test_b2_restore_target.py
 ?? tests/test_source_unit_disambiguation.py
 ?? tests/unit/test_vlm_configuration.py
---- commits since the base ---
+--- commits since the base (at capture time) ---
+1e7319d docs(experiment): correct the usage example and refresh the manifest
+f542db1 docs(experiment): final git state and artifact hashes
 5f586fd docs(experiment): contracts in Spanish and English, report and evidence
 92ca99f feat(editing): edit the graph through an Antü, validate and version it
 ea5c87d feat(semantics): record where every statement comes from
 c6c398c fix(evidence): make MAPU identity, quotes and polarity authoritative
 --- branch / HEAD ---
 work/kuyen-free-text-graph
-5f586fdd1599f5bcd7f7b3ae5c7c1807e8df46c3
+1e7319d4b0a6e8920d9eba3bf5dcf8ee1dd0ec31
 --- base commits present ---
 b6ad5fc=present
 9a5e512=present

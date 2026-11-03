@@ -35,9 +35,30 @@ persisted-format change: every store written before this work remains readable.
   admitted, in the materializer and in the normalizer alike.
 * `SdkOpenVikingAdapter.read_candidate` delegates to `CandidateMaterializer` instead of
   re-implementing a lossy parser: assertions and every declared evidence entry are kept.
+* **The compile instruction asks for the native tree**, not for an aggregate
+  `kuyen_result.json`. A live compilation of a real document produced a malformed aggregate
+  that blocked an otherwise valid tree; a malformed aggregate is now recorded
+  (`structured_result_ignored`) and the tree is materialized
+  (`native_structured_after_invalid_structured_result`).
+* **A declared native predicate is preserved, not rejected.** The `relation`/`predicate`
+  field of a native row is recorded as `source_predicate`; a term the ontology does not know
+  becomes `NATIVE_PREDICATE_PRESERVED_UNMAPPED` (relations) or
+  `SCALAR_PREDICATE_PRESERVED_UNMAPPED` (assertions) with `mapping_status: UNMAPPED` and a
+  WARNING. An undeclared unknown predicate is still an error.
+* **`DOCUMENT_REFERENCE` origin** for an object that comes from a MAPU without a verified
+  quote (`evidence_policy: "document"`, or a producer that only declares the source URI):
+  documentary provenance without documentary verification. `DOCUMENT_EVIDENCE` without
+  evidence and `DOCUMENT_REFERENCE` without a MAPU are refused by the canonical validator.
+* **`expected` is a declaration, not a copy.** For object-valued fields of an ANTÜ
+  operation, every declared key must match the current value; a partial declaration is
+  accepted and an empty one is refused. Measured: a real model declared `value` without
+  `unit`/`context` and a correct operation was being refused.
+* **Metering never enters the knowledge record.** `usage` stays in the ledger and in the
+  result; the provenance that feeds the canonical hash carries provider, model and proposal
+  hash only, so the identity of a version does not depend on token counts.
 
 ### Tests
-377 → 437 collected (375 → 435 passed, 2 skipped, 0 failed).
+377 → 450 collected (375 → 447 passed, 3 skipped, 0 failed).
 
 ## 0.2.1rc1 — release candidate (unpublished)
 

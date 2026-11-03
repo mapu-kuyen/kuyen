@@ -1,0 +1,250 @@
+{
+  "provider": {
+    "provider": "openai-compatible",
+    "model": "deepseek-chat",
+    "endpoint": "https://api.deepseek.com/v1",
+    "api_key_env": "DEEPSEEK_API_KEY",
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "timeout_s": 60.0,
+    "json_mode": true
+  },
+  "instruction": "Cambia la cantidad de luminarias instaladas de 12 a 18: el dato correcto es 18",
+  "status": "COMMITTED",
+  "base_version_id": "VER-3b63dcc70cbf",
+  "version_id": "VER-23a9a1a23e39",
+  "context": {
+    "mode": "FULL_INDEX",
+    "object_limit": 200,
+    "total_objects": 5,
+    "included": {
+      "entities": 2,
+      "relations": 1,
+      "assertions": 2,
+      "evidence": 3
+    },
+    "excluded": {
+      "entities": 0,
+      "relations": 0,
+      "assertions": 0
+    },
+    "truncated": false,
+    "keywords": [
+      "cantidad",
+      "luminarias",
+      "instaladas",
+      "dato",
+      "correcto"
+    ],
+    "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused"
+  },
+  "model": {
+    "provider": "openai-compatible",
+    "model": "deepseek-chat",
+    "endpoint": "https://api.deepseek.com/v1",
+    "transport": "urllib",
+    "temperature": 0.0,
+    "max_tokens": 2048,
+    "usage": {
+      "prompt_tokens": 2701,
+      "completion_tokens": 127
+    },
+    "proposal_sha256": "73a51bdce59ca898b46e0534fd3b9bd5d32fe6527b897c41b54f9130183bbaab"
+  },
+  "proposal": {
+    "schema_version": "kuyen-graph-edit-v1",
+    "status": "PROPOSED",
+    "antu_id": null,
+    "base_version_id": null,
+    "interpretation": "",
+    "clarification": null,
+    "conflict": null,
+    "operations": [
+      {
+        "operation_id": "op-1",
+        "op": "UPDATE_ASSERTION",
+        "target": {
+          "assertion_id": "asrt_0677645136247624437d"
+        },
+        "expected": {
+          "value": {
+            "value": 12,
+            "value_type": "integer"
+          }
+        },
+        "value": {
+          "value": {
+            "value": 18,
+            "value_type": "integer"
+          }
+        },
+        "reason": "La instrucción corrige el valor de luminarias instaladas de 12 a 18.",
+        "antu_ref": "Cambia la cantidad de luminarias instaladas de 12 a 18",
+        "affected": []
+      }
+    ],
+    "warnings": []
+  },
+  "proposal_raw": {
+    "status": "PROPOSED",
+    "schema_version": "kuyen-graph-edit-v1",
+    "operations": [
+      {
+        "op": "UPDATE_ASSERTION",
+        "operation_id": "op-1",
+        "target": {
+          "assertion_id": "asrt_0677645136247624437d"
+        },
+        "expected": {
+          "value": {
+            "value": 12,
+            "value_type": "integer"
+          }
+        },
+        "value": {
+          "value": {
+            "value": 18,
+            "value_type": "integer"
+          }
+        },
+        "antu_ref": "Cambia la cantidad de luminarias instaladas de 12 a 18",
+        "reason": "La instrucción corrige el valor de luminarias instaladas de 12 a 18."
+      }
+    ]
+  },
+  "content_digest": "5aeca61f104bb6893d8c",
+  "operations": [
+    {
+      "operation_id": "op-1",
+      "op": "UPDATE_ASSERTION",
+      "target": {
+        "assertion_id": "asrt_0677645136247624437d"
+      },
+      "expected": {
+        "value": {
+          "value": 12,
+          "value_type": "integer"
+        }
+      },
+      "value": {
+        "value": {
+          "value": 18,
+          "value_type": "integer"
+        }
+      },
+      "reason": "La instrucción corrige el valor de luminarias instaladas de 12 a 18.",
+      "antu_ref": "Cambia la cantidad de luminarias instaladas de 12 a 18",
+      "affected": []
+    }
+  ],
+  "rejected": [],
+  "affected": {
+    "assertions": [
+      "asrt_c06d21d5cd2113f35475"
+    ]
+  },
+  "provenance": {
+    "kind": "ANTU_INSTRUCTION",
+    "documentary_verification": false,
+    "antu_id": "ANTU-e29c0d5f896c2f9f",
+    "instruction_sha256": "e29c0d5f896c2f9f424de5d28df8e56907b45bc628ad257b4efe9b9c8ced48e9",
+    "base_version_id": "VER-3b63dcc70cbf",
+    "actor": null,
+    "model": "deepseek-chat",
+    "canonical_graph_hash": "5d9c01ba59d9433fb16e53554b1549a460568173616f3085b57e34d984ec5646",
+    "commit_id": "540f68b92832732120d5"
+  },
+  "diff": {
+    "collections": {
+      "entities": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 2
+      },
+      "relations": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "assertions": {
+        "added": [
+          "asrt_c06d21d5cd2113f35475"
+        ],
+        "modified": {
+          "asrt_0677645136247624437d": [
+            "status",
+            "superseded_by"
+          ]
+        },
+        "removed_from_current_view": [
+          "asrt_0677645136247624437d"
+        ],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "evidence": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 3
+      }
+    },
+    "counts": {
+      "entities": {
+        "before": 2,
+        "after": 2,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "relations": {
+        "before": 1,
+        "after": 1,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "assertions": {
+        "before": 2,
+        "after": 3,
+        "added": 1,
+        "modified": 1,
+        "retracted": 1,
+        "deleted": 0
+      },
+      "evidence": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      }
+    },
+    "versions": {
+      "before": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.0.0",
+        "canonical_graph_hash": "227ab0c13c993df656b3c8ae75e8ecea834c628fe867d6275a6de29e16df79bf"
+      },
+      "after": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.0.0",
+        "canonical_graph_hash": "227ab0c13c993df656b3c8ae75e8ecea834c628fe867d6275a6de29e16df79bf"
+      }
+    },
+    "empty": false
+  },
+  "reasons": []
+}

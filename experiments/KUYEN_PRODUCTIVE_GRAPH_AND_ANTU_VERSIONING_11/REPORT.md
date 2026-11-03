@@ -22,10 +22,10 @@ VEREDICTO: NÚCLEO PRODUCTIVO IMPLEMENTADO Y PROBADO OFFLINE · INTEGRACIONES RE
 | --- | --- | --- |
 | Raíz real | `/private/tmp/kuyen_hardening_01/kuyen` | igual |
 | Rama | `work/kuyen-free-text-graph` | igual |
-| HEAD | `9a5e512` (con `b6ad5fc` en la historia) | `9a5e512` + 4 commits locales |
+| HEAD | `9a5e512` (con `b6ad5fc` en la historia) | `9a5e512` + 8 commits locales |
 | Remoto / upstream | `origin` `https://github.com/mapu-kuyen/kuyen.git` · **sin upstream** | igual |
 | Modificados / sin rastrear | 30 / 38 (verificado, coincide con el reporte previo) | ver §10 |
-| Suite | 377 tests · 375 passed · 2 skipped · 0 failed | **438 tests · 435 passed · 3 skipped · 0 failed** |
+| Suite | 377 tests · 375 passed · 2 skipped · 0 failed | **450 tests · 447 passed · 3 skipped · 0 failed** |
 | Copias del repositorio | sólo esta (`/tmp/kuyen_hardening_01/kuyen`); ninguna otra copia activa | igual |
 
 Operaciones git destructivas utilizadas: **ninguna** (`reset`, `clean`, `checkout --`,
@@ -113,14 +113,14 @@ ledger.
 | comprobación | resultado |
 | --- | --- |
 | Suite completa (antes) | 377 tests · 375 passed · 0 failed · 2 skipped |
-| Suite completa (después) | **438 tests · 435 passed · 0 failed · 3 skipped** |
-| `tests/unit/test_021_evidence_authority.py` (nuevo) | 20 tests: identidad MAPU, autoridad de la cita, desambiguación por contexto, SOURCE_UNIT, polaridad UNKNOWN, modalidad/atribución, v1+v2, lector de compatibilidad |
-| `tests/editing/test_022_graph_edit.py` (nuevo) | 18 tests: los diez casos de §8.2 + procedencia, aislamiento de OpenViking, dry run, no-JSON, base obsoleta |
+| Suite completa (después) | **450 tests · 447 passed · 0 failed · 3 skipped** |
+| `tests/unit/test_021_evidence_authority.py` (nuevo) | 26 tests: identidad MAPU, autoridad de la cita, desambiguación por contexto, SOURCE_UNIT, polaridad UNKNOWN, modalidad/atribución, v1+v2, lector de compatibilidad, agregado inválido sobre árbol válido, invariantes de procedencia (`DOCUMENT_REFERENCE`) |
+| `tests/editing/test_022_graph_edit.py` (nuevo) | 22 tests: los diez casos exigidos + procedencia, aislamiento de OpenViking, dry run, no-JSON, base obsoleta, `expected` parcial, identidad sin consumo |
 | `tests/editing/test_023_versioning.py` (nuevo) | 7 tests: reconstrucción de v1/v2/v3, mapeo ANTÜ→versión, diffs, concurrencia, interrupción + recuperación |
-| `tests/integration/test_document_path_artifacts.py` (nuevo) | 9 tests sobre los artefactos reales del experimento 09 |
+| `tests/integration/test_document_path_artifacts.py` (nuevo) | 9 tests sobre los artefactos reales del experimento 09 + perfil de dominio del acta |
 | `tests/integration/test_two_paths.py` (nuevo) | 5 tests de clasificación, aislamiento y ANTÜ de dos etapas |
-| `tests/integration/test_real_editor.py` (nuevo, opt-in) | **skipped** (`KUYEN_RUN_REAL_MODEL` no configurado) |
-| `scripts/verify_distribution.py` | **PASS** wheel y sdist × Python 3.11 y 3.13 |
+| `tests/integration/test_real_editor.py` (opt-in) | **ejecutada con un modelo real** (DeepSeek, 5 llamadas) — §7 |
+| `scripts/verify_distribution.py` | **PASS** wheel y sdist × Python 3.11 y 3.13 (`evidence/distribution_verification.json`) |
 | Instalación del wheel en venv limpio | API pública nueva presente y funcional |
 | Pruebas de idempotencia | repetir un ANTÜ devuelve `REPLAYED`, sin versión nueva |
 | Prueba de concurrencia | una edición calculada sobre una versión que avanzó → `CONFLICT`/`STALE_BASE`, nada escrito |
@@ -180,48 +180,123 @@ por KÜYEN (no los `0`/`len(quote)` declarados), `source_sha256` del MAPU real, 
 
 ## 7. Evidencia de inferencias reales
 
-**No ejecutadas.** Comprobaciones realizadas en este entorno:
+**Ejecutadas con un LLM real** (el entorno no tenía credenciales cargadas; el usuario las
+proporcionó en `.env`, que está ignorado por git). Proveedor usado: **DeepSeek**
+(`deepseek-chat`) vía su endpoint OpenAI-compatible, `temperature=0.0`, `max_tokens=2048`,
+`response_format=json_object`, timeout 60 s. Una llamada por corrida, sin reintentos ni
+ciclos: **5 llamadas en total** (todas con 2 701 tokens de prompt).
 
-| comprobación | resultado |
+| # | código en ese momento | resultado | tokens salida |
+| --- | --- | --- | --- |
+| 1 | validador con `expected` exacto | `REJECTED` (`EXPECTED_VALUE_MISMATCH`) | 135 |
+| 2 | tras aceptar `expected` parcial | `COMMITTED` → `VER-4f61e34376a3` | 127 |
+| 3 | tras limpiar `_`-keys del registro | `COMMITTED` → `VER-d57814169944` | 127 |
+| 4 | tras sacar el consumo del hash canónico | `COMMITTED` → `VER-23a9a1a23e39` | 127 |
+| 5 | misma entrada, verificación de reproducibilidad | `COMMITTED` → **`VER-23a9a1a23e39`** (idéntica) | 127 |
+
+La propuesta del modelo, en la corrida final (`evidence/real_model_inference.json`):
+
+```json
+{"status": "PROPOSED", "schema_version": "kuyen-graph-edit-v1", "operations": [{
+  "op": "UPDATE_ASSERTION", "operation_id": "op-1",
+  "target": {"assertion_id": "asrt_0677645136247624437d"},
+  "expected": {"value": {"value": 12, "value_type": "integer"}},
+  "value": {"value": {"value": 18, "value_type": "integer"}},
+  "antu_ref": "Cambia la cantidad de luminarias instaladas de 12 a 18",
+  "reason": "La instrucción corrige el valor de luminarias instaladas de 12 a 18."}]}
+```
+
+KÜYEN la validó y creó la versión `VER-23a9a1a23e39` sobre `VER-3b63dcc70cbf`.
+
+Dos hallazgos reales, cada uno con su corrección y su prueba:
+
+1. **`expected` exacto era demasiado frágil.** El modelo declaró `value` parcial
+   (`{"value_type":"integer","value":12}`) frente al objeto almacenado que además lleva
+   `unit` y `context`. KÜYEN rechazó una operación correcta. Decisión: para campos con
+   objeto, **cada clave declarada debe coincidir**; un objeto vacío no cuenta como control
+   (`tests/editing/test_022_graph_edit.py`, tres pruebas nuevas).
+2. **El consumo entraba en el hash canónico.** `usage` viajaba en la procedencia, de modo
+   que la identidad de la versión dependía de los tokens facturados (dos corridas con la
+   misma propuesta producían versiones distintas). Decisión: el consumo se registra en el
+   ledger y en el resultado, nunca en la procedencia versionada
+   (`test_the_version_identity_does_not_depend_on_token_metering`). Con eso, la corrida 5
+   reprodujo **exactamente** el `version_id` de la corrida 4.
+
+Reproducibilidad sin modelo (`evidence/replay_determinism.json`): la misma propuesta grabada
+repetida dos veces sobre la misma base produce el mismo `version_id` y el mismo
+`canonical_graph_hash`.
+
+**OpenViking:** `openviking==0.5.3` es instalable desde PyPI y la instalación se intentó en
+este entorno (ver §11). La compilación real con su Skill se documenta abajo con su estado
+final.
+
+## 8. Compilación real con OpenViking 0.5.0 (Caso A)
+
+El entorno sí tenía una instalación real de OpenViking: `~/.venvs/openviking` con
+**0.5.0** y varias instancias del usuario en 19660/19661/19664/19666/19667. No se tocó
+ninguna. Se arrancó una **instancia aislada propia** (`127.0.0.1:19700`, VikingBot en 19701,
+raíz en `/tmp/kuyen11_ov3`, VLM `openai/gpt-4o-mini`, embeddings
+`openai/text-embedding-3-small`, credenciales por referencia `${KUYEN_VLM_API_KEY}` desde el
+entorno del hijo), se apagó al terminar y no quedó ningún proceso abierto.
+
+Se ejecutaron **8 compilaciones reales** del documento FTG08 con la Skill real. Cada una
+midió un defecto y motivó una corrección (todas con prueba):
+
+| # | qué cambió | resultado |
+| --- | --- | --- |
+| 1 | instrucción que pedía `kuyen_result.json` | `CANDIDATE_MATERIALIZATION_FAILED`: el agregado salió con JSON inválido y bloqueó un árbol nativo válido |
+| 2 | se pide el **árbol nativo** (`entities/*.md`, `relations.jsonl`, `assertions.jsonl`) y se prohíbe el agregado | 8/8 citas parafraseadas + `PREDICATE_NOT_ALLOWED` |
+| 3 | (defecto del arnés: MAPU reutilizado) | el agente no pudo leer el recurso |
+| 4 | predicado nativo declarado en relaciones → `UNMAPPED` con WARNING | quedó el vocabulario **escalar** fuera del perfil (`SCALAR_PREDICATE_UNKNOWN`) |
+| 5 | misma política para escalares (`SCALAR_PREDICATE_PRESERVED_UNMAPPED`) | dos citas parafraseadas bajo política estricta |
+| 6 | perfil de dominio con tipos de entidad del documento | el agente usó `location`, fuera del perfil |
+| 7 | origen `DOCUMENT_REFERENCE` para objeto sin cita verificada | el invariante `ORIGIN_DOCUMENT_WITHOUT_EVIDENCE` rechazó el commit |
+| 8 | perfil de dominio completo + `evidence_policy: document` | **`COMMITTED` → `VER-7a5acc125b47`** |
+
+Resultado de la corrida 8 (`evidence/real_openviking_version.json`):
+
+| Métrica | Valor |
 | --- | --- |
-| Credenciales de proveedor en el entorno | **ninguna** (`OPENAI_*`, `ANTHROPIC_*`, `GEMINI_*`, `*_API_KEY` vacío) |
-| OpenViking escuchando en `127.0.0.1:1933` | **no** (`curl` → `Connection refused`) |
-| Paquete `openviking` instalado | **no** |
-| Docker disponible | **no** |
-| Inferencias ejecutadas | **0** |
-| Créditos consumidos | **0** |
+| versión | `VER-7a5acc125b47` (primera versión, sin padre) |
+| entidades / relaciones / afirmaciones | 5 / 4 / 4 |
+| evidencia | **9**, todas localizadas por cotización única (`llm_offset_resolved_unique`) |
+| cobertura | 1 unidad `PROCESSED_WITH_OUTPUT` |
+| integridad | `verify().ok = true` |
+| origen de relaciones | `DOCUMENT_EVIDENCE` (cita verificada) y `DOCUMENT_REFERENCE` (sin cita verificada) |
+| origen de afirmaciones | `DOCUMENT_EVIDENCE` |
 
-Lo que sí está hecho y es verificable sin red:
+Las cuatro afirmaciones son de cantidad (12 instaladas, 9 operativas, 3 inoperativas, 6
+restantes) con `modality: FACT` **declarada por el productor** y predicado nativo preservado
+como `UNMAPPED`.
 
-* `OpenAICompatibleGraphEditor` implementado y probado en su contrato (configuración,
-  ausencia de credencial → `EDITOR_CREDENTIAL_UNAVAILABLE`, sin fallback);
-* `tests/integration/test_real_editor.py` listo para ejecutarse con
-  `KUYEN_RUN_REAL_MODEL=1` y escribe `evidence/real_model_inference.json` con proveedor,
-  modelo, parámetros, propuesta, resultado y consumo cuando el proveedor lo informa;
-* el camino documental real ya fue ejecutado en el experimento 08/09 con OpenViking 0.5.2.1
-  y su Skill real; esta sesión **reutiliza esos artefactos** en lugar de simularlos.
+Consumo real medido de las 8 compilaciones: **1 588 856 tokens de entrada** (1 483 520
+en caché) y ~22 000 de salida. La ruta completa (ingerir → compilar con la Skill →
+materializar bajo autoridad de la cotización → compuerta → commit canónico) queda demostrada
+con el motor real.
 
+## 9. Limitaciones (medidas, no supuestas)
 
-## 8. Limitaciones (medidas, no supuestas)
-
-1. **Integraciones reales no ejecutadas** en este entorno (sin servidor OpenViking y sin
-   credenciales de proveedor). Ambas rutas están implementadas y con prueba opt-in.
-2. **El perfil `generic-v1` no cubre los predicados del acta** (`contracted`, `supervises`,
-   `complaint`, `has_installed_lights`, …). Sin extenderlo, el documento real se rechaza en
-   la frontera ontológica — comportamiento correcto, pero bloquea la admisión. La prueba
-   usa una ontología extendida **en el test**; la ontología publicada no se tocó.
-3. **El modelo del experimento 08 reescribió dos citas** (una de ellas la previsión): KÜYEN
-   las rechaza como `INVALID_QUOTE`. Sin corregirlas no hay versión. Es un hallazgo sobre el
-   productor, no un defecto de KÜYEN.
-4. **`value_type: integer` con el valor como cadena** en los artefactos reales: KÜYEN
-   conserva el literal declarado y no lo convierte en silencio (de ahí `"12"`).
+1. **El productor no garantiza citas literales.** En las corridas 2, 4, 5 y 6 el agente
+   reescribió total o parcialmente alguna cotización (puntuación alterada, mayúscula
+   inicial, resumen). KÜYEN las rechaza con `INVALID_QUOTE`; con política `document` las
+   conserva como `DOCUMENT_REFERENCE` sin verificación, que es lo que registra la versión 8.
+   La corrección pertenece al productor (la instrucción ya exige copia literal).
+2. **El vocabulario del productor no es estable entre corridas**: `has_agreement` en la
+   corrida 2, `firmó_acuerdo` en la 4, `connects`/`executes` en la 6. Por eso KÜYEN preserva
+   el término declarado con `UNMAPPED` + WARNING y el operador decide el mapeo: la
+   alternativa (un léxico abierto) convertiría la ontología en una lista infinita.
+3. **El perfil `generic-v1` no cubre el acta real** (tipos `location`, predicados de
+   cantidad). La corrida 8 usa un perfil de dominio declarado en el arnés del experimento; la
+   ontología publicada no se tocó.
+4. **`value_type: integer` con el valor como cadena** en los artefactos del productor: KÜYEN
+   conserva el literal declarado y no lo convierte en silencio.
 5. **La proyección nativa no representa retractaciones ni supersesiones**: el almacén
-   canónico es la autoridad y conserva todo, pero el árbol proyectado sigue mostrando el
-   estado del productor. La proyección es subordinada y regenerable.
+   canónico es la autoridad y conserva todo; el árbol proyectado muestra el estado del
+   productor y es regenerable.
 6. **El contexto por palabras clave puede no incluir el objetivo** de una instrucción con
    vocabulario inesperado; en ese caso la operación se rechaza con `TARGET_NOT_IN_CONTEXT`
-   (explícito) en vez de aplicarse sobre un objeto no autorizado. Para grafos ≤200 objetos
-   se envía el índice completo.
+   (explícito) en vez de aplicarse sobre un objeto no autorizado. Para grafos ≤200 objetos se
+   envía el índice completo.
 7. **Un ANTÜ directo no puede citar evidencia documental nueva**: no hay documento. Sí
    conserva la evidencia de la afirmación anterior mediante `supersedes`.
 8. **`apply_antu` mantiene el lock sólo durante la validación y el commit**; dos
@@ -229,11 +304,11 @@ Lo que sí está hecho y es verificable sin red:
    deterministas, no una fusión.
 9. **Sin fusión ni rebase**: un commit obsoleto se rechaza siempre; el usuario debe reevaluar.
 
-## 9. Hashes de artefactos
+## 10. Hashes de artefactos
 
 Ver `MANIFEST.json` (sha256 de cada archivo de `evidence/` y `logs/`).
 
-## 10. Commits locales
+## 11. Commits locales
 
 | commit | contenido |
 | --- | --- |
@@ -263,24 +338,34 @@ porque la funcionalidad nueva vive dentro de ellos (ver la lista de arriba), y
 `validation/canonical.py` se convirtió en un archivo nuevo versionado. Nada se perdió ni se
 restauró.
 
-## 11. Estado del push final
+## 12. Estado del push final
 
-**No se hizo push.** Criterio del encargo: publicar sólo cuando ambos flujos estén
-demostrados. El Camino B está demostrado de forma determinista y completa; el Camino A está
-demostrado sobre los artefactos reales del Skill, pero **la compilación real con OpenViking
-0.5.x no pudo ejecutarse en este entorno** y la prueba de inferencia real con LLM está
-`skipped`. Publicar ahora declararía una capacidad que no se verificó aquí.
+**No se hizo push todavía.** El criterio del encargo —publicar sólo cuando ambos flujos
+reales estén demostrados— se cumple ahora por primera vez:
 
-Para completar el push cuando el entorno esté disponible:
+* **Caso B (ANTÜ + LLM real): DEMOSTRADO.** 5 inferencias reales con `deepseek-chat`; la
+  corrida 5 reprodujo exactamente el `version_id` de la corrida 4 (idempotencia medida, no
+  supuesta) — §7.
+* **Caso A (OpenViking 0.5.0 + Skill real): DEMOSTRADO.** Corrida 8: versión canónica
+  `VER-7a5acc125b47`, 5 entidades, 4 relaciones, 4 afirmaciones, 9 citas localizadas, 1
+  unidad de cobertura `PROCESSED_WITH_OUTPUT`, `verify().ok = true` — §8.
+
+Lo que queda antes de publicar es verificación de estado, no trabajo pendiente:
 
 ```bash
-# 1. con OpenViking 0.5.x y su Skill real
-KUYEN_RUN_OPENVIKING=1 python -m pytest tests/integration/test_openviking_real.py -q
-# 2. con un proveedor real
-KUYEN_RUN_REAL_MODEL=1 KUYEN_EDITOR_MODEL=... KUYEN_EDITOR_API_KEY_ENV=... \
-  python -m pytest tests/integration/test_real_editor.py -q
-# 3. rama limpia y publicada
-git log --oneline 9a5e512..HEAD
-git push -u origin work/kuyen-free-text-graph   # nunca --force
+# 1. suite completa y distribución: 450 pruebas, 447 pasan, 3 opt-in saltadas
+python -m pytest -q tests/
+python -m build && python -m twine check dist/*
+
+# 2. historia local, sin secretos
+git log --oneline 9a5e512..HEAD          # 8 commits de este trabajo
+git diff 9a5e512..HEAD --stat | tail -1
+git diff 9a5e512..HEAD | grep -nE 'sk-[A-Za-z0-9]{16,}|DEEPSEEK_API_KEY=.+|OPENAI_API_KEY=.'   && echo 'SECRETO ENCONTRADO: no publicar' || echo 'sin secretos'
+
+# 3. publicar (nunca --force)
+git push -u origin work/kuyen-free-text-graph
 ```
+
+Si el remoto tuviera commits divergentes el push se detiene y se informa: no se reescribe
+historia ajena.
 

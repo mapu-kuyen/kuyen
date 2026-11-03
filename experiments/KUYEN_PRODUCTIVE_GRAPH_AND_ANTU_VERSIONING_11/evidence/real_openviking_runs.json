@@ -1,0 +1,157 @@
+{
+  "engine": {
+    "openviking_version": "0.5.0",
+    "server": "instancia aislada propia 127.0.0.1:19700 + vikingbot 19701",
+    "vlm": "openai/gpt-4o-mini",
+    "embedding": "openai/text-embedding-3-small",
+    "isolation": "root propio en /tmp; ningun servidor del usuario tocado"
+  },
+  "document": "documento ficticio FTG08 (acta de seguimiento, ES)",
+  "runs": [
+    {
+      "run": 1,
+      "change": "kuyen_result.json pedido por la instrucción anterior",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "CANDIDATE_MATERIALIZATION_FAILED": 1
+      },
+      "error": null,
+      "note": "el agregado salió con JSON inválido y bloqueó el árbol nativo"
+    },
+    {
+      "run": 2,
+      "change": "instrucción reescrita: árbol nativo",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "ENTITY_EVIDENCE_MISSING": 3,
+        "RELATION_EVIDENCE_MISSING": 3,
+        "ASSERTION_EVIDENCE_MISSING": 2,
+        "PREDICATE_NOT_ALLOWED": 3
+      },
+      "error": null,
+      "note": "el agente parafraseó 8/8 citas y usó predicados nuevos"
+    },
+    {
+      "run": 3,
+      "change": "mismo MAPU reutilizado",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "ENTITY_EVIDENCE_MISSING": 1,
+        "COVERAGE_UNIT_INCOMPLETE": 1
+      },
+      "error": null,
+      "note": "el recurso ya no estaba legible para el agente (defecto del arnés, no de KÜYEN)"
+    },
+    {
+      "run": 4,
+      "change": "preservación de predicado nativo en relaciones",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "ENTITY_EVIDENCE_MISSING": 1,
+        "RELATION_EVIDENCE_MISSING": 1,
+        "NATIVE_PREDICATE_PRESERVED_UNMAPPED": 2,
+        "SCALAR_PREDICATE_UNKNOWN": 4
+      },
+      "error": null,
+      "note": "queda el vocabulario escalar fuera del perfil"
+    },
+    {
+      "run": 5,
+      "change": "preservación de predicado nativo escalar",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "ENTITY_EVIDENCE_MISSING": 1,
+        "ASSERTION_EVIDENCE_MISSING": 1,
+        "SCALAR_PREDICATE_PRESERVED_UNMAPPED": 1
+      },
+      "error": null,
+      "note": "dos citas siguen parafraseadas; política estricta"
+    },
+    {
+      "run": 6,
+      "change": "perfil de dominio con tipos de entidad",
+      "status": "REJECTED",
+      "version_id": null,
+      "issues": {
+        "ENTITY_TYPE_NOT_ALLOWED": 2,
+        "NATIVE_PREDICATE_PRESERVED_UNMAPPED": 2,
+        "SCALAR_PREDICATE_PRESERVED_UNMAPPED": 2
+      },
+      "error": null,
+      "note": "el agente usó el tipo `location`"
+    },
+    {
+      "run": 7,
+      "change": "origen DOCUMENT_REFERENCE para objeto sin cita verificada",
+      "status": null,
+      "version_id": null,
+      "issues": {},
+      "error": "kuyen.errors.CommitError: ORIGIN_DOCUMENT_WITHOUT_EVIDENCE: relation rel_dabceda98eff8e9e00bc claims documentary origin without evidence",
+      "note": "el invariante de procedencia rechazó el commit"
+    },
+    {
+      "run": 8,
+      "change": "perfil de dominio completo + política `document`",
+      "status": "COMMITTED",
+      "version_id": "VER-7a5acc125b47",
+      "issues": {},
+      "error": null,
+      "note": "COMMITTED"
+    }
+  ],
+  "compile_usage": [
+    {
+      "seconds": 32.2,
+      "input_tokens": 43351,
+      "cached_input_tokens": 35456,
+      "output_tokens": 2855
+    },
+    {
+      "seconds": 37.7,
+      "input_tokens": 112806,
+      "cached_input_tokens": 104320,
+      "output_tokens": 3121
+    },
+    {
+      "seconds": 71.0,
+      "input_tokens": 510743,
+      "cached_input_tokens": 488832,
+      "output_tokens": 1895
+    },
+    {
+      "seconds": 27.9,
+      "input_tokens": 66197,
+      "cached_input_tokens": 59776,
+      "output_tokens": 2525
+    },
+    {
+      "seconds": 86.6,
+      "input_tokens": 669052,
+      "cached_input_tokens": 640128,
+      "output_tokens": 3580
+    },
+    {
+      "seconds": 34.4,
+      "input_tokens": 64789,
+      "cached_input_tokens": 60544,
+      "output_tokens": 2873
+    },
+    {
+      "seconds": 24.0,
+      "input_tokens": 31417,
+      "cached_input_tokens": 27136,
+      "output_tokens": 1975
+    },
+    {
+      "seconds": 37.2,
+      "input_tokens": 90501,
+      "cached_input_tokens": 86272,
+      "output_tokens": 3030
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "version": {
+    "version_id": "VER-7a5acc125b47",
+    "parent_version_id": null,
+    "kuyen_version": "1.0.0",
+    "unit_revision": "R0000",
+    "content_digest": "67ba1d623773914ebb11",
+    "canonical_graph_hash": "81267cc777aed3fc55a7a0cc806a8c3c89cc6fd81faa18600eb415ff791b7d2d",
+    "provenance_digest": "11970306639bfbaacada",
+    "antu_id": "ANTU-REAL-OV-08"
+  },
+  "counts": {
+    "entities": 5,
+    "relations": 4,
+    "assertions": 4,
+    "evidence": 9,
+    "coverage": 1,
+    "mapu_ids": 1
+  },
+  "origins": {
+    "entities": [
+      "MISSING"
+    ],
+    "relations": [
+      "DOCUMENT_EVIDENCE",
+      "DOCUMENT_REFERENCE"
+    ],
+    "assertions": [
+      "DOCUMENT_EVIDENCE"
+    ]
+  },
+  "relations": [
+    {
+      "from": "ent_4f76ca53315c7df9a50d",
+      "to": "ent_9fc1cf55b62e323dc960",
+      "relation": "filed_complaint",
+      "label": "presentó una reclamación",
+      "polarity": "POSITIVE",
+      "source_predicate": "filed_complaint",
+      "canonical_predicate": "filed_complaint",
+      "mapping_status": "UNMAPPED",
+      "mapping_rule_id": "provider-predicate-layer-v1+canonical-from-source",
+      "evidence_ids": 0
+    },
+    {
+      "from": "ent_7e8fa077eab916268a6a",
+      "to": "ent_9b1ecfc7400181499bab",
+      "relation": "executes_installations",
+      "label": "responsable de ejecutar las instalaciones",
+      "polarity": "POSITIVE",
+      "source_predicate": "executes_installations",
+      "canonical_predicate": "executes_installations",
+      "mapping_status": "UNMAPPED",
+      "mapping_rule_id": "provider-predicate-layer-v1+canonical-from-source",
+      "evidence_ids": 1
+    },
+    {
+      "from": "ent_9fc1cf55b62e323dc960",
+      "to": "ent_9b1ecfc7400181499bab",
+      "relation": "plans_to_install",
+      "label": "comunicó que espera instalar las seis luminarias restantes",
+      "polarity": "POSITIVE",
+      "source_predicate": "plans_to_install",
+      "canonical_predicate": "plans_to_install",
+      "mapping_status": "UNMAPPED",
+      "mapping_rule_id": "provider-predicate-layer-v1+canonical-from-source",
+      "evidence_ids": 1
+    },
+    {
+      "from": "ent_9fc1cf55b62e323dc960",
+      "to": "ent_7e8fa077eab916268a6a",
+      "relation": "signed_agreement",
+      "label": "firmaron un acuerdo",
+      "polarity": "POSITIVE",
+      "source_predicate": "signed_agreement",
+      "canonical_predicate": "signed_agreement",
+      "mapping_status": "UNMAPPED",
+      "mapping_rule_id": "provider-predicate-layer-v1+canonical-from-source",
+      "evidence_ids": 0
+    }
+  ],
+  "assertions": [
+    {
+      "subject": "ent_7e8fa077eab916268a6a",
+      "predicate": "has_number_of_luminarias_installed",
+      "value": "12",
+      "value_type": "integer",
+      "polarity": "POSITIVE",
+      "modality": "FACT",
+      "status": "UNRESOLVED",
+      "source_predicate": "has_number_of_luminarias_installed",
+      "mapping_status": "UNRESOLVED",
+      "evidence_ids": 1
+    },
+    {
+      "subject": "ent_7e8fa077eab916268a6a",
+      "predicate": "has_number_of_non_operational_luminarias",
+      "value": "3",
+      "value_type": "integer",
+      "polarity": "NEGATIVE",
+      "modality": "FACT",
+      "status": "UNRESOLVED",
+      "source_predicate": "has_number_of_non_operational_luminarias",
+      "mapping_status": "UNRESOLVED",
+      "evidence_ids": 1
+    },
+    {
+      "subject": "ent_7e8fa077eab916268a6a",
+      "predicate": "has_number_of_remaining_luminarias",
+      "value": "6",
+      "value_type": "integer",
+      "polarity": "POSITIVE",
+      "modality": "FACT",
+      "status": "UNRESOLVED",
+      "source_predicate": "has_number_of_remaining_luminarias",
+      "mapping_status": "UNRESOLVED",
+      "evidence_ids": 1
+    },
+    {
+      "subject": "ent_7e8fa077eab916268a6a",
+      "predicate": "has_number_of_operational_luminarias",
+      "value": "9",
+      "value_type": "integer",
+      "polarity": "POSITIVE",
+      "modality": "FACT",
+      "status": "UNRESOLVED",
+      "source_predicate": "has_number_of_operational_luminarias",
+      "mapping_status": "UNRESOLVED",
+      "evidence_ids": 1
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev_05a047391d3e5754ea4e",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 242,
+      "char_end": 322,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "el camino El Arrayán, que conecta el puente La Higuera con la Escuela Los Aromos"
+    },
+    {
+      "evidence_id": "ev_4c4e4b305415806f7c3d",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 735,
+      "char_end": 782,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "se instalaron 12 de las 18 luminarias previstas"
+    },
+    {
+      "evidence_id": "ev_4cc37e72b2092f241d45",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 276,
+      "char_end": 322,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "el puente La Higuera con la Escuela Los Aromos"
+    },
+    {
+      "evidence_id": "ev_5a39bfd50de2dc4138bf",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 876,
+      "char_end": 936,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "Las seis luminarias restantes todavía no han sido instaladas"
+    },
+    {
+      "evidence_id": "ev_62fedd634a1c948375ab",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 784,
+      "char_end": 806,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "nueve están operativas"
+    },
+    {
+      "evidence_id": "ev_632cee609302b36b88f9",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 1127,
+      "char_end": 1201,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "El Comité de Adelanto El Arrayán presentó el 20 de octubre una reclamación"
+    },
+    {
+      "evidence_id": "ev_6fec8631eaa7a306e1cc",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 1397,
+      "char_end": 1498,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "La Municipalidad comunicó que espera instalar las seis luminarias restantes antes del 10 de noviembre"
+    },
+    {
+      "evidence_id": "ev_a2fc3a973c9d7e6195ef",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 809,
+      "char_end": 838,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "tres permanecen sin funcionar"
+    },
+    {
+      "evidence_id": "ev_dcd5e2fbda27b1d81f5e",
+      "mapu_id": "MAPU-FTG08-08",
+      "char_start": 489,
+      "char_end": 565,
+      "extraction_method": "llm_offset_resolved_unique",
+      "quote": "La Cooperativa Técnica Faro Sur es responsable de ejecutar las instalaciones"
+    }
+  ],
+  "coverage": [
+    {
+      "unit_id": "u00",
+      "state": "PROCESSED_WITH_OUTPUT"
+    }
+  ],
+  "integrity": {
+    "ok": true,
+    "problems": [],
+    "versions": [
+      {
+        "version_id": "VER-7a5acc125b47",
+        "ok": true,
+        "problems": []
+      }
+    ],
+    "current": "VER-7a5acc125b47",
+    "registry": {
+      "ok": true,
+      "versions": 1,
+      "indexed": 1,
+      "current": "VER-7a5acc125b47"
+    },
+    "ledger": {
+      "state": "INTACT",
+      "events": 4,
+      "tail": null,
+      "recovery": {
+        "repaired": false,
+        "records": []
+      }
+    },
+    "objects": {
+      "ok": true,
+      "blobs": null,
+      "ignored_temporaries": 0
+    },
+    "unit_history": {
+      "ok": true,
+      "revisions": 1,
+      "unreconciled": []
+    }
+  },
+  "ledger_tail": [
+    {
+      "event_type": "ANTU_RECEIVED",
+      "kind": "IMPORT"
+    },
+    {
+      "event_type": "ANTU_COMPLETED",
+      "kind": null
+    },
+    {
+      "event_type": "PROJECTION_ENQUEUED",
+      "kind": null
+    },
+    {
+      "event_type": "VERSION_COMMITTED",
+      "kind": null
+    }
+  ]
+}

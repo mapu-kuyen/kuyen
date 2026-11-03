@@ -1,0 +1,25 @@
+{
+  "instruction": "Cambia la cantidad de luminarias instaladas de 12 a 18: el dato correcto es 18",
+  "proposal_sha256": "73a51bdce59ca898b46e0534fd3b9bd5d32fe6527b897c41b54f9130183bbaab",
+  "runs": [
+    {
+      "status": "COMMITTED",
+      "version_id": "VER-4fbceb50a0b3",
+      "base_version_id": "VER-3b63dcc70cbf",
+      "canonical_graph_hash": "b8d97440893694683dd4f96530fda9a06699436b92c6b66700f849ebe125b70c"
+    },
+    {
+      "status": "COMMITTED",
+      "version_id": "VER-4fbceb50a0b3",
+      "base_version_id": "VER-3b63dcc70cbf",
+      "canonical_graph_hash": "b8d97440893694683dd4f96530fda9a06699436b92c6b66700f849ebe125b70c"
+    }
+  ],
+  "identical_version_id": true,
+  "identical_canonical_hash": true,
+  "live_run": {
+    "version_id": "VER-23a9a1a23e39",
+    "canonical_graph_hash": "5d9c01ba59d9433fb16e53554b1549a460568173616f3085b57e34d984ec5646"
+  },
+  "note": "Replaying the same recorded proposal twice on the same base produces the same version_id and the same canonical_graph_hash. The live run and the replay are different versions because the provenance records which editor produced them; the knowledge applied is identical (same accepted operations)."
+}

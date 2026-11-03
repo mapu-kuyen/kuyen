@@ -1,0 +1,93 @@
+{
+  "experiment": "KUYEN_ANTU_OPERATIONAL_COVERAGE_15",
+  "git": {
+    "branch": "work/kuyen-free-text-graph",
+    "head_before": "b6a00d0de2eb5c967d2dabd560a71ed4b465bd1c",
+    "head_at_manifest": "e85d95bdece595f41318cbdccc01d8ae5a91c938",
+    "status_entries": 70
+  },
+  "tests": {
+    "suite": "python3 -m pytest -q tests/",
+    "result": "527 passed, 3 skipped",
+    "new_module": "tests/editing/test_026_operational_coverage.py (35 pruebas)"
+  },
+  "memories": {
+    "KUYEN-001": {
+      "versions_before": 2,
+      "versions_after": 2,
+      "current": "VER-6d440968cbb3",
+      "verify": true
+    },
+    "KUYEN-002": {
+      "versions_before": 2,
+      "versions_after": 2,
+      "current": "VER-36bafc9dcf2f",
+      "verify": true
+    },
+    "KUYEN-003": {
+      "versions_before": 3,
+      "versions_after": 3,
+      "current": "VER-b54579461c44",
+      "verify": true
+    },
+    "KUYEN-004": {
+      "versions_before": 1,
+      "versions_after": 5,
+      "current": "VER-05288440f2d2",
+      "verify": true
+    },
+    "KUYEN-005": {
+      "versions_before": 4,
+      "versions_after": 5,
+      "current": "VER-23dfee10a0ae",
+      "verify": true
+    },
+    "KUYEN-006": {
+      "versions_before": 2,
+      "versions_after": 2,
+      "current": "VER-71b8665042d5",
+      "verify": true
+    },
+    "KUYEN-007": {
+      "versions_before": 1,
+      "versions_after": 1,
+      "current": "VER-34b7b1f4eecb",
+      "verify": true
+    },
+    "KUYEN-008": {
+      "versions_before": 5,
+      "versions_after": 5,
+      "current": "VER-529b4688b446",
+      "verify": true
+    },
+    "KUYEN-009": {
+      "versions_before": 1,
+      "versions_after": 1,
+      "current": "VER-884d87f21f7a",
+      "verify": true
+    },
+    "KUYEN-010": {
+      "versions_before": 2,
+      "versions_after": 2,
+      "current": "VER-aa3c7866061c",
+      "verify": true
+    }
+  },
+  "preserved_artifacts": {
+    "files": 703,
+    "changed": []
+  },
+  "artifacts": {
+    "REPORT.md": "e292897221d813f39f464b0b07d2a916f9004e7947d04240247dec3caf718a19",
+    "benchmarks/runs.csv": "3a0236095244e481c6123b7d9f32c08c783cde1482405e58a1327e1c2f8abf00",
+    "evidence/acceptance.json": "def1dd595142732e12daf04feedefd8fdef1d7b947097d4a0941c2b37202c6db",
+    "evidence/pre_fix_raw_responses.json": "e24f5ce663fe7837652734a763c6c31f9e0f1eca437312f9c73d25f60e1749cf",
+    "evidence/real_runs.json": "c7a12b288d14eb6881dcbf813450f7686a4f98aefa63d65f9998f6bd832c9e67",
+    "evidence/state_after.json": "1c9f9395d25423cc3b2c3323e4b58b22af5ffa539a9a62ff1730b09f78911e02",
+    "evidence/state_before.json": "16810b96f92f9cad02e9923164e969c1ef70f49a01ab9a224fe3d7ffc7129878",
+    "scripts/analyze.py": "b753dd6f7e0525179287156039683f0b73fd701cf3ff2f68df305f9b7cd1ac17",
+    "scripts/manifest.py": "df84e4e32c76b7f06e11f4128df3fea17c6ecd93147a6519d3a3ff01aeab7bde",
+    "scripts/run_real.py": "898419f78e22c95dc8dcb4383fcd544144125eaac863e4403bdaa38e2caaf143",
+    "scripts/snapshot.py": "38d3d6f4de9e8a5acefddae73f2e543a5dcbd8ff7cd03997bc54b31380dad274"
+  }
+}

@@ -257,7 +257,11 @@ recuperación, endurecimiento del paquete). No son separables hunk a hunk sin op
 destructivas, así que se incluyeron y aquí se deja constancia. En
 `src/kuyen/adapters/openviking.py` sí se separó: el commit `c6c398c` contiene **sólo** el
 cambio de `read_candidate` y la modificación previa de `compile()` sigue sin commitear.
-Los 30 archivos modificados y 38 sin rastrear del estado inicial siguen presentes.
+Del estado inicial (30 modificados, 38 sin rastrear) quedan **21 modificados y 37 sin
+rastrear** fuera de estos commits: los otros nueve archivos modificados se commitearon
+porque la funcionalidad nueva vive dentro de ellos (ver la lista de arriba), y
+`validation/canonical.py` se convirtió en un archivo nuevo versionado. Nada se perdió ni se
+restauró.
 
 ## 11. Estado del push final
 

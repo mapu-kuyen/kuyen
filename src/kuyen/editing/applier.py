@@ -20,8 +20,14 @@ from dataclasses import dataclass, field
 from typing import Any, Mapping
 
 from ..semantics.origin import antu_origin
+from ..semantics.schema import GraphSchema, SchemaError
+from ..errors import InvalidRequestError
 from .identity import entity_id_for, entity_identity_block
 from .operations import GraphEditOperation
+
+class EditContractError(InvalidRequestError):
+    """An accepted operation cannot be applied to this document."""
+
 
 STATUS_INSTRUCTED = "INSTRUCTED"
 STATUS_SUPERSEDED = "SUPERSEDED"
@@ -50,11 +56,13 @@ class ApplicationResult:
     applied: list[AppliedOperation] = field(default_factory=list)
     affected: dict[str, list[str]] = field(default_factory=dict)
     references: dict[str, str] = field(default_factory=dict)
+    schema_changes: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {"applied": [item.to_dict() for item in self.applied],
                 "affected": {key: list(value) for key, value in self.affected.items()},
-                "references": dict(self.references)}
+                "references": dict(self.references),
+                "schema_changes": copy.deepcopy(self.schema_changes)}
 
 
 class GraphEditApplier:
@@ -72,6 +80,7 @@ class GraphEditApplier:
         self.model = model
         self.recorded_at = recorded_at
         self.references: dict[str, str] = {}
+        self.schema_changes: list[dict[str, Any]] = []
 
     # ---------- provenance ----------
     def _origin(self, operation: GraphEditOperation) -> dict[str, Any]:
@@ -111,9 +120,10 @@ class GraphEditApplier:
 
     def _base_object(self, kind: str, identifier: str,
                      canonical: Mapping[str, Any]) -> dict[str, Any] | None:
-        key = {"entity": "entity_id", "relation": "relation_id",
-               "assertion": "assertion_id"}[kind]
-        return self._index(canonical[f"{kind}s"], key).get(identifier)
+        group, key = {"entity": ("entities", "entity_id"),
+                      "relation": ("relations", "relation_id"),
+                      "assertion": ("assertions", "assertion_id")}[kind]
+        return self._index(canonical[group], key).get(identifier)
 
 
     # ---------- application ----------
@@ -130,6 +140,109 @@ class GraphEditApplier:
             handler(operation, canonical, result)
         result.references = dict(self.references)
         return result
+
+    # ---------- schema operations (§6, §7) ----------
+    def _apply_add_field(self, operation: GraphEditOperation, canonical: dict[str, Any],
+                         result: ApplicationResult) -> None:
+        self._apply_schema_field(
+            operation, result, transform="add",
+            entity_type=str(operation.value.get("_entity_type") or ""),
+            field_spec=dict(operation.value.get("_field") or {}))
+
+    def _apply_update_field(self, operation: GraphEditOperation, canonical: dict[str, Any],
+                            result: ApplicationResult) -> None:
+        self._apply_schema_field(
+            operation, result, transform="update",
+            entity_type=str(operation.value.get("_entity_type") or ""),
+            field_spec=dict(operation.value.get("_field") or {}))
+
+    def _apply_retract_field(self, operation: GraphEditOperation, canonical: dict[str, Any],
+                             result: ApplicationResult) -> None:
+        self._apply_schema_field(
+            operation, result, transform="retract",
+            entity_type=str(operation.value.get("_entity_type") or ""),
+            field_spec={"name": str(operation.value.get("_field_name") or "")})
+
+    def _apply_schema_field(self, operation: GraphEditOperation, result: ApplicationResult, *,
+                            transform: str, entity_type: str,
+                            field_spec: dict[str, Any]) -> None:
+        """Apply one schema change, keeping the previous declaration in the record.
+
+        The schema is part of the version (it is hashed with it), so a field added by an Antü
+        is a real change of the memory: the next version knows the field, and a version
+        without it keeps not knowing it.
+        """
+        document = result.document
+        current = GraphSchema.from_dict(document.get("schema"))
+        if current is None:  # pragma: no cover - the validator refuses an absent schema
+            return
+        try:
+            if transform == "add":
+                updated = current.with_added_field(entity_type, field_spec,
+                                                   antu_id=self.antu_id)
+            elif transform == "update":
+                updated = current.with_updated_field(entity_type, field_spec,
+                                                     antu_id=self.antu_id)
+            else:
+                updated = current.with_removed_field(entity_type, field_spec.get("name"),
+                                                     antu_id=self.antu_id)
+        except SchemaError as exc:  # pragma: no cover - the validator checked the same rules
+            raise EditContractError(
+                f"the schema change cannot be applied: {exc}",
+                details={"code": "SCHEMA_CHANGE_FAILED", "entity_type": entity_type}) from exc
+        document["schema"] = updated.to_dict()
+        previous = operation.value.get("_previous")
+        field_name = str(field_spec.get("name") or "")
+        result.schema_changes.append({
+            "operation_id": operation.operation_id, "op": operation.op,
+            "entity_type": entity_type, "field": field_name,
+            "previous": copy.deepcopy(previous) if previous is not None else None,
+            "current": updated.field(entity_type, field_name), "antu_id": self.antu_id,
+        })
+        self._record(result, operation, kind="field",
+                     identifier=f"{entity_type}.{field_name}",
+                     effect={"add": "ADDED", "update": "UPDATED", "retract": "RETRACTED"}[transform],
+                     previous=previous if isinstance(previous, dict) else None)
+
+    def _apply_retract_entity(self, operation: GraphEditOperation, canonical: dict[str, Any],
+                              result: ApplicationResult) -> None:
+        """Retract an entity and, with it, the statements that only exist through it.
+
+        Nothing is deleted: the entity stays with `status: RETRACTED`, and every relation or
+        assertion that points at it is retracted by the same Antü, so a version never keeps an
+        assertion about something the same version retracted.
+        """
+        entity_id = str(operation.value.get("_target_id") or operation.target_id)
+        entity = self._base_object("entity", entity_id, canonical)
+        if entity is None:  # pragma: no cover - the validator resolved the target
+            return
+        previous = {"status": entity.get("status")}
+        entity.setdefault("revisions", []).append({
+            "antu_id": self.antu_id, "operation_id": operation.operation_id,
+            "recorded_at": self.recorded_at, "reason": operation.reason,
+            "instruction_sha256": self.instruction_sha256, "previous": previous,
+            "effect": "RETRACTED",
+        })
+        entity["status"] = STATUS_RETRACTED
+        entity["retracted"] = True
+        entity["origin"] = self._origin(operation)
+        self._record(result, operation, kind="entity", identifier=entity_id,
+                     effect="RETRACTED", previous=previous)
+        for group, id_key in (("relations", "relation_id"), ("assertions", "assertion_id")):
+            for item in canonical.get(group, []):
+                touches = (item.get("from_entity") == entity_id
+                           or item.get("to_entity") == entity_id
+                           or item.get("subject_entity") == entity_id
+                           or item.get("object_entity") == entity_id)
+                if not touches or str(item.get("status")) == STATUS_RETRACTED:
+                    continue
+                previous_status = item.get("status")
+                item["status"] = STATUS_RETRACTED
+                item["retracted"] = True
+                item["origin"] = self._origin(operation)
+                self._record(result, operation, kind=group[:-1],
+                             identifier=str(item.get(id_key)), effect="RETRACTED_CASCADE",
+                             previous={"status": previous_status})
 
     def _apply_add_entity(self, operation: GraphEditOperation, canonical: dict[str, Any],
                           result: ApplicationResult) -> None:
@@ -178,8 +291,9 @@ class GraphEditApplier:
 
     def _relation_record(self, operation: GraphEditOperation, *,
                          from_entity: str, to_entity: str) -> dict[str, Any]:
-        predicate = str(operation.value.get("predicate") or "")
-        label = str(operation.value.get("label") or predicate)
+        predicate = str(operation.value.get("predicate")
+                        or operation.value.get("_predicate") or "")
+        label = str(operation.value.get("label") or operation.value.get("_label") or predicate)
         return {
             "relation_id": str(operation.value.get("_canonical_id") or ""),
             "from_entity": from_entity, "to_entity": to_entity,
@@ -188,13 +302,13 @@ class GraphEditApplier:
             "provider_predicate": None, "display_label": label, "provider_label": None,
             "label": label, "source_label": label,
             "polarity": str(operation.value.get("_polarity") or ""),
-            "scope": str(operation.value.get("scope") or "instruction"),
+            "scope": str(operation.value.get("_scope") or "instruction"),
             "temporal_scope": operation.value.get("temporal_scope"),
             "temporal": operation.value.get("temporal"),
             "evidence_ids": [], "sources": [],
             "status": STATUS_INSTRUCTED, "semantic_status": "NOT_ASSESSED",
             "modality": str(operation.value.get("_modality") or "UNKNOWN"),
-            "attribution": operation.value.get("attribution"),
+            "attribution": operation.value.get("_attribution"),
             "mapping_status": "UNMAPPED", "mapping_rule_id": "antu-instruction-v1",
             "mapping_version": "1.0.0", "provider_projection_status": "NATIVE",
             "from_normalization_status": "RESOLVED", "to_normalization_status": "RESOLVED",
@@ -219,15 +333,32 @@ class GraphEditApplier:
             return
         new_id = str(operation.value.get("_canonical_id") or target_id)
         previous = {key: copy.deepcopy(relation.get(key)) for key in
-                    ("predicate", "label", "polarity", "temporal_scope", "modality")}
+                    ("predicate", "label", "polarity", "scope", "temporal_scope",
+                     "modality", "attribution", "evidence_ids")}
+        claim_changed = bool(operation.value.get("_identity_changed"))
         if new_id == target_id:
-            # Same identity: the change is recorded on the object itself.
-            for key in ("predicate", "label", "polarity", "modality", "temporal"):
-                if key in operation.value:
-                    relation[key] = operation.value[key]
+            relation["predicate"] = str(operation.value.get("_predicate")
+                                        or relation.get("predicate") or "")
+            relation["source_predicate"] = relation["predicate"]
+            relation["canonical_predicate"] = relation["predicate"]
+            relation["label"] = str(operation.value.get("_label")
+                                    or relation.get("label") or relation["predicate"])
+            relation["display_label"] = relation["label"]
+            relation["polarity"] = str(operation.value.get("_polarity")
+                                       or relation.get("polarity") or "")
+            relation["modality"] = str(operation.value.get("_modality")
+                                       or relation.get("modality") or "UNKNOWN")
+            if "attribution" in operation.value:
+                relation["attribution"] = operation.value.get("_attribution")
+            relation["scope"] = str(operation.value.get("_scope") or relation.get("scope")
+                                    or "instruction")
             if "temporal_scope" in operation.value:
                 relation["temporal_scope"] = operation.value["temporal_scope"]
-            relation["origin"] = self._origin(operation)
+            if "temporal" in operation.value:
+                relation["temporal"] = operation.value["temporal"]
+            self._amend_in_place(relation, operation, previous,
+                                 changed=[key for key in operation.value
+                                          if not key.startswith("_")])
             relation.setdefault("revisions", []).append({
                 "antu_id": self.antu_id, "operation_id": operation.operation_id,
                 "recorded_at": self.recorded_at, "reason": operation.reason,
@@ -238,6 +369,21 @@ class GraphEditApplier:
         updated = self._relation_record(
             operation, from_entity=str(relation.get("from_entity") or ""),
             to_entity=str(relation.get("to_entity") or ""))
+        updated["modality"] = str(operation.value.get("_modality")
+                                  or relation.get("modality") or "UNKNOWN")
+        updated["polarity"] = str(operation.value.get("_polarity")
+                                  or relation.get("polarity") or "")
+        updated["scope"] = str(operation.value.get("_scope") or relation.get("scope")
+                               or "instruction")
+        if claim_changed:
+            updated["previous_attribution"] = relation.get("attribution")
+            updated["previous_evidence_ids"] = list(relation.get("evidence_ids") or [])
+        else:
+            updated["attribution"] = (operation.value.get("_attribution")
+                                      if "attribution" in operation.value
+                                      else relation.get("attribution"))
+            updated["evidence_ids"] = list(relation.get("evidence_ids") or [])
+            updated["sources"] = list(relation.get("sources") or [])
         updated["supersedes"] = target_id
         relation["status"] = STATUS_SUPERSEDED
         relation["superseded_by"] = new_id
@@ -285,6 +431,24 @@ class GraphEditApplier:
                      effect="ATTRIBUTE_UPDATED",
                      previous={"attribute": attribute, "value": previous})
 
+    def _amend_in_place(self, obj: dict[str, Any], operation: GraphEditOperation,
+                        previous: Mapping[str, Any], *, changed) -> None:
+        """Record an in-place patch without lying about where the statement comes from.
+
+        A documentary statement that keeps its evidence remains `DOCUMENT_EVIDENCE`: the
+        instruction amended a property, it did not become the source. A statement that has
+        no evidence is instruction-borne and moves to the new Antü origin.
+        """
+        if not obj.get("evidence_ids"):
+            obj["origin"] = self._origin(operation)
+        obj["amended"] = True
+        obj.setdefault("instruction_edits", []).append({
+            "antu_id": self.antu_id, "operation_id": operation.operation_id,
+            "instruction_sha256": self.instruction_sha256,
+            "changed": sorted(str(key) for key in changed),
+            "previous": {key: copy.deepcopy(previous.get(key)) for key in previous},
+            "recorded_at": self.recorded_at})
+
     def _assertion_record(self, operation: GraphEditOperation, *,
                           subject: str, object_entity: str | None) -> dict[str, Any]:
         return {
@@ -295,7 +459,7 @@ class GraphEditApplier:
             "object_entity": object_entity,
             "value": copy.deepcopy(operation.value.get("_value_payload")),
             "polarity": str(operation.value.get("_polarity") or ""),
-            "scope": str(operation.value.get("scope") or "instruction"),
+            "scope": str(operation.value.get("_scope") or "instruction"),
             "temporal_scope": operation.value.get("temporal_scope"),
             "temporal": operation.value.get("temporal"),
             "evidence_ids": [], "sources": [],
@@ -305,7 +469,7 @@ class GraphEditApplier:
             "support_method": "antu_instruction",
             "support_rationale": operation.reason or None,
             "modality": str(operation.value.get("_modality") or "UNKNOWN"),
-            "attribution": operation.value.get("attribution"),
+            "attribution": operation.value.get("_attribution"),
             "origin": self._origin(operation),
         }
 
@@ -328,16 +492,32 @@ class GraphEditApplier:
             return
         new_id = str(operation.value.get("_canonical_id") or target_id)
         previous = {key: copy.deepcopy(assertion.get(key))
-                    for key in ("predicate", "value", "object_entity", "polarity", "modality")}
+                    for key in ("predicate", "value", "object_entity", "polarity", "modality",
+                                "attribution", "scope", "temporal_scope", "evidence_ids")}
+        claim_changed = bool(operation.value.get("_identity_changed"))
         if new_id == target_id:
-            for key in ("predicate", "polarity", "modality", "temporal"):
-                if key in operation.value:
-                    assertion[key] = operation.value[key]
-            for key in ("value", "object_entity", "temporal_scope"):
-                if key in operation.value:
-                    assertion[key] = copy.deepcopy(operation.value[
-                        "_value_payload" if key == "value" else key])
-            assertion["origin"] = self._origin(operation)
+            # Same identity: the patch is recorded on the object itself and every property
+            # the Antü did not name stays exactly as it was.
+            assertion["predicate"] = str(operation.value.get("_predicate")
+                                         or assertion.get("predicate") or "")
+            assertion["polarity"] = str(operation.value.get("_polarity")
+                                        or assertion.get("polarity") or "")
+            assertion["modality"] = str(operation.value.get("_modality")
+                                        or assertion.get("modality") or "UNKNOWN")
+            assertion["attribution"] = operation.value.get("_attribution")
+            assertion["scope"] = str(operation.value.get("_scope") or assertion.get("scope")
+                                     or "instruction")
+            if "value" in operation.value:
+                assertion["value"] = copy.deepcopy(operation.value.get("_value_payload"))
+            if "object_entity" in operation.value:
+                assertion["object_entity"] = operation.value.get("_object_entity")
+            if "temporal_scope" in operation.value:
+                assertion["temporal_scope"] = operation.value.get("temporal_scope")
+            if "temporal" in operation.value:
+                assertion["temporal"] = operation.value.get("temporal")
+            self._amend_in_place(assertion, operation, previous,
+                                 changed=[key for key in operation.value
+                                          if not key.startswith("_")])
             assertion.setdefault("revisions", []).append({
                 "antu_id": self.antu_id, "operation_id": operation.operation_id,
                 "recorded_at": self.recorded_at, "reason": operation.reason,
@@ -351,6 +531,31 @@ class GraphEditApplier:
             or assertion.get("object_entity"))
         if "predicate" not in operation.value:
             updated["predicate"] = str(assertion.get("predicate") or "")
+        # §3: a property the Antü did not name is not destroyed. Modality, polarity, scope,
+        # temporal scope and the shape of the value survive the correction; when the claim
+        # itself changes (value, predicate or endpoint) the new statement keeps the previous
+        # attribution and evidence only as history, because the instruction is not the source.
+        updated["modality"] = str(operation.value.get("_modality")
+                                  or assertion.get("modality") or "UNKNOWN")
+        updated["polarity"] = str(operation.value.get("_polarity")
+                                  or assertion.get("polarity") or "")
+        updated["scope"] = str(operation.value.get("_scope") or assertion.get("scope")
+                               or "instruction")
+        updated["temporal_scope"] = (operation.value.get("temporal_scope")
+                                     if "temporal_scope" in operation.value
+                                     else assertion.get("temporal_scope"))
+        updated["temporal"] = (operation.value.get("temporal")
+                               if "temporal" in operation.value else assertion.get("temporal"))
+        if claim_changed:
+            updated["previous_attribution"] = assertion.get("attribution")
+            updated["previous_evidence_ids"] = list(assertion.get("evidence_ids") or [])
+        else:
+            updated["attribution"] = (operation.value.get("_attribution")
+                                      if "attribution" in operation.value
+                                      else assertion.get("attribution"))
+            updated["evidence_ids"] = list(assertion.get("evidence_ids") or [])
+            updated["sources"] = list(assertion.get("sources") or [])
+            updated["evidence_status"] = assertion.get("evidence_status")
         updated["supersedes"] = target_id
         # No evidence is inherited: the instruction corrects the statement, it does not
         # bring documentary support for the new value. The prior statement keeps its own

@@ -135,3 +135,23 @@ the version that contains them and in every earlier version.
 Three optional evidence fields were added to `evidence.schema.json` (`context`,
 `source_unit_id`, `declared_offsets`). They are additive: every document written before
 this change remains valid and no storage migration was performed.
+
+## Partial updates (KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14)
+
+`UPDATE_ASSERTION` and `UPDATE_RELATION` are **patches**: the operation names only the properties
+it changes and every other property is inherited from the target.
+
+* inside `value`, the fields are merged one by one: a patch that sends only `value` keeps the
+  previous `value_type`, `unit` and `context`;
+* `modality`, `polarity`, `scope` and `attribution` survive unless the operation names them;
+  an omitted property is never read as `UNKNOWN` or as an empty value;
+* changing an **identity** property (`value`, `object_entity`, `predicate`, `polarity`,
+  `temporal_scope`, `scope`) creates a new statement with `supersedes`; the previous one stays
+  `SUPERSEDED` with its own evidence and the new one records `previous_evidence_ids`,
+  `previous_attribution` and no evidence of its own (the instruction is not a source);
+* changing only `modality` or `attribution` updates the statement **in place**: the identity is
+  preserved, the evidence stays, and the change is recorded in `instruction_edits` with
+  `amended: true`. A documentary statement keeps `origin.kind = DOCUMENT_EVIDENCE` because it
+  keeps its evidence; an instruction-borne statement moves to the new Antü origin.
+
+This is what makes a correction of one number stop turning a `FACT` into `UNKNOWN`.

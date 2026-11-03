@@ -88,3 +88,30 @@ An Antü is identified by `antu_id` (derived from the literal instruction when n
 repeating it returns the earlier outcome instead of creating a second version. The
 interpretation runs outside the writer lock; the commit re-checks the base version inside
 it, so an edit computed on a version that already moved is refused with `STALE_BASE`.
+
+## Partial updates and the truth of a commit (0.2.1)
+
+`UPDATE_ASSERTION` and `UPDATE_RELATION` patch the target: only the properties the Antü names
+change, and `KÜYEN` inherits the rest (value type, unit, context, modality, polarity, scope,
+attribution). A modality or attribution change alone keeps the statement identity and its
+evidence; a value, predicate or polarity change supersedes the statement and keeps the
+previous one readable (see `DATA_MODEL.md`).
+
+### Operation lifecycle
+
+An operation is not a change until the canonical commit exists:
+
+| State | Meaning |
+| --- | --- |
+| `PROPOSED` | the model produced it (kept in the run proposal) |
+| `VALIDATED` | KÜYEN accepted it; the Antü is not committed yet |
+| `APPLIED` | the deterministic applier changed the working candidate |
+| `COMMITTED` | the canonical commit persisted the version |
+| `DISCARDED` | it was applied to the candidate and the Antü was rejected afterwards: nothing was written |
+| `DECLINED` | the model classified it not applicable; KÜYEN verified the claim where it could |
+| `REJECTED` | it broke the contract; the whole Antü is refused |
+
+`AntuEditResult.operations` carries the `VALIDATED`/`COMMITTED` state of each accepted operation;
+`AntuEditResult.applied` records what the applier did, with the previous value, and is `DISCARDED`
+when the Antü did not commit. Metering stays in the run record and never enters the canonical
+hash.

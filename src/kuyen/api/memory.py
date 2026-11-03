@@ -18,6 +18,7 @@ from ..canonical import digest, read_json, sha256_text
 from ..contracts import PROJECTOR_VERSION, SIDECAR_SCHEMA_VERSION, STORE_FORMAT_VERSION
 from ..editing.diff import diff_documents, summarize as summarize_diff
 from ..editing.editors import GraphEditorPort
+from ..semantics.scope import AntuScope, permissions_for
 from ..editing.service import (STATUS_CLARIFICATION, STATUS_CONFLICT,
                                STATUS_INTERPRETATION_FAILED, STATUS_NO_CHANGES,
                                STATUS_REJECTED, STATUS_VALIDATED, EditRun, derive_antu_id,
@@ -218,7 +219,11 @@ class AntuEditResult:
     instruction: str
     base_version_id: str | None = None
     version_id: str | None = None
+    #: Accepted operations, each with its lifecycle `status`: `VALIDATED` while the Antü has
+    #: not been committed, `COMMITTED` only after the canonical commit (experiment 14, §9).
     operations: list[dict[str, Any]] = field(default_factory=list)
+    #: What the deterministic applier actually did, with the previous value it replaced.
+    applied: list[dict[str, Any]] = field(default_factory=list)
     rejected: list[dict[str, Any]] = field(default_factory=list)
     affected: dict[str, list[str]] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
@@ -231,17 +236,31 @@ class AntuEditResult:
     diff: dict[str, Any] | None = None
     reasons: list[str] = field(default_factory=list)
     committed: bool = False
+    # §2/§5: the portable identity and the local decision. The same Antü has one global
+    # identity and one applicability result per KÜYEN.
+    antu_global_id: str | None = None
+    kuyen_id: str | None = None
+    scope: dict[str, Any] = field(default_factory=dict)
+    applicability: dict[str, int] = field(default_factory=dict)
+    declined: list[dict[str, Any]] = field(default_factory=list)
+    schema_changes: list[dict[str, Any]] = field(default_factory=list)
     run: EditRun | None = field(default=None, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
-        return {"antu_id": self.antu_id, "status": self.status, "instruction": self.instruction,
+        return {"antu_id": self.antu_id, "antu_global_id": self.antu_global_id,
+                "status": self.status, "instruction": self.instruction,
+                "kuyen_id": self.kuyen_id,
                 "base_version_id": self.base_version_id, "version_id": self.version_id,
-                "operations": list(self.operations), "rejected": list(self.rejected),
+                "operations": list(self.operations), "applied": list(self.applied),
+                "rejected": list(self.rejected),
                 "affected": {key: list(value) for key, value in self.affected.items()},
                 "provenance": dict(self.provenance), "evidence": list(self.evidence),
                 "validation": dict(self.validation), "clarification": self.clarification,
                 "conflict": self.conflict, "model": dict(self.model),
                 "context": dict(self.context), "diff": self.diff,
+                "scope": dict(self.scope), "applicability": dict(self.applicability),
+                "declined": list(self.declined),
+                "schema_changes": list(self.schema_changes),
                 "reasons": list(self.reasons), "committed": self.committed}
 
 
@@ -343,6 +362,8 @@ class KuyenMemory:
                  "provenance": document["kuyen"]["provenance"],
                  "content_digest": document["kuyen"].get("content_digest"),
                  "provenance_digest": document["kuyen"].get("provenance_digest")}
+        if "schema" in document:
+            graph["schema"] = document["schema"]
         if digest(graph) != self._version(target).canonical_graph_hash:
             raise StoreError(f"version {target} does not match its canonical hash")
         return graph
@@ -588,13 +609,16 @@ class KuyenMemory:
     def apply_antu(self, instruction: str, *, editor: GraphEditorPort,
                    antu_id: str | None = None, actor: dict[str, Any] | None = None,
                    base_version_id: str | None = None, dry_run: bool = False,
-                   object_limit: int | None = None) -> AntuEditResult:
+                   object_limit: int | None = None,
+                   scope: Any = None) -> AntuEditResult:
         """Interpret an Antü and commit the resulting version. OpenViking is never used.
 
         Concurrency: the interpretation happens outside the writer lock (it is a network
         call); the base version is re-checked inside the lock before anything is written,
         so an edit computed against a version that has already moved is refused with
-        `STALE_BASE` instead of overwriting the newer knowledge. Idempotency: an Antü whose
+        `STALE_BASE` instead of overwriting the newer knowledge. `scope` is the effective
+        permission of this Antü in this KÜYEN (§4): it filters the context and it authorises
+        every operation, here and again before the commit. Idempotency: an Antü whose
         identity already reached a terminal state in the ledger is replayed, never applied
         twice. Nothing is written at all when the interpretation is ambiguous, conflicts,
         produces no operation or fails validation.
@@ -624,7 +648,8 @@ class KuyenMemory:
         graph = self.graph(target_base)
         graph_view = {**graph, "version_id": target_base}
         run = run_edit(instruction=text, antu_id=antu_id, base_document=document,
-                       graph=graph_view, editor=editor, actor=actor, object_limit=object_limit)
+                       graph=graph_view, editor=editor, actor=actor,
+                       object_limit=object_limit, scope=scope)
         return self._finish_edit(run, sidecar=sidecar, document=document,
                                  target_base=target_base, actor=actor, dry_run=dry_run)
 
@@ -662,12 +687,21 @@ class KuyenMemory:
                               conflict={"code": code, "reason": reason})
 
 
-    def _edit_result(self, run: EditRun, *, version_id: str | None) -> AntuEditResult:
+    def _edit_result(self, run: EditRun, *, version_id: str | None,
+                     committed: bool = False) -> AntuEditResult:
         validation = run.validation.to_dict() if run.validation else {}
+        lifecycle = "COMMITTED" if committed else "VALIDATED"
+        operations = [{**dict(item), "status": lifecycle}
+                      for item in (validation.get("accepted") or [])]
+        # An applied change exists only in the working candidate until the commit persists.
+        # If the Antü is rejected afterwards, the record says so instead of looking confirmed.
+        applied_lifecycle = "COMMITTED" if committed else "DISCARDED"
+        applied = [{**dict(item), "status": applied_lifecycle}
+                   for item in ((run.application or {}).get("applied") or [])]
         return AntuEditResult(
             antu_id=run.antu_id, status=run.status, instruction=run.instruction,
             base_version_id=run.base_version_id, version_id=version_id,
-            operations=validation.get("accepted") or [],
+            operations=operations, applied=applied,
             rejected=validation.get("rejected") or [],
             affected=dict((run.application or {}).get("affected") or {}),
             provenance=origin_view({"kind": "ANTU_INSTRUCTION", "antu_id": run.antu_id,
@@ -677,18 +711,55 @@ class KuyenMemory:
             evidence=[], validation=validation, clarification=run.clarification,
             conflict=run.conflict, model=dict(run.model),
             context=dict(run.context.selection), diff=run.diff,
-            reasons=list(run.reasons), committed=False, run=run)
+            reasons=list(run.reasons), committed=False, run=run,
+            antu_global_id=derive_antu_id(run.instruction), kuyen_id=self._kuyen_id(),
+            scope=dict(run.scope), applicability=run.applicability, declined=run.declined,
+            schema_changes=list((run.application or {}).get("schema_changes") or []))
+
+    def _kuyen_id(self) -> str | None:
+        """The identity of this memory, read from the current version.
+
+        The identity belongs to the store, not to the unit state: the same Antü has to record
+        which KÜYEN evaluated it (§2).
+        """
+        pointer = current(self._store) or {}
+        target = pointer.get("version_id")
+        if not target:
+            return None
+        try:
+            return self._version(target).kuyen_id
+        except Exception:  # noqa: BLE001 - a missing manifest is not an identity
+            return None
+
+    @staticmethod
+    def _scope_violations(run: EditRun) -> list[str]:
+        """Operations that the effective scope does not authorise, checked at commit time."""
+        scope = AntuScope.from_dict(run.scope or None)
+        problems: list[str] = []
+        for operation in (run.validation.accepted if run.validation else []):
+            missing = scope.missing(permissions_for(operation.op))
+            if missing:
+                needed = ", ".join(missing)
+                problems.append(f"PERMISSION_REQUIRED: {operation.op} needs {needed} and this "
+                                "KÜYEN does not grant it")
+        changes = (run.application or {}).get("schema_changes") or []
+        if changes and not scope.schema_write:
+            problems.append("PERMISSION_REQUIRED: the candidate changes the schema and this "
+                            "KÜYEN does not grant SCHEMA_WRITE")
+        return problems
 
     def _record_edit_outcome(self, run: EditRun, *, target_base: str,
                              graph: dict[str, Any] | None = None,
                              reasons: list[str] | None = None) -> None:
         """Write the ledger trail of one edit attempt (inside the writer lock)."""
         append_event(self._store, "ANTU_RECEIVED", {
-            "antu_id": run.antu_id, "kind": "GRAPH_EDIT", "instruction": run.instruction,
+            "antu_id": run.antu_id, "antu_global_id": derive_antu_id(run.instruction),
+            "kuyen_id": self._kuyen_id(),
+            "kind": "GRAPH_EDIT", "instruction": run.instruction,
             "instruction_sha256": run.instruction_sha256, "base_version_id": target_base,
             "context_sha256": run.request.context_sha256,
             "prompt_sha256": run.request.prompt_sha256,
-            "model": run.model, "recorded_at": _now()})
+            "scope": dict(run.scope), "model": run.model, "recorded_at": _now()})
         append_event(self._store, "ANTU_EDIT_PROPOSED", {
             "antu_id": run.antu_id, "status": run.status,
             "proposal_sha256": run.model.get("proposal_sha256"),
@@ -696,13 +767,20 @@ class KuyenMemory:
                 run.validation.accepted if run.validation else [])],
             "rejected": [item.code for item in (
                 run.validation.rejected if run.validation else [])],
+            "applicability": run.applicability,
+            "declined": [item.to_dict() for item in (
+                run.validation.declined if run.validation else [])],
             "recorded_at": _now()})
         unit = read_state(self._store) or {}
         if run.status == STATUS_CLARIFICATION:
             append_event(self._store, "ANTU_CLARIFICATION_REQUIRED", {
                 "antu_id": run.antu_id, "question": (run.clarification or {}).get("question"),
                 "recorded_at": _now()})
-            status = "CLARIFICATION_REQUIRED"
+            # The unit revision records what happened to the graph, not the wording of the
+            # decision: a clarification changed nothing. The exact ANTÜ status stays in the
+            # ledger event and in `detail.edit_status`, so `verify()` keeps accepting the
+            # history it was given (KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13).
+            status = "NO_SEMANTIC_CHANGE"
         elif run.status == STATUS_NO_CHANGES:
             append_event(self._store, "ANTU_NO_SEMANTIC_CHANGE", {
                 "antu_id": run.antu_id, "version_id": target_base,
@@ -724,6 +802,7 @@ class KuyenMemory:
                             canonical_graph_hash=None, semantic_change=False,
                             created_at=_now(),
                             detail={"kind": "GRAPH_EDIT",
+                                    "edit_status": run.status,
                                     "reasons": reasons or run.reasons})
 
 
@@ -738,6 +817,17 @@ class KuyenMemory:
                     self._record_edit_outcome(run, target_base=target_base)
             return record
         candidate = dict(run.candidate_document or {})
+        # Defence in depth (§4): the scope that authorised the interpretation is checked again
+        # on the accepted operations immediately before anything is written.
+        violations = self._scope_violations(run)
+        if violations:
+            run.status = "REJECTED"
+            run.reasons.extend(violations)
+            record = self._edit_result(run, version_id=None)
+            if not dry_run:
+                with self._store.writer_lock():
+                    self._record_edit_outcome(run, target_base=target_base, reasons=violations)
+            return record
         provenance = dict(candidate["kuyen"].get("provenance") or {})
         base_version = str(document["kuyen"]["version"])
         new_version = _bump_version(base_version)
@@ -802,6 +892,11 @@ class KuyenMemory:
             record.version_id = result["version"]["version_id"]
             record.committed = True
             record.status = "COMMITTED"
+            # Only now, with the canonical commit persisted, is an operation confirmed.
+            for item in record.operations:
+                item["status"] = "COMMITTED"
+            for item in record.applied:
+                item["status"] = "COMMITTED"
             record.provenance = {**record.provenance,
                                  "canonical_graph_hash": result["version"]["canonical_graph_hash"],
                                  "commit_id": result["commit_id"]}

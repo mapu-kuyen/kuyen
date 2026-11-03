@@ -1,5 +1,58 @@
 # CHANGELOG
 
+## Unreleased — semantic fidelity of Antü operations
+
+KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14. Ten real memories, no document recompilation. The
+editor now patches what the instruction names and preserves everything else. Additive: stores
+written before this change remain readable and verifiable.
+
+### Changed
+* **`UPDATE_ASSERTION` / `UPDATE_RELATION` are partial updates.** The fields of `value` are
+  merged one by one and `modality`, `polarity`, `scope` and `attribution` are inherited unless
+  the operation names them. Changing only the modality or the attribution keeps the statement
+  identity, its evidence and (for documentary statements) its `DOCUMENT_EVIDENCE` origin,
+  recording the edit in `instruction_edits` with `amended: true`.
+* **A replaced statement keeps its history.** The new object carries `previous_evidence_ids`
+  and `previous_attribution`; the superseded one keeps its own evidence.
+* **Operation lifecycle is explicit.** `AntuEditResult.operations[].status` is `VALIDATED` until
+  the canonical commit and `COMMITTED` after; `AntuEditResult.applied` exposes what the applier
+  did with the previous value and is `DISCARDED` when the Antü did not commit.
+* **`VersionRecord` listing is ordered by creation**, not by the content hash of its directory.
+
+### Fixed
+* A malformed `ADD_FIELD` (no `value.field.name`) is a rejection, never a `KeyError`.
+* An in-place patch of a documentary statement no longer turns it into an instruction without
+  evidence, which the canonical validator refuses (`ORIGIN_ANTU_CANNOT_BE_SOURCE_VERIFIED`).
+* An `UPDATE_ASSERTION` on an existing target no longer forces the model to modify the value:
+  `VALUE_INCOMPLETE` is gone for modality/attribution-only patches.
+
+## Unreleased — ten real MAPU and real Antu operations
+
+KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13. Ten public documents were materialised into ten
+independent memories through OpenViking 0.5.0 and the real Skill, and each memory then received
+free-text Antu instructions interpreted by the same inference model. Additive and backward
+compatible: no persisted format changed.
+
+### Added
+* **Embedding provider configuration.** `VlmProviderConfig` may declare its own
+  `embedding_api_base` and `embedding_api_key_env` when the inference provider publishes no
+  embedding endpoint (DeepSeek returns 404 on `/v1/embeddings`). It is the same configuration
+  object: the inference model is still one, and the embedding credential travels only in the
+  child environment as `${KUYEN_EMBEDDING_API_KEY}`.
+* **Provider execution identity.** `DocumentIncorporation` exposes `request_key` and
+  `candidate_uri`, so the native artifacts of a real compilation can be archived and audited
+  after the server is gone without guessing a URI.
+* **The document title reaches the compile instruction** when it is declared on the MAPU.
+* `docs/PRODUCT_MAPU_KUYEN_ANTU.md` and its English counterpart: what a MAPU, a KUYEN and an
+  Antu are, who decides what, which permissions exist and where the limits are.
+
+### Fixed
+* **A clarifying Antu no longer breaks `verify()`.** The unit revision of a
+  `CLARIFICATION_REQUIRED` execution recorded that state, which the unit-history verifier did
+  not accept; it now records `NO_SEMANTIC_CHANGE` (nothing changed in the graph) while the
+  ledger keeps the exact Antu status in the event and in `detail.edit_status`. Regression test
+  added.
+
 ## Unreleased — productive graph and Antu versioning
 
 KUYEN_PRODUCTIVE_GRAPH_11. Two additive capabilities and the hardening they required. No

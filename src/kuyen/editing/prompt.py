@@ -46,6 +46,13 @@ este KÜYEN tiene un tipo de entidad, un campo, un dato o un permiso: mira el co
 Operaciones
 - Puedes emitir cero, una o varias operaciones. Agrupa las dependientes con `depends_on`
   (por `operation_id`).
+- Una instrucción puede pedir varios cambios independientes: emite **una operación por cada
+  uno**, cada una con su `antu_ref`, y no resumas ni omitas ninguna. Si una parte es ambigua y
+  otra no, resuelve la clara y declara la ambigua `NEEDS_CLARIFICATION` con su pregunta.
+- Si no puedes interpretar la instrucción con la confianza suficiente, devuelve
+  `CLARIFICATION_REQUIRED` con la pregunta exacta. Nunca respondas `NO_CHANGES` porque no
+  encontraste el objetivo: `NO_CHANGES` sólo es válido si el estado vigente ya es el que se
+  pide, y entonces lo dices en `interpretation`.
 - Identificadores: usa sólo los que aparecen en `objects`. Para agregar algo usa `value.ref`
   con un identificador local tuyo; KÜYEN generará la identidad definitiva.
 - Toda operación declara `expected` (lo que esperas encontrar) y `antu_ref` (fragmento
@@ -67,7 +74,29 @@ Modificaciones parciales
   KÜYEN los hereda del estado vigente. La afirmación anterior queda SUPERSEDED y conserva su
   evidencia.
 
+Entidades, atributos y relaciones
+- `UPDATE_ENTITY` cambia `name`, `description` o `aliases` de una entidad existente: la
+  identidad canónica no cambia y no se crea otra entidad. Declara en `expected` el valor vigente
+  del campo que cambias. Si el nombre nuevo ya es el de otra entidad del mismo tipo, KÜYEN lo
+  rechaza: pide aclaración en lugar de fusionar dos identidades.
+- `UPDATE_ATTRIBUTE` cambia un atributo tipado de una entidad: `value.attribute` y
+  `value.value`, con `expected.attribute` y `expected.value` (el valor vigente; `null` si el
+  atributo está declarado y todavía no tiene valor). El atributo debe existir en la entidad o
+  estar declarado en `schema`; si hay que declararlo, emite `ADD_FIELD` y después
+  `UPDATE_ATTRIBUTE` con `depends_on`. Un atributo no es una afirmación: `UPDATE_ASSERTION`
+  cambia un hecho, `UPDATE_ATTRIBUTE` cambia una propiedad de la ficha.
+- `UPDATE_RELATION` también es un parche: cambia `label`, `polarity`, `modality`, `scope` o
+  `predicate` sin retirar la relación. Para corregir la dirección, retira la relación equivocada
+  y agrega la correcta en la misma respuesta.
+- `ADD_RELATION` exige `from`, `to`, `predicate` y `polarity`, con ambos extremos identificados
+  sin ambigüedad. Si la relación ya existe, no la agregues: declara `ALREADY_SATISFIED`. Si el
+  mismo predicado ya se cumple en la dirección contraria, KÜYEN lo rechaza como ambiguo.
+
 Relaciones
+- Un objeto se cambia con **una sola** operación: si la instrucción pide dos cambios sobre la
+  misma entidad (por ejemplo el nombre y los alias), envía un único `UPDATE_ENTITY` con los dos
+  campos. KÜYEN comprueba `expected` contra la versión vigente, no contra el efecto de otra
+  operación de la misma respuesta.
 - Si la instrucción corrige una interpretación que afecta a varias relaciones equivalentes
   (por ejemplo, un proyecto "ubicado" en varios países por sus instalaciones piloto), emite una
   RETRACT_RELATION por cada relación afectada, con su `target` y su `expected`. No retires las
@@ -86,7 +115,15 @@ Estados del documento
 - CLARIFICATION_REQUIRED con la pregunta exacta si la instrucción es ambigua.
 - CONFLICT si contradice el conocimiento vigente.
 
+Forma de la respuesta
+- Un único objeto JSON en la raíz, con `status`, `interpretation` y `operations` en el primer
+  nivel. No anides las operaciones dentro de `operation_reference`, `contract`, `proposal` ni
+  ningún otro objeto: KÜYEN busca `operations` en la raíz.
+- `interpretation` explica en una frase qué pediste y qué decidiste; es obligatoria cuando no
+  emites ninguna operación.
+
 Responde sólo el JSON, sin texto adicional."""
+
 
 OPERATION_REFERENCE = {
     "schema_version": EDIT_CONTRACT_ID,
@@ -140,6 +177,24 @@ OPERATION_REFERENCE = {
          "value": {"entity_type": "person", "field": {"name": "rut"}},
          "explanation": "este KÜYEN no concede SCHEMA_WRITE a esta Antü",
          "antu_ref": "fragmento literal"},
+        {"operation_id": "op-7", "op": "UPDATE_ENTITY",
+         "target": {"entity_id": "ent_..."},
+         "expected": {"name": "Nombre vigente"},
+         "value": {"name": "Nombre oficial", "aliases": ["alias conservado"]},
+         "reason": "la instrucción corrige la denominación, la identidad es la misma",
+         "antu_ref": "fragmento literal"},
+        {"operation_id": "op-8", "op": "UPDATE_ATTRIBUTE",
+         "target": {"entity_id": "ent_..."},
+         "expected": {"attribute": "estado_operativo", "value": "inactivo"},
+         "value": {"attribute": "estado_operativo", "value": "operativo"},
+         "reason": "la instrucción corrige el valor del atributo, no un hecho nuevo",
+         "antu_ref": "fragmento literal"},
+        {"operation_id": "op-9", "op": "UPDATE_RELATION",
+         "target": {"relation_id": "rel_..."},
+         "expected": {"label": "etiqueta vigente"},
+         "value": {"label": "etiqueta corregida"},
+         "reason": "la instrucción corrige la etiqueta de la relación",
+         "antu_ref": "fragmento literal"},
     ],
 }
 
@@ -160,7 +215,11 @@ class GraphEditRequest:
             "instruction": self.instruction,
             "antu_id": self.antu_id,
             "graph": self.context.to_payload(),
-            "contract": self.operation_reference,
+            # The reference used to travel as `contract`, with its examples under `operations`.
+            # A real model copied that location and nested its answer there, so KÜYEN read a
+            # proposal with no operations. The key names no longer collide with the answer
+            # shape, and the parser accepts the nested form anyway (experiment 15 §6).
+            "operation_reference": self.operation_reference,
         })
 
     def messages(self) -> list[dict[str, str]]:

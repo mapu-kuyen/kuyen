@@ -273,21 +273,35 @@ class GraphEditApplier:
             return
         previous = {key: copy.deepcopy(entity.get(key))
                     for key in ("name", "entity_type", "description", "aliases")}
+        previous_origin = copy.deepcopy(entity.get("origin"))
+        changed = [key for key in ("name", "entity_type", "description", "aliases")
+                   if key in operation.value]
         for key in ("name", "entity_type", "description"):
             if key in operation.value:
                 entity[key] = str(operation.value[key])
         if "aliases" in operation.value:
             entity["aliases"] = [str(item) for item in (operation.value.get("aliases") or [])]
+        # §4: the identity of the entity never changes, so the previous state is kept on the
+        # entity itself: the revision holds the old values and the origin it had, and a
+        # documentary entity keeps saying that a document supports it (the Antü corrected a
+        # property, it did not become the source of the entity).
         entity.setdefault("revisions", []).append({
             "antu_id": self.antu_id, "operation_id": operation.operation_id,
             "recorded_at": self.recorded_at, "reason": operation.reason,
             "instruction_sha256": self.instruction_sha256, "previous": previous,
+            "previous_origin": previous_origin, "changed": sorted(changed),
         })
-        entity["origin"] = self._origin(operation)
+        if entity.get("evidence_ids"):
+            self._amend_in_place(entity, operation, {key: previous[key] for key in changed},
+                                 changed=changed, keep_origin=True)
+        else:
+            entity["origin"] = self._origin(operation)
         if str(entity.get("status") or "") != STATUS_INSTRUCTED:
             entity["status"] = STATUS_INSTRUCTED
         self._record(result, operation, kind="entity", identifier=str(entity["entity_id"]),
-                     effect="UPDATED", previous=previous)
+                     effect="UPDATED",
+                     previous={**previous, "origin": previous_origin})
+
 
     def _relation_record(self, operation: GraphEditOperation, *,
                          from_entity: str, to_entity: str) -> dict[str, Any]:
@@ -412,35 +426,58 @@ class GraphEditApplier:
 
     def _apply_update_attribute(self, operation: GraphEditOperation, canonical: dict[str, Any],
                                 result: ApplicationResult) -> None:
+        """Patch one typed attribute of an entity (§5).
+
+        Only that attribute changes: the other attributes, the identity, the documentary
+        evidence and every relation of the entity survive. The previous value and the origin
+        the entity had are kept in the revision, so the change is reconstructible.
+        """
         target_id = str(operation.value.get("_target_id") or operation.target_id)
         entity = self._base_object("entity", target_id, canonical)
         if entity is None:  # pragma: no cover - the validator resolved the target
             return
         attribute = str(operation.value.get("_attribute") or "")
-        previous = copy.deepcopy((entity.get("metadata") or {}).get(attribute))
         metadata = dict(entity.get("metadata") or {})
-        metadata[attribute] = operation.value.get("value")
+        previous = copy.deepcopy(metadata.get(attribute))
+        new_value = copy.deepcopy(operation.value.get("value"))
+        previous_origin = copy.deepcopy(entity.get("origin"))
+        metadata[attribute] = new_value
         entity["metadata"] = metadata
         entity.setdefault("revisions", []).append({
             "antu_id": self.antu_id, "operation_id": operation.operation_id,
             "recorded_at": self.recorded_at, "reason": operation.reason,
             "instruction_sha256": self.instruction_sha256,
-            "attribute": attribute, "previous": previous})
-        entity["origin"] = self._origin(operation)
+            "attribute": attribute, "previous": previous, "current": new_value,
+            "previous_origin": previous_origin, "declared_by": STATUS_INSTRUCTED.lower()})
+        if entity.get("evidence_ids"):
+            self._amend_in_place(entity, operation, {attribute: previous},
+                                 changed=[f"metadata.{attribute}"], keep_origin=True)
+        else:
+            entity["origin"] = self._origin(operation)
         self._record(result, operation, kind="entity", identifier=str(entity["entity_id"]),
                      effect="ATTRIBUTE_UPDATED",
-                     previous={"attribute": attribute, "value": previous})
+                     previous={"attribute": attribute, "value": previous,
+                               "origin": previous_origin})
+
 
     def _amend_in_place(self, obj: dict[str, Any], operation: GraphEditOperation,
-                        previous: Mapping[str, Any], *, changed) -> None:
+                        previous: Mapping[str, Any], *, changed, keep_origin: bool = False) -> None:
         """Record an in-place patch without lying about where the statement comes from.
 
         A documentary statement that keeps its evidence remains `DOCUMENT_EVIDENCE`: the
         instruction amended a property, it did not become the source. A statement that has
-        no evidence is instruction-borne and moves to the new Antü origin.
+        no evidence is instruction-borne and moves to the new Antü origin. `keep_origin`
+        forces the first case for an object whose evidence is not stored on itself.
         """
-        if not obj.get("evidence_ids"):
+        if not keep_origin and not obj.get("evidence_ids"):
             obj["origin"] = self._origin(operation)
+        elif keep_origin and not obj.get("origin") and obj.get("evidence_ids"):
+            # The record predates per-object origin tracking: its support *is* its evidence, and
+            # saying so is what keeps the provenance honest after the patch. Nothing is invented:
+            # the evidence ids are the ones the object already had.
+            obj["origin"] = {"kind": "DOCUMENT_EVIDENCE",
+                             "evidence_ids": list(obj.get("evidence_ids") or [])}
+
         obj["amended"] = True
         obj.setdefault("instruction_edits", []).append({
             "antu_id": self.antu_id, "operation_id": operation.operation_id,

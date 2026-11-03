@@ -19,11 +19,12 @@ from .identity import assertion_id_for, coercer_value, normalized, relation_id_f
 from .operations import (ADD_FIELD, ALREADY_SATISFIED, APPLICABILITY_STATES, APPLICABLE,
                         BLOCKED_BY_PERMISSION, MODALITIES, NEEDS_CLARIFICATION,
                         NOT_APPLICABLE, OPERATION_TYPES, OUT_OF_SCOPE, POLARITIES,
-                        REQUIRES_DATA_ACCESS, RETRACT_FIELD, SCHEMA_OPERATIONS,
+                        REQUIRES_DATA_ACCESS, RETRACT_FIELD, RETRACT_RELATION, SCHEMA_OPERATIONS,
                         UPDATE_FIELD, GraphEditOperation)
 
 _WORD = re.compile(r"[0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ_]{3,}")
 ENTITY_UPDATE_FIELDS = ("name", "entity_type", "description", "aliases")
+
 #: `UPDATE_ASSERTION` is a *patch*: only the properties the Antü names are changed and every
 #: other one is inherited from the target (KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14, §3).
 _ASSERTION_UPDATE_FIELDS = ("value", "object_entity", "predicate", "temporal_scope",
@@ -35,6 +36,33 @@ _ASSERTION_IDENTITY_FIELDS = ("value", "object_entity", "predicate", "polarity",
 _RELATION_UPDATE_FIELDS = ("predicate", "label", "polarity", "temporal_scope",
                            "modality", "attribution", "scope")
 _RELATION_IDENTITY_FIELDS = ("predicate", "polarity", "temporal_scope", "scope")
+
+
+def attribute_value_problem(value_type: Any, value: Any) -> str | None:
+    """Why `value` cannot be stored as an attribute of the declared type, or None.
+
+    An attribute is a typed property of an entity, not a statement: the schema declares its
+    type and KÜYEN refuses a value of another type instead of guessing a coercion. `None` is
+    never a value — removing an attribute is not an update, and no operation invents one.
+    """
+    if value is None:
+        return "an attribute value cannot be null; nothing in the contract removes an attribute"
+    kind = str(value_type or "any")
+    if kind == "text":
+        return None if isinstance(value, str) else f"text requires a string, not {value!r}"
+    if kind == "integer":
+        return (None if isinstance(value, int) and not isinstance(value, bool)
+                else f"integer requires an integer, not {value!r}")
+    if kind == "number":
+        return (None if isinstance(value, (int, float)) and not isinstance(value, bool)
+                else f"number requires a number, not {value!r}")
+    if kind == "boolean":
+        return None if isinstance(value, bool) else f"boolean requires true or false, not {value!r}"
+    if kind == "date":
+        return (None if isinstance(value, str) and value.strip()
+                else f"date requires an ISO 8601 string, not {value!r}")
+    return None
+
 
 
 @dataclass
@@ -152,6 +180,15 @@ class EditValidator:
         # Every identity of the version, including the objects outside the authorised
         # context: this is what tells "does not exist" apart from "not in this Antü".
         self.version_ids = {key: set(value) for key, value in (version_ids or {}).items()}
+        # Relations this same Antü retracts: a relation that is being withdrawn cannot make
+        # the opposite statement "already present" (a deliberate direction correction).
+        self.retraction_targets: set[str] = set()
+        # Fields this same Antü declares: an Antü may declare an attribute and set it in the
+        # same answer (`ADD_FIELD`, then `UPDATE_ATTRIBUTE` with `depends_on`), so a
+        # declaration proposed here counts as a declaration for the operations that follow it.
+        self.declared_fields: dict[tuple[str, str], dict[str, Any]] = {}
+
+
 
     # ---------- helpers ----------
     def _existing(self, kind: str, identifier: str) -> dict[str, Any] | None:
@@ -255,7 +292,11 @@ class EditValidator:
             elif expected != actual:
                 rejected.append(self._reject(
                     operation, "EXPECTED_VALUE_MISMATCH",
-                    f"{name} is {actual!r} in this version, not {expected!r}"))
+                    f"{name} is {actual!r} in this version, not {expected!r}"
+                    + ("; KÜYEN validates every operation against the base version, so a second "
+                       "patch of the same object cannot expect the result of the first one: send "
+                       "one operation per object"
+                       if operation.depends_on else "")))
                 return False
         return True
 
@@ -321,6 +362,9 @@ class EditValidator:
                 f"STALE_BASE: the proposal declares base {proposal.base_version_id}, "
                 f"the context is {self.context.version_id}")
             return outcome
+        self.retraction_targets = {operation.target_id for operation in proposal.operations
+                                   if operation.op == RETRACT_RELATION and operation.target_id}
+
         for operation in proposal.operations:
             if operation.op not in OPERATION_TYPES:
                 outcome.rejected.append(self._reject(
@@ -429,7 +473,31 @@ class EditValidator:
             return True, f"field {name!r} already declared on {entity_type!r}"
         identifier = operation.target_id
         if not identifier:
+            # A decline does not need a canonical id if KÜYEN can verify the claim on the
+            # statement itself: "this relation already exists" is checkable from the endpoints
+            # and the predicate, and a real model phrases it exactly that way (experiment 15).
+            if operation.op == "ADD_RELATION":
+                stored = self._stored_relation(
+                    from_entity=str(operation.value.get("from") or ""),
+                    to_entity=str(operation.value.get("to") or ""),
+                    predicate=str(operation.value.get("predicate") or ""),
+                    polarity=str(operation.value.get("polarity") or "POSITIVE").strip().upper(),
+                    temporal=operation.value.get("temporal_scope"))
+                if stored is not None:
+                    return True, (f"relation {stored.get('relation_id')} already states it "
+                                  f"between those entities")
+                return False, "no relation in this version states what it claims is already there"
+            if operation.op == "ADD_ENTITY":
+                name = normalized(operation.value.get("name"))
+                entity_type = str(operation.value.get("entity_type") or "")
+                for entity in self.context.entities:
+                    if normalized(entity.get("name")) == name \
+                            and str(entity.get("entity_type")) == entity_type:
+                        return True, (f"{entity.get('entity_id')} already is a "
+                                      f"{entity_type!r} with that name")
+                return False, "no entity of that type has that name in this version"
             return False, "the operation does not identify what is already satisfied"
+
         if not self._exists_in_version(operation.target_kind or "", identifier):
             return False, f"{identifier} does not exist in this version"
         target = self._existing(operation.target_kind or "", identifier)
@@ -439,9 +507,26 @@ class EditValidator:
         for key, value in expected.items():
             if str(key).startswith("_"):
                 continue
-            if target.get(key) != value:
+            if not self._claim_matches(target.get(key), value):
                 return False, f"{identifier}.{key} is {target.get(key)!r}, not {value!r}"
         return True, f"{identifier} already matches the request"
+
+    @staticmethod
+    def _claim_matches(actual: Any, expected: Any) -> bool:
+        """Compare a claimed value with the stored one without inventing a difference.
+
+        A model that claims "this relation is not retracted" writes `retracted: false`; the
+        stored object simply has no `retracted` key, which means the same thing. Statuses are
+        compared case-insensitively. Any other difference is a real one and the claim fails.
+        """
+        if actual == expected:
+            return True
+        if isinstance(expected, bool):
+            return expected is False and actual is None
+        if isinstance(expected, str) and isinstance(actual, str):
+            return actual.strip().upper() == expected.strip().upper()
+        return False
+
 
     @staticmethod
     def _verify_not_applicable(operation: GraphEditOperation) -> tuple[bool, str]:
@@ -519,7 +604,9 @@ class EditValidator:
             return
         operation.value = {**operation.value, "_entity_type": entity_type,
                            "_field": declaration, "_previous": None}
+        self.declared_fields[(entity_type, str(declaration.get("name") or ""))] = dict(declaration)
         outcome.accepted.append(operation)
+
 
     def _validate_update_field(self, operation: GraphEditOperation,
                                outcome: ValidationOutcome) -> None:
@@ -627,8 +714,27 @@ class EditValidator:
             outcome.rejected.append(self._reject(
                 operation, "VALUE_INCOMPLETE", "an entity name cannot become empty"))
             return
+        new_name = str(operation.value.get("name") or "").strip()
+        if new_name:
+            # §4: renaming keeps the identity. It never creates a second entity and it never
+            # merges two similar ones: a name already taken by the same type is a collision
+            # the Antü has to resolve, not a silent merge.
+            for entity in self.context.entities:
+                if entity.get("entity_id") == target.get("entity_id"):
+                    continue
+                if normalized(entity.get("name")) != normalized(new_name):
+                    continue
+                if str(entity.get("entity_type")) != str(target.get("entity_type")):
+                    continue
+                outcome.rejected.append(self._reject(
+                    operation, "ENTITY_NAME_COLLISION",
+                    f"{new_name!r} is already the name of {entity.get('entity_id')} "
+                    f"({entity.get('entity_type')}): renaming this entity would merge two "
+                    "identities; ask for clarification instead"))
+                return
         operation.value = {**operation.value, "_target_id": target.get("entity_id")}
         outcome.accepted.append(operation)
+
 
     def _validate_update_attribute(self, operation: GraphEditOperation,
                                   outcome: ValidationOutcome) -> None:
@@ -643,7 +749,33 @@ class EditValidator:
             return
         metadata = target.get("metadata") or {}
         current = metadata.get(attribute) if isinstance(metadata, Mapping) else None
+        declared = (self.schema.field(target.get("entity_type"), attribute)
+                    if self.schema is not None else None)
+        if declared is None:
+            # A field this same Antü declares counts: `ADD_FIELD` plus `UPDATE_ATTRIBUTE` in
+            # one answer is how an Antü introduces a typed attribute and gives it a value.
+            declared = self.declared_fields.get((str(target.get("entity_type") or ""), attribute))
+        exists = isinstance(metadata, Mapping) and attribute in metadata
+
+        if declared is None and not exists:
+            # §5: an attribute is either already there or declared in the schema of this very
+            # version. Creating one silently would be inventing structure behind the Antü.
+            outcome.rejected.append(self._reject(
+                operation, "ATTRIBUTE_NOT_DECLARED",
+                f"{target.get('entity_type')}.{attribute} is neither declared in the schema "
+                "nor present on this entity: declare it with ADD_FIELD first (ADD_FIELD, then "
+                "UPDATE_ATTRIBUTE with depends_on) or update an existing attribute"))
+            return
+        new_value = operation.value.get("value")
+        if declared is not None:
+            problem = attribute_value_problem(declared.get("value_type"), new_value)
+            if problem is not None:
+                outcome.rejected.append(self._reject(
+                    operation, "ATTRIBUTE_TYPE_MISMATCH",
+                    f"{attribute} is declared as {declared.get('value_type')}: {problem}"))
+                return
         expected = operation.expected or {}
+
         if expected.get("attribute") != attribute:
             outcome.rejected.append(self._reject(
                 operation, "EXPECTED_VALUE_REQUIRED",
@@ -860,6 +992,30 @@ class EditValidator:
         return True
 
 
+    def _same_relation(self, relation: Mapping[str, Any], *, from_entity: str, to_entity: str,
+                       predicate: str, polarity: str, temporal: Any) -> bool:
+        """True when a stored relation states exactly the same thing, whatever its id.
+
+        Relation identifiers are produced by the projection and are not reproducible from the
+        statement, so duplication is decided on what the relation says: endpoints, predicate,
+        polarity and temporal scope. A retracted relation does not make a new one a duplicate.
+        """
+        if relation.get("retracted") or str(relation.get("status") or "") == "RETRACTED":
+            return False
+        return (str(relation.get("from_entity") or "") == from_entity
+                and str(relation.get("to_entity") or "") == to_entity
+                and str(relation.get("predicate") or "") == predicate
+                and str(relation.get("polarity") or "").upper() == polarity
+                and (str(relation.get("temporal_scope") or "") == str(temporal or "")))
+
+    def _stored_relation(self, *, from_entity: str, to_entity: str, predicate: str,
+                         polarity: str, temporal: Any) -> dict[str, Any] | None:
+        for relation in self.context.relations:
+            if self._same_relation(relation, from_entity=from_entity, to_entity=to_entity,
+                                   predicate=predicate, polarity=polarity, temporal=temporal):
+                return relation
+        return None
+
     def _validate_add_relation(self, operation: GraphEditOperation,
                                outcome: ValidationOutcome) -> None:
         source = self._endpoint(operation.value.get("from"), operation, outcome.rejected)
@@ -881,11 +1037,39 @@ class EditValidator:
         temporal = operation.value.get("temporal_scope")
         candidate_id = relation_id_for(from_entity=source, predicate=predicate, to_entity=target,
                                        polarity=polarity, temporal_scope=temporal)
-        if candidate_id in self.relations:
+        # §3: no duplication. A relation is compared by what it says, not only by its id (ids
+        # come from the projection), and the check covers the whole authorised context: a
+        # relation that already exists must not be asserted twice.
+        stored = self._stored_relation(from_entity=source, to_entity=target, predicate=predicate,
+                                       polarity=polarity, temporal=temporal)
+        if stored is not None or self._exists_in_version("relation", candidate_id):
             outcome.rejected.append(self._reject(
                 operation, "DUPLICATE_OBJECT",
-                f"relation {candidate_id} already exists in this version"))
+                f"relation {predicate!r} from {source} to {target} already exists"
+                f" ({stored.get('relation_id') if stored else candidate_id}): report "
+                "ALREADY_SATISFIED instead of adding it twice"))
             return
+        reversed_stored = self._stored_relation(from_entity=target, to_entity=source,
+                                                predicate=predicate, polarity=polarity,
+                                                temporal=temporal)
+        reversed_id = relation_id_for(from_entity=target, predicate=predicate,
+                                      to_entity=source, polarity=polarity,
+                                      temporal_scope=temporal)
+        if ((reversed_stored is not None or (reversed_id != candidate_id
+                                             and self._exists_in_version("relation", reversed_id)))
+                and reversed_id not in self.retraction_targets
+                and (reversed_stored or {}).get("relation_id") not in self.retraction_targets):
+            # The same predicate already holds in the opposite direction and this Antü is not
+            # withdrawing it. Adding it would assert both directions, which is almost always a
+            # misread instruction: KÜYEN does not choose for the user.
+            existing = (reversed_stored or {}).get("relation_id") or reversed_id
+            outcome.rejected.append(self._reject(
+                operation, "RELATION_DIRECTION_CONFLICT",
+                f"{predicate!r} already holds from {target} to {source} ({existing}); the "
+                "opposite direction is ambiguous unless the existing relation is retracted in "
+                "the same Antü"))
+            return
+
         operation.value = {**operation.value, "_canonical_id": candidate_id,
                            "_polarity": polarity,
                            "_modality": self._modality(operation, outcome.rejected),

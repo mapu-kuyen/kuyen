@@ -366,8 +366,8 @@ python -m build && python -m twine check dist/*
 # 2. historia local, sin secretos
 git log --oneline 9a5e512..HEAD          # los commits de este trabajo (ver §11)
 git diff 9a5e512..HEAD --stat | tail -1
-git diff 9a5e512..HEAD | grep -nE 'sk-[A-Za-z0-9]{16,}|DEEPSEEK_API_KEY=.+|OPENAI_API_KEY=.'   && echo 'SECRETO ENCONTRADO: no publicar' || echo 'sin secretos'
-
+git diff 9a5e512..HEAD | grep -nE '(sk|xoxb)-[[:alnum:]_-]{16,}|_API_KEY=.' \
+  && echo 'SECRETO ENCONTRADO: no publicar' || echo 'sin secretos'
 # 3. publicar (nunca --force)
 git push -u origin work/kuyen-free-text-graph
 ```

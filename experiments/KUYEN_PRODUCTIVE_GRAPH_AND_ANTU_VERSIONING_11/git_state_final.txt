@@ -2,9 +2,12 @@
 
 ## branch / HEAD
 work/kuyen-free-text-graph
-32654f9 docs(experiment): exact final counts of the preserved pre-existing work
+152cbc7 experimento 11: inferencias reales y compilacion real de OpenViking
 
 ## commits since the base
+152cbc7 experimento 11: inferencias reales y compilacion real de OpenViking
+866ea0f documento: arbol nativo, predicado declarado preservado, origen de referencia
+8240d97 editing: expected parcial, identidad sin consumo, registro limpio
 32654f9 docs(experiment): exact final counts of the preserved pre-existing work
 606f8c5 docs(experiment): point the report at the authoritative commit list and refresh hashes
 1e7319d docs(experiment): correct the usage example and refresh the manifest
@@ -14,99 +17,9 @@ f542db1 docs(experiment): final git state and artifact hashes
 ea5c87d feat(semantics): record where every statement comes from
 c6c398c fix(evidence): make MAPU identity, quotes and polarity authoritative
 
-## status --short
- M BACKUP_AND_RECOVERY.md
- M CHANGELOG.md
- M DATA_MODEL.md
- M SECURITY.md
- M SIDECAR.md
- M VERSION
- M docs/GRAPH_EDIT_ANTU.en.md
- M docs/GRAPH_EDIT_ANTU.md
- M examples/quickstart.py
- M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/MANIFEST.json
- M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/REPORT.md
- M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/git_state_final.txt
- M pyproject.toml
- M src/kuyen/adapters/openviking.py
- M src/kuyen/backup/archive.py
- M src/kuyen/canonical.py
- M src/kuyen/editing/operations.py
- M src/kuyen/editing/service.py
- M src/kuyen/editing/validator.py
- M src/kuyen/engine.py
- M src/kuyen/errors.py
- M src/kuyen/ingest.py
- M src/kuyen/lifecycle/unit.py
- M src/kuyen/materialization/materializer.py
- M src/kuyen/models/domain.py
- M src/kuyen/normalization/normalizer.py
- M src/kuyen/projection/native.py
- M src/kuyen/projection/openviking.py
- M src/kuyen/projection/outbox.py
- M src/kuyen/semantics/__init__.py
- M src/kuyen/semantics/origin.py
- M src/kuyen/storage/commit.py
- M src/kuyen/storage/registry.py
- M src/kuyen/storage/store.py
- M src/kuyen/storage/versions.py
- M src/kuyen/validation/validators.py
- M tests/editing/test_022_graph_edit.py
- M tests/integration/test_document_path_artifacts.py
- M tests/integration/test_real_editor.py
- M tests/unit/test_013_ingestion.py
- M tests/unit/test_014_materializer.py
- M tests/unit/test_021_evidence_authority.py
-?? MANIFEST.in
-?? docs/KUYEN_OPENVIKING_VLM_CONFIGURATION_05.md
-?? docs/KUYEN_RELEASE_QUICKSTART_REPAIR_02.md
-?? docs/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03.md
-?? docs/reports/
-?? experiments/KUYEN_EXPLICIT_POLARITY_FIXTURES_10/
-?? experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/
-?? experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/
-?? experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/
-?? experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/live_compile/
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/real_model_inference.json
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/real_openviking_compilation.json
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/real_openviking_runs.json
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/real_openviking_version.json
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/evidence/replay_determinism.json
-?? experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/
-?? experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/
-?? scripts/
-?? src/kuyen/provenance.py
-?? src/kuyen/vlm.py
-?? tests/api/test_a1_canonical_validation.py
-?? tests/examples/
-?? tests/lifecycle/test_antu_contract.py
-?? tests/lifecycle/test_b1_staging_classification.py
-?? tests/lifecycle/test_m1_ledger_concurrency.py
-?? tests/lifecycle/test_m1_ledger_multiprocess.py
-?? tests/lifecycle/test_m1_m2_combined.py
-?? tests/lifecycle/test_m2_ledger_recovery.py
-?? tests/lifecycle/test_m6_append_scaling.py
-?? tests/lifecycle/test_operation_boundary.py
-?? tests/lifecycle/test_reconciliation_metadata.py
-?? tests/lifecycle/test_source_provenance.py
-?? tests/projection/
-?? tests/projection_helpers.py
-?? tests/security/test_tamper_detection.py
-?? tests/security/test_version_id_containment.py
-?? tests/storage/test_a2_stale_base_commit.py
-?? tests/storage/test_a3_backup_target.py
-?? tests/storage/test_atomic_write_boundary.py
-?? tests/storage/test_b2_restore_target.py
-?? tests/test_source_unit_disambiguation.py
-?? tests/unit/test_vlm_configuration.py
-
-## counts
-modified=42
-untracked=43
+## status --short (summary)
+modified=23
+untracked=37
 
 ## upstream
 fatal: no upstream configured for branch 'work/kuyen-free-text-graph'
-no upstream
-
-## remote has divergent commits?

@@ -5,8 +5,8 @@
   "experiment": "KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11",
   "files": {
     "REPORT.md": {
-      "bytes": 22026,
-      "sha256": "a54cc1365422e11572d887af44b21b34b1a9eb3d6174eb775b79ce0a282ac3c6"
+      "bytes": 22675,
+      "sha256": "3fc4c3e46287bb268a7a59dcb9084969ba049ebfd12bfae8d30d1cd6cd0fd3f4"
     },
     "evidence/distribution_verification.json": {
       "bytes": 9475,
@@ -77,8 +77,8 @@
       "sha256": "48ccb63401b7744e689a24105740140a76ee9e96e8fbcd6e6cdd6bdd7ffbc09b"
     },
     "git_state_final.txt": {
-      "bytes": 3100,
-      "sha256": "74889fbca916c2b08aec80c2a0304e24d7a18e146f9bdadfe2c7b0ed32a6abac"
+      "bytes": 1209,
+      "sha256": "e492e2bb972591c873f24269a934688528c44955528e366277ca3922983f8abb"
     },
     "logs/distribution.log": {
       "bytes": 294,

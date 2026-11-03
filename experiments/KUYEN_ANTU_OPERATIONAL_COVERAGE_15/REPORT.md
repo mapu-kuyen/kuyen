@@ -36,8 +36,9 @@ sin cambiar de modelo:
 | raíz | `/private/tmp/kuyen_hardening_01/kuyen` |
 | rama | `work/kuyen-free-text-graph` |
 | HEAD inicial | `b6a00d0` (sin commits nuevos al empezar) |
-| trabajo previo | intacto: **71** entradas en `git status` antes y después de esta tarea |
-| entradas nuevas | 10 (código, pruebas, este experimento); ninguna entrada previa se modificó |
+| HEAD de código al cerrar | `a6bc996` (pruebas `951b1ba`, documentación `e85d95b`, manifiesto `54ce6e7`) |
+| trabajo previo | intacto: **71** entradas en `git status` al empezar y **69** al cerrar (las dos que faltan son `editing/operations.py` y `editing/service.py`, que se confirman con este experimento; su trabajo previo va descrito en el mensaje del commit `d565f00`) |
+| archivos del experimento | 23: 9 modificados y 14 nuevos (código, pruebas y 12 artefactos del experimento; el manifiesto no se hashea a sí mismo) |
 | OpenViking | **no ejecutado**; ninguna compilación documental repetida |
 | documentos | ningún MAPU reprocesado; ninguna memoria recreada |
 
@@ -389,7 +390,9 @@ ni duplica versiones.
 ## 12. Manifiesto
 
 `MANIFEST.json` contiene el SHA-256 de cada archivo de este experimento, el estado Git inicial y
-final y el resumen de la suite. Los artefactos de los experimentos 13 y 14 no se modificaron: sus
-703 archivos tienen el mismo hash antes y después (`evidence/state_before.json` y
-`evidence/state_after.json`, clave `preserved`).
+final y el resumen de la suite. Se genera justo antes de su propio commit, así que
+`git.head_at_manifest` es el último commit de documentación anterior a él y el que lo contiene
+aparece en `git log` (no puede contenerse a sí mismo). Los artefactos de los experimentos 13 y 14
+no se modificaron: sus 703 archivos tienen el mismo hash antes y después
+(`evidence/state_before.json` y `evidence/state_after.json`, clave `preserved`).
 

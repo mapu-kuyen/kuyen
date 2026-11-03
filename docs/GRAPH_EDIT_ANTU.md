@@ -70,6 +70,27 @@ Operaciones admitidas: `ADD_ENTITY`, `UPDATE_ENTITY`, `ADD_ASSERTION`,
 `UPDATE_ASSERTION`, `RETRACT_ASSERTION`, `ADD_RELATION`, `UPDATE_RELATION`,
 `RETRACT_RELATION`, `UPDATE_ATTRIBUTE`.
 
+Qué distingue cada familia (KUYEN_ANTU_OPERATIONAL_COVERAGE_15):
+
+* **entidad** (`UPDATE_ENTITY`): cambia `name`, `description` o `aliases` y conserva la
+  identidad canónica, las relaciones, los atributos y la evidencia. Un nombre que ya pertenece a
+  otra entidad del mismo tipo se rechaza (`ENTITY_NAME_COLLISION`): KÜYEN no fusiona por su
+  cuenta y la Antü debe pedir aclaración.
+* **atributo** (`UPDATE_ATTRIBUTE`): parchea un atributo tipado de la ficha
+  (`entity.metadata`). El atributo debe existir o estar declarado en el esquema —en la misma
+  respuesta vale un `ADD_FIELD` previo— y el valor debe respetar su `value_type`
+  (`ATTRIBUTE_NOT_DECLARED`, `ATTRIBUTE_TYPE_MISMATCH`). Un atributo no es una afirmación: no
+  crea objetos en `assertions`.
+* **relación** (`ADD_RELATION`, `UPDATE_RELATION`): la duplicación se decide por lo que la
+  relación dice (extremos, predicado, polaridad, ámbito temporal), no por su identificador, y se
+  rechaza también cuando el mismo predicado ya se cumple en la dirección contraria
+  (`RELATION_DIRECTION_CONFLICT`) salvo que la relación existente se retire en la misma Antü.
+* **esquema** (`ADD_FIELD`, `UPDATE_FIELD`, `RETRACT_FIELD`): estructura versionada; declarar un
+  campo no rellena valores.
+
+Una operación que cambia un objeto se valida contra la **versión de base**: dos parches
+encadenados sobre el mismo objeto en una misma Antü no pueden esperar el resultado del primero.
+
 Reglas que KÜYEN exige y verifica:
 
 * toda operación que **modifica o retira** declara `expected` (el valor que espera
@@ -95,9 +116,18 @@ Reglas que KÜYEN exige y verifica:
 | `REJECTED` | alguna operación o el candidato completo no cumple el contrato | no |
 | `CLARIFICATION_REQUIRED` | la instrucción es ambigua; el modelo pide precisión | no |
 | `CONFLICT` | la instrucción contradice el grafo o la base cambió (`STALE_BASE`) | no |
-| `NO_CHANGES` | la interpretación no produce operaciones | no |
+| `NO_CHANGES` | el editor declara que no hay nada que cambiar, o toda operación se declinó con un motivo verificable | no |
+| `INTERPRETATION_INCOMPLETE` | el editor no produjo ninguna operación y no explicó por qué: es una limitación de la interpretación, no una ausencia de cambios | no |
 | `INTERPRETATION_FAILED` | la salida del modelo no es el contrato | no |
 | `REPLAYED` | ese `antu_id` ya terminó; se devuelve el resultado anterior | no |
+
+Además de `status`, cada resultado expone `outcome` —el estado operativo de la Antü en este
+KÜYEN (`COMMITTED`, `ALREADY_SATISFIED`, `NOT_APPLICABLE`, `REQUIRES_DATA_ACCESS`,
+`NEEDS_CLARIFICATION`, `OUT_OF_SCOPE`, `BLOCKED_BY_PERMISSION`, `INVALID_PROPOSAL`,
+`EXECUTION_FAILED`, `NO_CHANGES` o `NOT_EVALUATED`)— y `outcomes`, la misma clasificación
+operación por operación. Así una Antü mixta (una relación añadida, un atributo ya satisfecho, una
+parte pendiente de aclaración) se lee sin ambigüedad, y una limitación del modelo nunca se
+registra como «no hay cambios».
 
 Un rechazo deja el grafo intacto y queda registrado en el ledger para siempre.
 

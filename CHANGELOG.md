@@ -1,5 +1,48 @@
 # CHANGELOG
 
+## Unreleased — operational coverage of Antü operations
+
+KUYEN_ANTU_OPERATIONAL_COVERAGE_15. Twelve real evaluations on the ten memories of experiment
+13 (no document recompilation, same model, no fallback) completed the operations experiments 13
+and 14 left open: relation addition, `UPDATE_ENTITY`, `UPDATE_ATTRIBUTE` and long
+multi-operation instructions. Additive: existing stores remain readable and verifiable.
+
+### Added
+* **`AntuEditResult.outcome` and `outcome` per operation.** One closed vocabulary
+  (`COMMITTED`, `ALREADY_SATISFIED`, `NOT_APPLICABLE`, `REQUIRES_DATA_ACCESS`,
+  `NEEDS_CLARIFICATION`, `OUT_OF_SCOPE`, `BLOCKED_BY_PERMISSION`, `INVALID_PROPOSAL`,
+  `EXECUTION_FAILED`, plus `NO_CHANGES`/`NOT_EVALUATED` for a mixed or unevaluated Antü) so a
+  mixed answer is legible and a limitation is never reported as an absence of change
+  (`kuyen.editing.outcome`).
+* **`UPDATE_ENTITY` keeps the identity and the history.** The revision stores the previous
+  values *and* the origin the entity had; a documentary entity keeps its evidence, records
+  `amended: true` and its `instruction_edits`, and gains a `DOCUMENT_EVIDENCE` origin derived
+  from the evidence it already had when the compiled record carried none.
+* **`UPDATE_ATTRIBUTE` is typed.** The attribute must exist on the entity or be declared in the
+  schema (an `ADD_FIELD` in the same Antü counts): `ATTRIBUTE_NOT_DECLARED`,
+  `ATTRIBUTE_TYPE_MISMATCH`. The revision keeps the previous value, the new one and the origin.
+* **`ADD_RELATION` compares statements, not identifiers.** Duplicates are detected from
+  endpoints, predicate, polarity and temporal scope, and the opposite direction of an existing
+  predicate is refused as ambiguous (`RELATION_DIRECTION_CONFLICT`) unless that relation is
+  retracted in the same Antü.
+* **Declines that KÜYEN can verify without an identifier.** An `ALREADY_SATISFIED` claim on a
+  relation (endpoints + predicate) or on an entity (name + type) is checked against the graph
+  instead of being refused for lack of a `target`.
+
+### Fixed
+* **A valid proposal nested inside another object is read instead of discarded.** The real model
+  answered `{"status": ..., "contract": {"operations": [...]}}`, mirroring the request envelope;
+  KÜYEN looked for `operations` only at the root and recorded zero operations. That is what
+  experiments 13 and 14 reported as "`NO_CHANGES` on long instructions". The normaliser now
+  reads the nested form (with a warning) and the request no longer names the reference
+  `contract`, so the answer shape does not collide with it.
+* **`NO_CHANGES` is no longer inferred.** An empty proposal that explains nothing is
+  `INTERPRETATION_INCOMPLETE` (`NO_OPERATION_WITHOUT_EXPLANATION`); `NO_CHANGES` requires the
+  editor to say so or every operation to be declined with a verifiable reason. A proposal that
+  declares `NO_CHANGES` *and* operations is validated instead of having its operations ignored.
+* An `ALREADY_SATISFIED` claim that says `retracted: false` for a record without that key is
+  verifiable (`None` means "not retracted") instead of being refused.
+
 ## Unreleased — semantic fidelity of Antü operations
 
 KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14. Ten real memories, no document recompilation. The

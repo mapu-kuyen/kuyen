@@ -65,6 +65,27 @@ Operation types: `ADD_ENTITY`, `UPDATE_ENTITY`, `ADD_ASSERTION`, `UPDATE_ASSERTI
 `RETRACT_ASSERTION`, `ADD_RELATION`, `UPDATE_RELATION`, `RETRACT_RELATION`,
 `UPDATE_ATTRIBUTE`.
 
+What each family means (KUYEN_ANTU_OPERATIONAL_COVERAGE_15):
+
+* **entity** (`UPDATE_ENTITY`): changes `name`, `description` or `aliases` and keeps the
+  canonical identity, the relations, the attributes and the evidence. A name already owned by
+  another entity of the same type is refused (`ENTITY_NAME_COLLISION`): KÜYEN never merges on
+  its own, so the Antü has to ask.
+* **attribute** (`UPDATE_ATTRIBUTE`): patches one typed attribute of the record
+  (`entity.metadata`). The attribute must exist or be declared in the schema —an `ADD_FIELD` in
+  the same answer counts— and the value must match its `value_type`
+  (`ATTRIBUTE_NOT_DECLARED`, `ATTRIBUTE_TYPE_MISMATCH`). An attribute is not a statement: no
+  object is added to `assertions`.
+* **relation** (`ADD_RELATION`, `UPDATE_RELATION`): duplication is decided on what the relation
+  says (endpoints, predicate, polarity, temporal scope), not on its identifier, and the same
+  predicate already holding in the opposite direction is refused
+  (`RELATION_DIRECTION_CONFLICT`) unless the existing relation is retracted in the same Antü.
+* **schema** (`ADD_FIELD`, `UPDATE_FIELD`, `RETRACT_FIELD`): versioned structure; declaring a
+  field does not fill values.
+
+An operation that changes an object is validated against the **base version**: two chained
+patches on the same object in one Antü cannot expect the result of the first one.
+
 Rules KÜYEN enforces:
 
 * every operation that **changes or retracts** declares `expected`. Scalar fields are
@@ -84,9 +105,18 @@ Rules KÜYEN enforces:
 | `REJECTED` | an operation or the whole candidate breaks the contract | no |
 | `CLARIFICATION_REQUIRED` | the instruction is ambiguous; the model asks | no |
 | `CONFLICT` | the instruction contradicts the graph, or the base moved (`STALE_BASE`) | no |
-| `NO_CHANGES` | the interpretation produces no operation | no |
+| `NO_CHANGES` | the editor states there is nothing to change, or every operation was declined with a verifiable reason | no |
+| `INTERPRETATION_INCOMPLETE` | the editor produced no operation and did not say why: a limitation of the interpretation, never an absence of change | no |
 | `INTERPRETATION_FAILED` | the model output is not the contract | no |
 | `REPLAYED` | that `antu_id` already finished; the earlier result is returned | no |
+
+Besides `status`, every result exposes `outcome` —the operational state of the Antü in this
+KÜYEN (`COMMITTED`, `ALREADY_SATISFIED`, `NOT_APPLICABLE`, `REQUIRES_DATA_ACCESS`,
+`NEEDS_CLARIFICATION`, `OUT_OF_SCOPE`, `BLOCKED_BY_PERMISSION`, `INVALID_PROPOSAL`,
+`EXECUTION_FAILED`, `NO_CHANGES` or `NOT_EVALUATED`)— and `outcomes`, the same classification
+operation by operation. A mixed Antü (one relation added, one attribute already satisfied, one
+part waiting for an answer) is legible, and a limitation of the model is never recorded as "no
+changes".
 
 A rejection leaves the graph untouched and stays in the ledger forever.
 

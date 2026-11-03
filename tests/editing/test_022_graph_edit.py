@@ -7,7 +7,7 @@ untouched previous state are all read back from the store.
 """
 from __future__ import annotations
 
-import helpers as h
+from tests.editing import helpers as h
 from kuyen import KuyenMemory
 from kuyen.editing import derive_antu_id
 

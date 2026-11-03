@@ -1,14 +1,9 @@
- M ANTU_LIFECYCLE.md
- M ARCHITECTURE.md
  M BACKUP_AND_RECOVERY.md
- M CHANGELOG.md
- M DATA_MODEL.md
- M PUBLIC_API.md
- M README.md
  M SECURITY.md
  M SIDECAR.md
  M VERSION
  M examples/quickstart.py
+ M experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/git_state_final.txt
  M pyproject.toml
  M src/kuyen/adapters/openviking.py
  M src/kuyen/backup/archive.py
@@ -28,8 +23,6 @@
  M tests/editing/test_023_versioning.py
  M tests/unit/test_013_ingestion.py
 ?? MANIFEST.in
-?? docs/GRAPH_EDIT_ANTU.en.md
-?? docs/GRAPH_EDIT_ANTU.md
 ?? docs/KUYEN_OPENVIKING_VLM_CONFIGURATION_05.md
 ?? docs/KUYEN_RELEASE_QUICKSTART_REPAIR_02.md
 ?? docs/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03.md
@@ -39,18 +32,13 @@
 ?? experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/
 ?? experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/
 ?? experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/
-?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/
 ?? experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/
 ?? experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/
 ?? scripts/
 ?? src/kuyen/provenance.py
 ?? src/kuyen/vlm.py
 ?? tests/api/test_a1_canonical_validation.py
-?? tests/editing/__init__.py
 ?? tests/examples/
-?? tests/integration/test_document_path_artifacts.py
-?? tests/integration/test_real_editor.py
-?? tests/integration/test_two_paths.py
 ?? tests/lifecycle/test_antu_contract.py
 ?? tests/lifecycle/test_b1_staging_classification.py
 ?? tests/lifecycle/test_m1_ledger_concurrency.py
@@ -71,9 +59,18 @@
 ?? tests/storage/test_b2_restore_target.py
 ?? tests/test_source_unit_disambiguation.py
 ?? tests/unit/test_vlm_configuration.py
+--- commits since the base ---
+5f586fd docs(experiment): contracts in Spanish and English, report and evidence
 92ca99f feat(editing): edit the graph through an Antü, validate and version it
 ea5c87d feat(semantics): record where every statement comes from
 c6c398c fix(evidence): make MAPU identity, quotes and polarity authoritative
-9a5e512 test(semantics): make fixture polarity explicit
-b6ad5fc refactor(architecture): align KÜYEN with OpenViking-first design
-5fd8777 Release KÜYEN 0.2.0
+--- branch / HEAD ---
+work/kuyen-free-text-graph
+5f586fdd1599f5bcd7f7b3ae5c7c1807e8df46c3
+--- base commits present ---
+b6ad5fc=present
+9a5e512=present
+--- remotes / upstream ---
+origin	https://github.com/mapu-kuyen/kuyen.git (fetch)
+origin	https://github.com/mapu-kuyen/kuyen.git (push)
+fatal: no upstream configured for branch 'work/kuyen-free-text-graph'

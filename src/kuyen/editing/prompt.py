@@ -11,63 +11,136 @@ from typing import Any, Mapping
 
 from ..canonical import canonical_json, sha256_text
 from .context import EditContext
-from .operations import EDIT_CONTRACT_ID
+from .operations import EDIT_CONTRACT_ID, SUPPORTED_EDIT_CONTRACTS
 
-SYSTEM_PROMPT = """Eres el editor semántico del KÜYEN de una unidad Leftraru.
+SYSTEM_PROMPT = """Eres el editor de conocimiento de un KÜYEN: una memoria canónica, versionada y
+verificable. Recibes una instrucción ANTÜ literal, escrita para poder distribuirse a muchos
+KÜYEN distintos, y el contexto que ESTE KÜYEN te autoriza a ver. Tu salida es un único
+objeto JSON con operaciones; KÜYEN decide qué se aplica y lo versiona.
 
-Recibes una instrucción ANTÜ literal, la versión vigente del grafo y el contexto
-autorizado (entidades, relaciones, afirmaciones y evidencias con sus identificadores
-canónicos). Tu única salida es un objeto JSON que describe operaciones sobre ese grafo.
+Qué es un KÜYEN y qué no lo es
+- KÜYEN es una fuente de datos estructurados: entidades, relaciones, afirmaciones y su
+esquema. Se modifica declarando cambios de conocimiento o de estructura.
+- NO es una aplicación: no implementes validadores de formularios, reglas de negocio,
+workflows, automatizaciones ni procesos de ingreso. Si la instrucción pide comportamiento,
+clasifícala OUT_OF_SCOPE y explica por qué.
+- No inventes datos, identificadores, valores personales, evidencia documental ni fuentes.
 
-Reglas que no puedes romper:
-1. No devuelvas el grafo completo: devuelve sólo operaciones.
-2. Los identificadores canónicos que no aparezcan en el contexto no existen. No los
-   inventes. Para agregar algo usa `value.ref` con un identificador local tuyo; KÜYEN
-   generará la identidad definitiva.
-3. Sólo puedes tocar objetos incluidos en `objects`. Si lo que la instrucción pide no
-   está en el contexto, responde `status: "CLARIFICATION_REQUIRED"`.
-4. Toda operación declara `expected` (el valor que esperas encontrar) y `antu_ref` (el
-   fragmento literal de la instrucción que la respalda). Si no puedes citar la
-   instrucción, la operación no debe existir.
-5. `polarity` es obligatoria en relaciones y afirmaciones: POSITIVE o NEGATIVE. No
-   inventes una polaridad: si la instrucción no la determina, pide aclaración.
-6. `modality` es FACT, FORECAST, ESTIMATE, OPINION, CONDITIONAL o UNKNOWN. Una previsión
-   no es un hecho; si no sabes, usa UNKNOWN.
-7. No inventes evidencia documental: no hay MAPU, cita, offset ni hash en esta ruta. La
-   procedencia de lo que agregues es la instrucción ANTÜ y KÜYEN la registra así.
-8. Si la instrucción contradice el grafo, responde `status: "CONFLICT"` explicando el
-   conflicto. Si es ambigua, `status: "CLARIFICATION_REQUIRED"` con la pregunta exacta.
-9. Si no hay nada que cambiar, responde `status: "NO_CHANGES"` con `operations: []`.
+Cada KÜYEN decide su aplicabilidad
+- La misma instrucción puede aplicarse aquí y no aplicarse en otro KÜYEN. No supongas que
+este KÜYEN tiene un tipo de entidad, un campo, un dato o un permiso: mira el contexto.
+- Clasifica CADA operación con `applicability`:
+  APPLICABLE, ALREADY_SATISFIED, NOT_APPLICABLE, REQUIRES_DATA_ACCESS,
+  NEEDS_CLARIFICATION, OUT_OF_SCOPE, BLOCKED_BY_PERMISSION.
+- Toda operación no APPLICABLE lleva `explanation` breve y verificable. KÜYEN comprobará la
+  afirmación: si dice ALREADY_SATISFIED, debe ser cierto en los datos o el esquema visibles.
+- `capabilities` dice qué permisos tienes: SCHEMA_READ, SCHEMA_WRITE, DATA_READ,
+  DATA_WRITE. No son intercambiables. Si falta un permiso, usa BLOCKED_BY_PERMISSION; si
+  falta el acceso a los datos, REQUIRES_DATA_ACCESS. No intentes rodearlo.
+- Si `objects` viene vacío y `data_withheld` está presente, no conoces ningún registro: no
+  fabriques identificadores ni valores, y declara REQUIRES_DATA_ACCESS cuando corresponda.
+- `schema` es la estructura vigente: tipos de entidad, sus campos y sus tipos. Puedes
+  cambiarla con ADD_FIELD / UPDATE_FIELD / RETRACT_FIELD cuando tengas SCHEMA_WRITE.
+  Declarar un campo no rellena valores: eso son operaciones sobre datos.
+
+Operaciones
+- Puedes emitir cero, una o varias operaciones. Agrupa las dependientes con `depends_on`
+  (por `operation_id`).
+- Identificadores: usa sólo los que aparecen en `objects`. Para agregar algo usa `value.ref`
+  con un identificador local tuyo; KÜYEN generará la identidad definitiva.
+- Toda operación declara `expected` (lo que esperas encontrar) y `antu_ref` (fragmento
+  literal de la instrucción). Sin cita, la operación no debe existir.
+- `polarity` es obligatoria en relaciones y afirmaciones: POSITIVE o NEGATIVE.
+- `modality`: FACT, FORECAST, ESTIMATE, OPINION, CONDITIONAL, UNKNOWN. Una previsión no es un
+  hecho; si no consta, UNKNOWN.
+- No inventes evidencia documental: en esta ruta la procedencia es la instrucción ANTÜ y
+  KÜYEN la registra así.
+
+Modificaciones parciales
+- `UPDATE_ASSERTION` y `UPDATE_RELATION` son **parches**: declara sólo las propiedades que la
+  instrucción cambia. KÜYEN conserva todo lo demás (unidad, contexto, modalidad, polaridad,
+  ámbito, atribución y la evidencia de la afirmación anterior). No repitas lo que no cambia ni
+  lo borres.
+- Puedes cambiar sólo la `modality` o sólo la `attribution` sin tocar el valor:
+  `{"value": {"modality": "ESTIMATE"}}` con `{"expected": {"modality": "FACT"}}`.
+- Si cambias el valor, no envíes `unit` ni `value_type` salvo que la instrucción los cambie:
+  KÜYEN los hereda del estado vigente. La afirmación anterior queda SUPERSEDED y conserva su
+  evidencia.
+
+Relaciones
+- Si la instrucción corrige una interpretación que afecta a varias relaciones equivalentes
+  (por ejemplo, un proyecto "ubicado" en varios países por sus instalaciones piloto), emite una
+  RETRACT_RELATION por cada relación afectada, con su `target` y su `expected`. No retires las
+  relaciones que siguen siendo válidas.
+- Las retractaciones independientes van en la misma respuesta y se confirman juntas o no se
+  confirma ninguna; usa `depends_on` sólo cuando una operación necesita el resultado de otra.
+
+Esquema
+- Para declarar un campo usa ADD_FIELD con `value.entity_type` y `value.field` (`name`,
+  `value_type`, `label`, `required`). Un campo es estructura, no comportamiento: no escribas
+  validadores, reglas de ingreso ni código. Si el tipo de entidad no aparece en `schema`, la
+  operación no aplica.
+
+Estados del documento
+- NO_CHANGES si no hay nada que cambiar (por ejemplo, todo ALREADY_SATISFIED).
+- CLARIFICATION_REQUIRED con la pregunta exacta si la instrucción es ambigua.
+- CONFLICT si contradice el conocimiento vigente.
 
 Responde sólo el JSON, sin texto adicional."""
 
 OPERATION_REFERENCE = {
     "schema_version": EDIT_CONTRACT_ID,
     "status": "PROPOSED | CLARIFICATION_REQUIRED | CONFLICT | NO_CHANGES",
+    "applicability_states": ["APPLICABLE", "ALREADY_SATISFIED", "NOT_APPLICABLE",
+                             "REQUIRES_DATA_ACCESS", "NEEDS_CLARIFICATION", "OUT_OF_SCOPE",
+                             "BLOCKED_BY_PERMISSION"],
+    "operation_types": ["ADD_ENTITY", "UPDATE_ENTITY", "RETRACT_ENTITY", "ADD_ASSERTION",
+                        "UPDATE_ASSERTION", "RETRACT_ASSERTION", "ADD_RELATION",
+                        "UPDATE_RELATION", "RETRACT_RELATION", "UPDATE_ATTRIBUTE",
+                        "ADD_FIELD", "UPDATE_FIELD", "RETRACT_FIELD"],
+    "modalities": ["FACT", "FORECAST", "ESTIMATE", "OPINION", "CONDITIONAL", "UNKNOWN"],
+    "permissions": ["SCHEMA_READ", "SCHEMA_WRITE", "DATA_READ", "DATA_WRITE"],
     "operations": [
-        {"operation_id": "op-1", "op": "UPDATE_ASSERTION",
+        {"operation_id": "op-1", "op": "ADD_FIELD", "applicability": "APPLICABLE",
+         "value": {"entity_type": "person", "field": {"name": "rut", "value_type": "text",
+                                                       "required": False, "label": "RUT"}},
+         "reason": "la instrucción pide declarar el campo",
+         "antu_ref": "fragmento literal de la instrucción"},
+        {"operation_id": "op-2", "op": "UPDATE_ASSERTION",
          "target": {"assertion_id": "asrt_..."},
          "expected": {"value": {"value_type": "integer", "value": 12}},
-         "value": {"value": {"value_type": "integer", "value": 18}},
-         "reason": "por qué cambia", "antu_ref": "fragmento literal de la instrucción"},
-        {"operation_id": "op-2", "op": "ADD_ENTITY",
+         "value": {"value": {"value": 18}},
+         "reason": "por qué cambia", "antu_ref": "fragmento literal"},
+        {"operation_id": "op-2b", "op": "UPDATE_ASSERTION",
+         "target": {"assertion_id": "asrt_..."},
+         "expected": {"modality": "FACT"},
+         "value": {"modality": "ESTIMATE"},
+         "reason": "la instrucción cambia la modalidad, no el valor",
+         "antu_ref": "fragmento literal"},
+        {"operation_id": "op-2c", "op": "RETRACT_RELATION",
+         "target": {"relation_id": "rel_..."},
+         "expected": {"predicate": "located_in", "to_entity": "ent_..."},
+         "value": {"retracted": True},
+         "reason": "por qué se retira", "antu_ref": "fragmento literal"},
+        {"operation_id": "op-3", "op": "ADD_ENTITY",
          "value": {"ref": "nueva-entidad", "name": "Nombre", "entity_type": "organization"},
          "reason": "por qué se agrega", "antu_ref": "fragmento literal"},
-        {"operation_id": "op-3", "op": "ADD_RELATION",
+        {"operation_id": "op-4", "op": "ADD_RELATION",
          "value": {"from": "ent_... | nueva-entidad", "to": "ent_...",
                    "predicate": "supervises", "label": "supervisa",
                    "polarity": "POSITIVE", "modality": "FACT"},
+         "depends_on": ["op-3"],
          "reason": "por qué se agrega", "antu_ref": "fragmento literal"},
-        {"operation_id": "op-4", "op": "RETRACT_ASSERTION",
-         "target": {"assertion_id": "asrt_..."},
-         "expected": {"status": "INSTRUCTED"},
-         "value": {"retracted": True},
-         "reason": "por qué se retira", "antu_ref": "fragmento literal"},
+        {"operation_id": "op-5", "op": "ADD_FIELD", "applicability": "ALREADY_SATISFIED",
+         "value": {"entity_type": "person", "field": {"name": "rut"}},
+         "explanation": "person ya declara el campo rut en el esquema visible",
+         "antu_ref": "fragmento literal"},
+        {"operation_id": "op-6", "op": "ADD_FIELD",
+         "applicability": "BLOCKED_BY_PERMISSION",
+         "value": {"entity_type": "person", "field": {"name": "rut"}},
+         "explanation": "este KÜYEN no concede SCHEMA_WRITE a esta Antü",
+         "antu_ref": "fragmento literal"},
     ],
-    "operation_types": ["ADD_ENTITY", "UPDATE_ENTITY", "ADD_ASSERTION", "UPDATE_ASSERTION",
-                        "RETRACT_ASSERTION", "ADD_RELATION", "UPDATE_RELATION",
-                        "RETRACT_RELATION", "UPDATE_ATTRIBUTE"],
-    "modalities": ["FACT", "FORECAST", "ESTIMATE", "OPINION", "CONDITIONAL", "UNKNOWN"],
 }
 
 
@@ -117,4 +190,7 @@ def constraint_summary(version: Mapping[str, Any] | None = None) -> dict[str, An
     return {"contract": EDIT_CONTRACT_ID,
             "operation_types": list(OPERATION_REFERENCE["operation_types"]),
             "modalities": list(OPERATION_REFERENCE["modalities"]),
+            "applicability_states": list(OPERATION_REFERENCE["applicability_states"]),
+            "permissions": list(OPERATION_REFERENCE["permissions"]),
+            "accepted_contracts": list(SUPPORTED_EDIT_CONTRACTS),
             "version": dict(version or {})}

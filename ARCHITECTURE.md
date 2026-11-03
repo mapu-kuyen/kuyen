@@ -28,7 +28,7 @@ src/kuyen/
 ├── ports/                publication port interfaces
 ├── adapters/             optional OpenViking SDK adapter
 ├── query/                read helpers over a graph
-├── extraction/, importing/, coverage/   optional candidate production
+├── importing/            import of graphs produced by other systems (not an acceptance path)
 └── schemas/, config/, skills/            runtime assets (package data)
 ```
 

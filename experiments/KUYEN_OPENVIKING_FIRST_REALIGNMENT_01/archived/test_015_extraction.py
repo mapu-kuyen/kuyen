@@ -231,7 +231,7 @@ class ExtractionTests(unittest.TestCase):
         fake = FakeClient(FakeResponse(candidate))
         ledger = BudgetLedger(total_usd=0.50, phase_caps={"extraction": 0.15})
         provider = OpenAIExtractionProvider(
-            config=OpenAIExtractionConfig(max_output_tokens=1000),
+            config=OpenAIExtractionConfig(model="gpt-6-luna", max_output_tokens=1000),
             ledger=ledger, pricing=pricing(), client=fake,
         )
         result = provider.extract(
@@ -253,7 +253,9 @@ class ExtractionTests(unittest.TestCase):
     def test_budget_rejects_before_call(self):
         fake = FakeClient(FakeResponse(extraction_candidate()))
         ledger = BudgetLedger(total_usd=0.000001)
-        provider = OpenAIExtractionProvider(ledger=ledger, pricing=pricing(), client=fake)
+        provider = OpenAIExtractionProvider(
+            config=OpenAIExtractionConfig(model="gpt-6-luna"),
+            ledger=ledger, pricing=pricing(), client=fake)
         with self.assertRaises(OpenAIBudgetExceededError):
             provider.extract(
                 antu=self.antu(), ontology=self.ontology(), source_text=SOURCE,
@@ -263,6 +265,7 @@ class ExtractionTests(unittest.TestCase):
 
     def test_incomplete_and_refusal_are_classified(self):
         provider = OpenAIExtractionProvider(
+            config=OpenAIExtractionConfig(model="gpt-6-luna"),
             ledger=BudgetLedger(total_usd=0.50), pricing=pricing(),
             client=FakeClient(FakeResponse(extraction_candidate(), status="incomplete")),
         )
@@ -274,6 +277,7 @@ class ExtractionTests(unittest.TestCase):
                 source_uri=URI, mapu_id=MAPU_ID, unit_ids=["u00"],
             )
         provider = OpenAIExtractionProvider(
+            config=OpenAIExtractionConfig(model="gpt-6-luna"),
             ledger=BudgetLedger(total_usd=0.50), pricing=pricing(),
             client=FakeClient(FakeResponse(extraction_candidate(), refusal="cannot extract")),
         )

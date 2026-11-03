@@ -4,7 +4,6 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
-from kuyen.extraction import extraction_to_provider_result
 from kuyen.models import CandidateBundle, CandidateEntity, CandidateRelation
 from kuyen.ontology import Ontology
 from kuyen.semantics import preserve_incompatible_relations
@@ -40,22 +39,6 @@ class GeneralizationTests(unittest.TestCase):
         self.assertEqual(relation.provider_predicate, "related_to")
         self.assertEqual(relation.mapping_status, "UNMAPPED")
         self.assertEqual(relation.provider_projection_status, "LOSSY_PROJECTION")
-
-    def test_non_numeric_quantity_text_is_preserved_as_string(self):
-        candidate = {
-            "entities": [{"source_ref": "e1", "source_entity_id": "e1", "entity_type": "place", "name": "Chile", "evidence_refs": ["ev"]}],
-            "relations": [], "coverage": {"units_used": ["u00"]},
-            "assertions": [{
-                "assertion_ref": "a1", "subject_ref": "e1", "predicate": "has_value",
-                "object_ref": None, "value": {"value_type": "quantity", "text_value": "2 millones de toneladas", "number_value": None},
-                "polarity": "POSITIVE", "temporal_scope": None, "epistemic_status": "UNRESOLVED",
-                "evidence_refs": ["ev"],
-            }],
-            "evidence": [{"evidence_ref": "ev", "quote": "Chile", "source_uri": "viking://x", "mapu_id": "MAPU-X"}],
-        }
-        result = extraction_to_provider_result(candidate, source_uri="viking://x", mapu_id="MAPU-X")
-        self.assertEqual(result["assertions"][0]["value"]["value_type"], "string")
-        self.assertEqual(result["assertions"][0]["value"]["value"], "2 millones de toneladas")
 
 
 if __name__ == "__main__":

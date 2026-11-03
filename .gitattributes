@@ -1,0 +1,3 @@
+# Los parches archivados en experiments/ son evidencia byte-exacta: reproducen el contenido
+# original, incluidos sus espacios finales. Git no debe reescribirlos ni marcarlos como error.
+*.patch -whitespace

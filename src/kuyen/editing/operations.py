@@ -17,11 +17,15 @@ from typing import Any, Mapping
 
 from ..errors import InvalidRequestError
 
-EDIT_CONTRACT_ID = "kuyen-graph-edit-v1"
-SUPPORTED_EDIT_CONTRACTS = (EDIT_CONTRACT_ID,)
+EDIT_CONTRACT_ID = "kuyen-graph-edit-v2"
+#: `v1` is still accepted: a proposal written before applicability existed declares every
+#: operation APPLICABLE, which is what KÜYEN assumed then.
+SUPPORTED_EDIT_CONTRACTS = (EDIT_CONTRACT_ID, "kuyen-graph-edit-v1")
+LEGACY_EDIT_CONTRACT = "kuyen-graph-edit-v1"
 
 ADD_ENTITY = "ADD_ENTITY"
 UPDATE_ENTITY = "UPDATE_ENTITY"
+RETRACT_ENTITY = "RETRACT_ENTITY"
 ADD_ASSERTION = "ADD_ASSERTION"
 UPDATE_ASSERTION = "UPDATE_ASSERTION"
 RETRACT_ASSERTION = "RETRACT_ASSERTION"
@@ -29,25 +33,47 @@ ADD_RELATION = "ADD_RELATION"
 UPDATE_RELATION = "UPDATE_RELATION"
 RETRACT_RELATION = "RETRACT_RELATION"
 UPDATE_ATTRIBUTE = "UPDATE_ATTRIBUTE"
+ADD_FIELD = "ADD_FIELD"
+UPDATE_FIELD = "UPDATE_FIELD"
+RETRACT_FIELD = "RETRACT_FIELD"
 
 OPERATION_TYPES = (
-    ADD_ENTITY, UPDATE_ENTITY, ADD_ASSERTION, UPDATE_ASSERTION, RETRACT_ASSERTION,
-    ADD_RELATION, UPDATE_RELATION, RETRACT_RELATION, UPDATE_ATTRIBUTE,
+    ADD_ENTITY, UPDATE_ENTITY, RETRACT_ENTITY, ADD_ASSERTION, UPDATE_ASSERTION,
+    RETRACT_ASSERTION, ADD_RELATION, UPDATE_RELATION, RETRACT_RELATION, UPDATE_ATTRIBUTE,
+    ADD_FIELD, UPDATE_FIELD, RETRACT_FIELD,
 )
+#: Operations that change the schema of the version instead of its data.
+SCHEMA_OPERATIONS = (ADD_FIELD, UPDATE_FIELD, RETRACT_FIELD)
+DATA_OPERATIONS = tuple(item for item in OPERATION_TYPES if item not in SCHEMA_OPERATIONS)
 ADDITIVE_OPERATIONS = (ADD_ENTITY, ADD_ASSERTION, ADD_RELATION)
-REPLACING_OPERATIONS = (UPDATE_ENTITY, UPDATE_ASSERTION, UPDATE_RELATION, UPDATE_ATTRIBUTE)
-RETRACTING_OPERATIONS = (RETRACT_ASSERTION, RETRACT_RELATION)
+REPLACING_OPERATIONS = (UPDATE_ENTITY, UPDATE_ASSERTION, UPDATE_RELATION, UPDATE_ATTRIBUTE,
+                       UPDATE_FIELD)
+RETRACTING_OPERATIONS = (RETRACT_ASSERTION, RETRACT_RELATION, RETRACT_ENTITY, RETRACT_FIELD)
 # Operations that must declare the value they expect to find (optimistic check).
 OPERATIONS_REQUIRING_EXPECTED = REPLACING_OPERATIONS + RETRACTING_OPERATIONS
 # Operations whose target is an existing canonical object.
 OPERATIONS_TARGETING_EXISTING = (UPDATE_ENTITY, UPDATE_ASSERTION, RETRACT_ASSERTION,
-                                UPDATE_RELATION, RETRACT_RELATION, UPDATE_ATTRIBUTE)
+                                UPDATE_RELATION, RETRACT_RELATION, UPDATE_ATTRIBUTE,
+                                RETRACT_ENTITY, UPDATE_FIELD, RETRACT_FIELD)
 
 PROPOSED = "PROPOSED"
 CLARIFICATION_REQUIRED = "CLARIFICATION_REQUIRED"
 CONFLICT = "CONFLICT"
 NO_CHANGES = "NO_CHANGES"
 PROPOSAL_STATUSES = (PROPOSED, CLARIFICATION_REQUIRED, CONFLICT, NO_CHANGES)
+
+# ---------- applicability (§5) ----------
+APPLICABLE = "APPLICABLE"
+ALREADY_SATISFIED = "ALREADY_SATISFIED"
+NOT_APPLICABLE = "NOT_APPLICABLE"
+REQUIRES_DATA_ACCESS = "REQUIRES_DATA_ACCESS"
+NEEDS_CLARIFICATION = "NEEDS_CLARIFICATION"
+OUT_OF_SCOPE = "OUT_OF_SCOPE"
+BLOCKED_BY_PERMISSION = "BLOCKED_BY_PERMISSION"
+APPLICABILITY_STATES = (APPLICABLE, ALREADY_SATISFIED, NOT_APPLICABLE, REQUIRES_DATA_ACCESS,
+                        NEEDS_CLARIFICATION, OUT_OF_SCOPE, BLOCKED_BY_PERMISSION)
+#: States that propose no change: KÜYEN records them instead of refusing the Antü.
+DECLINING_STATES = tuple(item for item in APPLICABILITY_STATES if item != APPLICABLE)
 
 POLARITIES = ("POSITIVE", "NEGATIVE")
 MODALITIES = ("FACT", "FORECAST", "ESTIMATE", "OPINION", "CONDITIONAL", "UNKNOWN")
@@ -72,6 +98,13 @@ class GraphEditOperation:
     reason: str = ""
     antu_ref: str = ""
     affected: list[str] = field(default_factory=list)
+    # §5: the model classifies every operation it derives, and KÜYEN verifies the claim
+    # instead of trusting it. v1 proposals carry no classification, which is exactly
+    # APPLICABLE (the behaviour KÜYEN had before applicability existed).
+    applicability: str = APPLICABLE
+    explanation: str = ""
+    requires: list[str] = field(default_factory=list)
+    depends_on: list[str] = field(default_factory=list)
     raw: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -113,7 +146,9 @@ class GraphEditOperation:
         value = {key: item for key, item in self.value.items() if not str(key).startswith("_")}
         return {"operation_id": self.operation_id, "op": self.op, "target": self.target,
                 "expected": self.expected, "value": value, "reason": self.reason,
-                "antu_ref": self.antu_ref, "affected": list(self.affected)}
+                "antu_ref": self.antu_ref, "affected": list(self.affected),
+                "applicability": self.applicability, "explanation": self.explanation,
+                "requires": list(self.requires), "depends_on": list(self.depends_on)}
 
 
 @dataclass
@@ -152,6 +187,38 @@ def _strip_fence(text: str) -> str:
     return "\n".join(lines).strip()
 
 
+def _unwrap_envelope(data: Mapping[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    """Read a proposal whose operations were nested inside another object.
+
+    A real editor (deepseek-flash, experiment 15 §6) answers with the same envelope it was
+    given: `{"status": ..., "contract": {"operations": [...]}}`, because the operation
+    reference arrives under `contract` and it copies that location. The operations are valid
+    and KÜYEN was discarding them, which is what experiments 13 and 14 recorded as
+    "NO_CHANGES on long instructions". The normaliser now reads them, keeps a warning, and does
+    not accept anything else from the nested object.
+    """
+    container = dict(data)
+    warnings: list[str] = []
+    if isinstance(container.get("operations"), list) and container["operations"]:
+        return container, warnings
+    for key in ("contract", "proposal", "result", "response", "output"):
+        nested = container.get(key)
+        if not isinstance(nested, Mapping):
+            continue
+        if not isinstance(nested.get("operations"), list):
+            continue
+        merged = {**container, "operations": list(nested["operations"])}
+        for field in ("status", "interpretation", "clarification", "conflict",
+                      "schema_version", "base_version_id", "antu_id"):
+            if merged.get(field) in (None, "", {}) and nested.get(field) is not None:
+                merged[field] = nested[field]
+        if nested.get("schema_version") and not merged.get("schema_version"):
+            merged["schema_version"] = nested["schema_version"]
+        warnings.append(f"the operations were nested inside `{key}`; KÜYEN read them there")
+        return merged, warnings
+    return container, warnings
+
+
 def parse_proposal(payload: str | Mapping[str, Any]) -> GraphEditProposal:
     """Read a proposal from the model output. Structural defects raise, content does not.
 
@@ -179,6 +246,8 @@ def parse_proposal(payload: str | Mapping[str, Any]) -> GraphEditProposal:
     if not isinstance(data, Mapping):
         raise EditContractError("the proposal must be a JSON object",
                                 details={"code": "PROPOSAL_NOT_OBJECT"})
+    data, envelope_warnings = _unwrap_envelope(data)
+    warnings = list(warnings) + envelope_warnings
     version = str(data.get("schema_version") or EDIT_CONTRACT_ID)
     if version not in SUPPORTED_EDIT_CONTRACTS:
         raise EditContractError(
@@ -211,12 +280,23 @@ def parse_proposal(payload: str | Mapping[str, Any]) -> GraphEditProposal:
             reason=str(item.get("reason") or ""),
             antu_ref=str(item.get("antu_ref") or item.get("antu_span") or ""),
             affected=[str(x) for x in (item.get("affected") or [])],
+            applicability=str(item.get("applicability") or APPLICABLE).strip().upper(),
+            explanation=str(item.get("explanation") or ""),
+            requires=[str(x).strip().upper() for x in (item.get("requires") or [])],
+            depends_on=[str(x) for x in (item.get("depends_on") or [])],
             raw=dict(item),
         ))
     clarification = data.get("clarification") if isinstance(data.get("clarification"), Mapping) else None
     conflict = data.get("conflict") if isinstance(data.get("conflict"), Mapping) else None
+    # §6/§7: an empty proposal is not rewritten as `NO_CHANGES`. "I found nothing to change"
+    # and "I could not interpret this" are different facts; the service classifies the second
+    # one as an incomplete interpretation instead of hiding it behind an absence of changes.
     if status == PROPOSED and not operations:
-        status = NO_CHANGES
+        warnings.append("the proposal declares no operation: the interpretation must explain "
+                        "why, or it is incomplete")
+    if status == NO_CHANGES and operations:
+        warnings.append("status NO_CHANGES contradicts the operations the proposal declares")
+
     if status == CLARIFICATION_REQUIRED and not clarification:
         clarification = {"question": "the instruction is ambiguous", "reason": "no detail provided"}
     return GraphEditProposal(

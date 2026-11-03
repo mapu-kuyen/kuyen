@@ -21,13 +21,15 @@ from typing import Any, Mapping
 
 from ..canonical import sha256_text
 from ..semantics.origin import antu_origin
+from . import outcome as outcomes
 from .applier import GraphEditApplier
 from .context import EditContext, build_context
 from .diff import diff_documents
 from .editors import GraphEditorPort
-from .operations import (CLARIFICATION_REQUIRED, CONFLICT, NO_CHANGES,
+from .operations import (CLARIFICATION_REQUIRED, CONFLICT, NO_CHANGES, PROPOSED,
                         GraphEditProposal, parse_proposal)
 from .prompt import GraphEditRequest, build_request
+from ..semantics.scope import AntuScope
 from .validator import EditValidator, ValidationOutcome
 
 STATUS_VALIDATED = "VALIDATED"
@@ -36,6 +38,10 @@ STATUS_CLARIFICATION = "CLARIFICATION_REQUIRED"
 STATUS_CONFLICT = "CONFLICT"
 STATUS_REJECTED = "REJECTED"
 STATUS_INTERPRETATION_FAILED = "INTERPRETATION_FAILED"
+#: The editor returned no operation and did not say why. It is a limitation of the
+#: interpretation, so it can never be recorded as `NO_CHANGES` (§6, §7).
+STATUS_INTERPRETATION_INCOMPLETE = "INTERPRETATION_INCOMPLETE"
+
 
 
 def derive_antu_id(instruction: str) -> str:
@@ -61,13 +67,38 @@ class EditRun:
     clarification: dict[str, Any] | None = None
     conflict: dict[str, Any] | None = None
     reasons: list[str] = field(default_factory=list)
+    scope: dict[str, Any] = field(default_factory=dict)
+    #: A machine-readable classification of the run (`NO_OPERATION_WITHOUT_EXPLANATION`, ...),
+    #: so a limitation of the interpretation is never read as an absence of change.
+    code: str | None = None
+
+    @property
+    def declined(self) -> list[dict[str, Any]]:
+        return [item.to_dict() for item in (self.validation.declined if self.validation else [])]
+
+    @property
+    def applicability(self) -> dict[str, int]:
+        return self.validation.applicability_summary() if self.validation else {}
+
+    @property
+    def outcome(self) -> str:
+        """The operational outcome of this run at the editing layer.
+
+        A validated candidate counts as `COMMITTED` here because this layer does not own the
+        commit; the API layer re-derives the outcome with the real commit flag, so a dry run
+        or a failed commit is never reported as committed (see `editing.outcome`).
+        """
+        return outcomes.run_outcome(self.status,
+                                    committed=self.candidate_document is not None,
+                                    declined=self.declined)
 
     @property
     def committable(self) -> bool:
         return self.status == STATUS_VALIDATED and self.candidate_document is not None
 
     def to_dict(self) -> dict[str, Any]:
-        return {"antu_id": self.antu_id, "status": self.status,
+        return {"antu_id": self.antu_id, "status": self.status, "outcome": self.outcome,
+                "code": self.code,
                 "instruction": self.instruction, "instruction_sha256": self.instruction_sha256,
                 "base_version_id": self.base_version_id,
                 "context": dict(self.context.selection),
@@ -78,26 +109,39 @@ class EditRun:
                 "application": dict(self.application or {}),
                 "diff": self.diff, "model": dict(self.model),
                 "clarification": self.clarification, "conflict": self.conflict,
+                "scope": dict(self.scope), "applicability": self.applicability,
+                "declined": self.declined,
                 "reasons": list(self.reasons)}
 
 
 def run_edit(*, instruction: str, antu_id: str, base_document: Mapping[str, Any],
              graph: Mapping[str, Any], editor: GraphEditorPort,
              actor: Mapping[str, Any] | None, recorded_at: str | None = None,
-             object_limit: int | None = None) -> EditRun:
-    """Interpret one instruction against one version and return the validated candidate."""
+             object_limit: int | None = None,
+             scope: Any = None) -> EditRun:
+    """Interpret one instruction against one version and return the validated candidate.
+
+    `scope` is the effective permission of this Antü in this KÜYEN (§4). It filters the
+    context before it exists and it authorises every operation again inside the lock, so the
+    same portable Antü can be APPLICABLE here and BLOCKED_BY_PERMISSION elsewhere without any
+    change to the instruction.
+    """
     text = " ".join(str(instruction or "").split())
     if not text:
         raise ValueError("an Antü edit requires a non-empty instruction")
     version_id = str(graph.get("version_id") or base_document.get("version_id") or "")
-    context_kwargs = {} if object_limit is None else {"object_limit": object_limit}
+    effective_scope = AntuScope.from_dict(scope)
+    context_kwargs: dict[str, Any] = {"scope": effective_scope}
+    if object_limit is not None:
+        context_kwargs["object_limit"] = object_limit
     context = build_context(graph, text, version_id=version_id, **context_kwargs)
     request = build_request(antu_id, text, context)
     instruction_sha = sha256_text(text)
     run = EditRun(antu_id=antu_id, status=STATUS_INTERPRETATION_FAILED, instruction=text,
                   instruction_sha256=instruction_sha, base_version_id=version_id,
                   context=context, request=request,
-                  model=dict(editor.metadata()) if hasattr(editor, "metadata") else {})
+                  model=dict(editor.metadata()) if hasattr(editor, "metadata") else {},
+                  scope=effective_scope.public_dict())
     raw = editor.interpret(request)
     usage = getattr(editor, "last_usage", None)
     if usage is not None and hasattr(usage, "to_dict"):
@@ -126,11 +170,46 @@ def run_edit(*, instruction: str, antu_id: str, base_document: Mapping[str, Any]
         run.conflict = dict(proposal.conflict or {"reason": proposal.interpretation})
         run.reasons.append("the instruction conflicts with the current knowledge")
         return run
-    if proposal.status == NO_CHANGES or not proposal.operations:
-        run.status = STATUS_NO_CHANGES
-        run.reasons.append("the interpretation produced no operation")
+    if proposal.status == NO_CHANGES:
+        if proposal.operations:
+            # The document says "no changes" and declares operations: an operation *is* a
+            # change, so KÜYEN evaluates them instead of discarding them silently (a real
+            # model did exactly this on an idempotent instruction, experiment 14 K009-SAT).
+            run.reasons.append(
+                "PROPOSAL_STATUS_CONTRADICTED: the proposal says NO_CHANGES and declares "
+                "operations; the operations were validated instead of being discarded")
+            proposal.status = PROPOSED
+        else:
+            justification = " ".join(str(proposal.interpretation or "").split())
+            stated = proposal.raw.get("no_changes") or proposal.raw.get("reason")
+            stated = " ".join(str(stated).split()) if isinstance(stated, str) else ""
+            if justification or stated:
+                run.status = STATUS_NO_CHANGES
+                run.reasons.append(
+                    "the interpretation states that there is nothing to change: "
+                    f"{justification or stated}")
+                return run
+            # No operation and no explanation: the editor did not interpret the instruction.
+            # Recording this as NO_CHANGES would turn a limitation into a fact about the
+            # knowledge (§6), so it is classified as an incomplete interpretation.
+            run.status = STATUS_INTERPRETATION_INCOMPLETE
+            run.code = "NO_OPERATION_WITHOUT_EXPLANATION"
+            run.reasons.append(
+                "NO_OPERATION_WITHOUT_EXPLANATION: the editor produced no operation and did "
+                "not explain why; this is an incomplete interpretation, not an absence of "
+                "changes")
+            return run
+    if not proposal.operations:
+        run.status = STATUS_INTERPRETATION_INCOMPLETE
+        run.code = "NO_OPERATION_WITHOUT_EXPLANATION"
+        run.reasons.append(
+            "NO_OPERATION_WITHOUT_EXPLANATION: the editor produced no operation and did not "
+            "explain why; this is an incomplete interpretation, not an absence of changes")
         return run
+
     validation = EditValidator(context, instruction=text, antu_id=antu_id,
+                               scope=effective_scope,
+                               schema=base_document.get("schema"),
                                version_ids={
                                    "entity": [str(item.get("entity_id"))
                                               for item in (graph.get("entities") or [])],
@@ -144,6 +223,14 @@ def run_edit(*, instruction: str, antu_id: str, base_document: Mapping[str, Any]
         run.status = STATUS_REJECTED
         run.reasons.extend(f"{item.code}: {item.message}" for item in validation.rejected)
         run.reasons.extend(validation.problems)
+        return run
+    if not validation.accepted:
+        # Every operation was classified as not applicable: the Antü is recorded, no version
+        # is created and nothing is fabricated (§8).
+        run.status = STATUS_NO_CHANGES
+        run.reasons.append("every operation was declined with a verifiable reason")
+        for item in validation.declined:
+            run.reasons.append(f"{item.applicability}: {item.explanation}")
         return run
     applier = GraphEditApplier(
         antu_id=antu_id, instruction=text, instruction_sha256=instruction_sha,
@@ -178,6 +265,9 @@ def edit_provenance_record(run: EditRun) -> dict[str, Any]:
         "rejected": [item.to_dict() for item in (run.validation.rejected if run.validation else [])],
         "model": model,
         "context": dict(run.context.selection),
+        "applicability": (run.validation.applicability_summary() if run.validation else {}),
+        "declined": [item.to_dict() for item in (run.validation.declined if run.validation else [])],
+        "schema_changes": list((run.application or {}).get("schema_changes") or []),
         "status": run.status,
         "origin": antu_origin(
             antu_id=run.antu_id, instruction=run.instruction,

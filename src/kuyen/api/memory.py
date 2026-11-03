@@ -18,11 +18,12 @@ from ..canonical import digest, read_json, sha256_text
 from ..contracts import PROJECTOR_VERSION, SIDECAR_SCHEMA_VERSION, STORE_FORMAT_VERSION
 from ..editing.diff import diff_documents, summarize as summarize_diff
 from ..editing.editors import GraphEditorPort
+from ..editing import outcome as edit_outcome
 from ..semantics.scope import AntuScope, permissions_for
 from ..editing.service import (STATUS_CLARIFICATION, STATUS_CONFLICT,
-                               STATUS_INTERPRETATION_FAILED, STATUS_NO_CHANGES,
-                               STATUS_REJECTED, STATUS_VALIDATED, EditRun, derive_antu_id,
-                               edit_provenance_record, run_edit)
+                               STATUS_INTERPRETATION_FAILED, STATUS_INTERPRETATION_INCOMPLETE,
+                               STATUS_NO_CHANGES, STATUS_REJECTED, STATUS_VALIDATED, EditRun,
+                               derive_antu_id, edit_provenance_record, run_edit)
 from ..semantics.origin import public_view as origin_view
 from ..errors import (AmbiguousSourceUnit, AntuConflictError, CommitError, ConflictError,
                       StoreError, ValidationRejected)
@@ -244,11 +245,18 @@ class AntuEditResult:
     applicability: dict[str, int] = field(default_factory=dict)
     declined: list[dict[str, Any]] = field(default_factory=list)
     schema_changes: list[dict[str, Any]] = field(default_factory=list)
+    #: §7: the operational outcome of the Antü in this KÜYEN, from the closed vocabulary of
+    #: `editing.outcome`. It distinguishes a committed change from a satisfied request, a
+    #: permission block, an invalid proposal and a failed interpretation.
+    outcome: str = "NOT_EVALUATED"
+    #: The same, operation by operation: a mixed Antü keeps one state per operation.
+    outcomes: list[dict[str, Any]] = field(default_factory=list)
     run: EditRun | None = field(default=None, repr=False)
 
     def to_dict(self) -> dict[str, Any]:
         return {"antu_id": self.antu_id, "antu_global_id": self.antu_global_id,
-                "status": self.status, "instruction": self.instruction,
+                "status": self.status, "outcome": self.outcome, "outcomes": list(self.outcomes),
+                "instruction": self.instruction,
                 "kuyen_id": self.kuyen_id,
                 "base_version_id": self.base_version_id, "version_id": self.version_id,
                 "operations": list(self.operations), "applied": list(self.applied),
@@ -666,7 +674,12 @@ class KuyenMemory:
             base_version_id=last.get("base_version_id"), version_id=last.get("version_id"),
             provenance={"kind": "ANTU_INSTRUCTION", "antu_id": antu_id, "replayed": True},
             reasons=[f"the Antü already reached {last.get('event_type')} at seq "
-                     f"{last.get('seq')}"], committed=False)
+                     f"{last.get('seq')}"], committed=False,
+            outcome=edit_outcome.ALREADY_SATISFIED,
+            outcomes=[{"operation_id": None, "op": None,
+                       "outcome": edit_outcome.ALREADY_SATISFIED,
+                       "detail": f"replayed from {last.get('event_type')}"}])
+
 
     def _record_edit_rejection(self, *, antu_id: str, instruction: str, base_version_id: str | None,
                                code: str, reason: str, dry_run: bool) -> AntuEditResult:
@@ -684,7 +697,12 @@ class KuyenMemory:
                                 detail={"code": code, "reason": reason})
         return AntuEditResult(antu_id=antu_id, status="REJECTED", instruction=instruction,
                               base_version_id=base_version_id, reasons=[reason],
-                              conflict={"code": code, "reason": reason})
+                              conflict={"code": code, "reason": reason},
+                              outcome=edit_outcome.INVALID_PROPOSAL,
+                              outcomes=[{"operation_id": None, "op": None,
+                                         "outcome": edit_outcome.INVALID_PROPOSAL,
+                                         "detail": f"{code}: {reason}"}])
+
 
 
     def _edit_result(self, run: EditRun, *, version_id: str | None,
@@ -698,11 +716,21 @@ class KuyenMemory:
         applied_lifecycle = "COMMITTED" if committed else "DISCARDED"
         applied = [{**dict(item), "status": applied_lifecycle}
                    for item in ((run.application or {}).get("applied") or [])]
+        # §7: what happened, operation by operation, with the commit flag the caller owns.
+        declined = validation.get("declined") or []
+        outcomes = edit_outcome.operation_outcomes(
+            status=run.status, committed=committed,
+            accepted=validation.get("accepted") or [], declined=declined,
+            rejected=validation.get("rejected") or [])
         return AntuEditResult(
             antu_id=run.antu_id, status=run.status, instruction=run.instruction,
             base_version_id=run.base_version_id, version_id=version_id,
             operations=operations, applied=applied,
             rejected=validation.get("rejected") or [],
+            outcome=edit_outcome.run_outcome(run.status, committed=committed,
+                                             declined=declined),
+            outcomes=outcomes,
+
             affected=dict((run.application or {}).get("affected") or {}),
             provenance=origin_view({"kind": "ANTU_INSTRUCTION", "antu_id": run.antu_id,
                                     "instruction_sha256": run.instruction_sha256,
@@ -784,14 +812,19 @@ class KuyenMemory:
         elif run.status == STATUS_NO_CHANGES:
             append_event(self._store, "ANTU_NO_SEMANTIC_CHANGE", {
                 "antu_id": run.antu_id, "version_id": target_base,
-                "reason": "the interpretation produced no operation", "recorded_at": _now()})
+                "reason": (run.reasons[0] if run.reasons
+                           else "the interpretation produced no operation"),
+                "recorded_at": _now()})
             status = "NO_SEMANTIC_CHANGE"
-        elif run.status in (STATUS_CONFLICT, STATUS_REJECTED, STATUS_INTERPRETATION_FAILED) \
-                or reasons:
+        elif run.status in (STATUS_CONFLICT, STATUS_REJECTED, STATUS_INTERPRETATION_FAILED,
+                            STATUS_INTERPRETATION_INCOMPLETE) or reasons:
+            # An incomplete interpretation is not "no change" (§6): it is written as a
+            # terminal attempt whose `edit_status` says exactly why nothing was applied.
             append_event(self._store, "ANTU_REJECTED", {
                 "antu_id": run.antu_id, "kind": "GRAPH_EDIT", "status": run.status,
-                "reasons": reasons or run.reasons, "recorded_at": _now()})
+                "code": run.code, "reasons": reasons or run.reasons, "recorded_at": _now()})
             status = "REJECTED"
+
         else:
             status = None
         if status is not None:
@@ -870,7 +903,12 @@ class KuyenMemory:
                     antu_id=run.antu_id, status="CONFLICT", instruction=run.instruction,
                     base_version_id=target_base,
                     conflict={"code": "STALE_BASE", "reason": reason},
-                    reasons=[reason], run=run)
+                    reasons=[reason], run=run,
+                    outcome=edit_outcome.INVALID_PROPOSAL,
+                    outcomes=[{"operation_id": None, "op": None,
+                               "outcome": edit_outcome.INVALID_PROPOSAL,
+                               "detail": f"STALE_BASE: {reason}"}])
+
             self._record_edit_outcome(run, target_base=target_base, graph=graph)
             unit = read_state(self._store) or {}
             revision = next_revision(self._store)
@@ -892,6 +930,12 @@ class KuyenMemory:
             record.version_id = result["version"]["version_id"]
             record.committed = True
             record.status = "COMMITTED"
+            # §7: the outcome follows the commit, not the candidate. Only now is an operation
+            # confirmed, and only now is the Antü `COMMITTED` instead of `NOT_EVALUATED`.
+            record.outcome = edit_outcome.COMMITTED
+            for item in record.outcomes:
+                if item.get("outcome") == edit_outcome.NOT_EVALUATED:
+                    item["outcome"] = edit_outcome.COMMITTED
             # Only now, with the canonical commit persisted, is an operation confirmed.
             for item in record.operations:
                 item["status"] = "COMMITTED"

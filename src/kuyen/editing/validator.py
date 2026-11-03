@@ -154,6 +154,14 @@ class EditValidator:
 
     def _check_expected(self, operation: GraphEditOperation, current: Mapping[str, Any],
                         rejected: list[OperationRejection], *, fields: Iterable[str]) -> bool:
+        """Check that the knowledge the operation is based on still holds.
+
+        For scalar fields the comparison is exact. For an object-valued field (`value`,
+        `temporal`) every key the operation declares must match the current object with the
+        same value: a partial declaration is accepted — the model is not forced to copy a
+        record byte for byte — but a declared field that already changed is a stale base and
+        the operation is refused (measured with a real model, see the experiment report).
+        """
         if operation.expected is None:
             rejected.append(self._reject(
                 operation, "EXPECTED_VALUE_REQUIRED",
@@ -166,11 +174,24 @@ class EditValidator:
             expected = operation.expected[name]
             actual = current.get(name)
             if isinstance(expected, Mapping) or isinstance(actual, Mapping):
-                if dict(expected or {}) != dict(actual or {}):
+                declared = {key: value for key, value in dict(expected or {}).items()
+                            if not str(key).startswith("_")}
+                if not declared:
+                    rejected.append(self._reject(
+                        operation, "EXPECTED_VALUE_REQUIRED",
+                        f"expected.{name} must declare at least one field of the current value"))
+                    return False
+                if not isinstance(actual, Mapping):
                     rejected.append(self._reject(
                         operation, "EXPECTED_VALUE_MISMATCH",
-                        f"{name} is {actual!r} in this version, not {expected!r}"))
+                        f"{name} is {actual!r} in this version, not {dict(expected)}"))
                     return False
+                for key, value in declared.items():
+                    if actual.get(key) != value:
+                        rejected.append(self._reject(
+                            operation, "EXPECTED_VALUE_MISMATCH",
+                            f"{name}.{key} is {actual.get(key)!r} in this version, not {value!r}"))
+                        return False
             elif expected != actual:
                 rejected.append(self._reject(
                     operation, "EXPECTED_VALUE_MISMATCH",

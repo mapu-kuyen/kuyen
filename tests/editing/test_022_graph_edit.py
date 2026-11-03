@@ -268,6 +268,53 @@ class TestRefusals:
         assert [item["code"] for item in result.rejected] == [
             "OPERATION_NOT_SUPPORTED_BY_INSTRUCTION"]
 
+    def test_a_partial_expected_value_still_detects_the_current_value(self, tmp_path) -> None:
+        """A model does not have to copy the whole record; it must declare what it relies on."""
+        memory = h.memory_at(tmp_path)
+        identifiers = h.ids(memory)
+        result = edit(memory, "Cambia la cantidad de luminarias de 12 a 18", [{
+            "operation_id": "op-1", "op": "UPDATE_ASSERTION",
+            "target": {"assertion_id": identifiers["assertions"]["installed_lights"]},
+            # the stored value also carries `unit` and `context`; declaring only these two
+            # fields is enough because both still hold
+            "expected": {"value": {"value_type": "integer", "value": 12}},
+            "value": {"value": {"value_type": "integer", "value": 18, "unit": "luminarias"}},
+            "reason": "la instrucción corrige la cantidad instalada",
+            "antu_ref": "de 12 a 18",
+        }])
+        assert result.status == "COMMITTED", result.to_dict()
+
+    def test_a_wrong_field_in_the_expected_value_is_refused(self, tmp_path) -> None:
+        memory = h.memory_at(tmp_path)
+        identifiers = h.ids(memory)
+        base = memory.current().version_id
+        result = edit(memory, "Cambia la cantidad de luminarias de 12 a 18", [{
+            "operation_id": "op-1", "op": "UPDATE_ASSERTION",
+            "target": {"assertion_id": identifiers["assertions"]["installed_lights"]},
+            "expected": {"value": {"value_type": "integer", "value": 11}},
+            "value": {"value": {"value_type": "integer", "value": 18}},
+            "reason": "la instrucción corrige la cantidad instalada",
+            "antu_ref": "de 12 a 18",
+        }])
+        assert result.status == "REJECTED"
+        assert [item["code"] for item in result.rejected] == ["EXPECTED_VALUE_MISMATCH"]
+        assert "value.value is 12" in result.rejected[0]["message"]
+        assert memory.current().version_id == base
+
+    def test_an_empty_expected_object_is_not_a_check(self, tmp_path) -> None:
+        memory = h.memory_at(tmp_path)
+        identifiers = h.ids(memory)
+        result = edit(memory, "Cambia la cantidad de luminarias de 12 a 18", [{
+            "operation_id": "op-1", "op": "UPDATE_ASSERTION",
+            "target": {"assertion_id": identifiers["assertions"]["installed_lights"]},
+            "expected": {"value": {}},
+            "value": {"value": {"value_type": "integer", "value": 18}},
+            "reason": "la instrucción corrige la cantidad instalada",
+            "antu_ref": "de 12 a 18",
+        }])
+        assert result.status == "REJECTED"
+        assert [item["code"] for item in result.rejected] == ["EXPECTED_VALUE_REQUIRED"]
+
     def test_the_same_antu_is_replayed_and_never_duplicated(self, tmp_path) -> None:
         memory = h.memory_at(tmp_path)
         identifiers = h.ids(memory)
@@ -344,6 +391,44 @@ class TestProvenanceAndIsolation:
         provenance = memory.graph()["provenance"]
         assert provenance["edits"][-1]["antu_id"] == result.antu_id
         assert provenance["edits"][-1]["instruction_sha256"]
+
+    def test_the_version_identity_does_not_depend_on_token_metering(self, tmp_path) -> None:
+        """Two runs of the same proposal with the same editor produce the same version id.
+
+        Metering (`usage`) is recorded in the ledger, not in the graph provenance: the
+        identity of a version must depend on the knowledge and on its provenance, never on
+        how many tokens the model consumed.
+        """
+        from kuyen.editing import EditorUsage
+
+        first = h.memory_at(tmp_path / "first")
+        second = h.memory_at(tmp_path / "second")
+        identifiers = h.ids(first)
+        payload = h.proposal([{
+            "operation_id": "op-1", "op": "UPDATE_ASSERTION",
+            "target": {"assertion_id": identifiers["assertions"]["installed_lights"]},
+            "expected": {"value": {"value_type": "integer", "value": 12}},
+            "value": {"value": {"value_type": "integer", "value": 18,
+                                "unit": "luminarias"}},
+            "reason": "la instrucción corrige la cantidad instalada",
+            "antu_ref": "de 12 a 18"}])
+        instructions = "Cambia la cantidad de luminarias de 12 a 18"
+
+        def run(memory, usage):
+            editor = h.ScriptedEditor(payload)
+            editor.last_usage = usage
+            return memory.apply_antu(instructions, editor=editor)
+
+        one = run(first, EditorUsage(prompt_tokens=2701, completion_tokens=127))
+        two = run(second, EditorUsage(prompt_tokens=999, completion_tokens=1))
+        assert one.status == two.status == "COMMITTED"
+        assert one.version_id == two.version_id
+        assert one.provenance["canonical_graph_hash"] == two.provenance["canonical_graph_hash"]
+        # the metering is in the ledger, where the run record belongs
+        received = next(event for event in first.ledger()
+                        if event["event_type"] == "ANTU_RECEIVED"
+                        and event.get("kind") == "GRAPH_EDIT")
+        assert received["model"]["usage"]["prompt_tokens"] == 2701
 
     def test_the_edit_never_touches_openviking(self, tmp_path, monkeypatch) -> None:
         memory = h.memory_at(tmp_path)

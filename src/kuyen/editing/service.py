@@ -147,7 +147,10 @@ def run_edit(*, instruction: str, antu_id: str, base_document: Mapping[str, Any]
         return run
     applier = GraphEditApplier(
         antu_id=antu_id, instruction=text, instruction_sha256=instruction_sha,
-        base_version_id=version_id, actor=actor, model=run.model, recorded_at=recorded_at)
+        base_version_id=version_id, actor=actor,
+        # metering never reaches the knowledge record: it stays in the run/ledger
+        model={key: value for key, value in run.model.items() if key != "usage"},
+        recorded_at=recorded_at)
     application = applier.apply(base_document, validation.accepted)
     run.application = application.to_dict()
     run.candidate_document = application.document
@@ -157,7 +160,14 @@ def run_edit(*, instruction: str, antu_id: str, base_document: Mapping[str, Any]
 
 
 def edit_provenance_record(run: EditRun) -> dict[str, Any]:
-    """The compact record an edited version keeps in its graph provenance."""
+    """The compact record an edited version keeps in its graph provenance.
+
+    Metering (`usage`) is deliberately excluded: token counts belong to the run record and
+    to the ledger, not to the identity of the knowledge. Including them would make the
+    canonical hash of a version depend on billing, so replaying the same proposal with the
+    same editor would produce a different version for the same knowledge.
+    """
+    model = {key: value for key, value in run.model.items() if key != "usage"}
     return {
         "antu_id": run.antu_id,
         "kind": "GRAPH_EDIT",
@@ -166,10 +176,11 @@ def edit_provenance_record(run: EditRun) -> dict[str, Any]:
         "base_version_id": run.base_version_id,
         "operations": [item.to_dict() for item in (run.validation.accepted if run.validation else [])],
         "rejected": [item.to_dict() for item in (run.validation.rejected if run.validation else [])],
-        "model": dict(run.model),
+        "model": model,
         "context": dict(run.context.selection),
         "status": run.status,
         "origin": antu_origin(
             antu_id=run.antu_id, instruction=run.instruction,
-            instruction_sha256=run.instruction_sha256, base_version_id=run.base_version_id),
+            instruction_sha256=run.instruction_sha256, base_version_id=run.base_version_id,
+            model=model),
     }

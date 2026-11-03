@@ -67,7 +67,10 @@ Operation types: `ADD_ENTITY`, `UPDATE_ENTITY`, `ADD_ASSERTION`, `UPDATE_ASSERTI
 
 Rules KÜYEN enforces:
 
-* every operation that **changes or retracts** declares `expected`; a mismatch is refused;
+* every operation that **changes or retracts** declares `expected`. Scalar fields are
+  compared exactly; for an object field (`value`, `temporal`) declaring the keys you rely on
+  is enough — every declared key must match the current value, and an empty object is not a
+  check;
 * every operation cites the instruction in `antu_ref`; a literal fragment or a faithful
   paraphrase (≥80 % of its words present) passes, an invented justification does not;
 * additions propose a **local** reference (`value.ref`); KÜYEN generates the canonical
@@ -124,9 +127,12 @@ current version with its parent.
 | `KUYEN_EDITOR_TEMPERATURE`, `KUYEN_EDITOR_MAX_TOKENS`, `KUYEN_EDITOR_TIMEOUT_S` | parameters |
 | `KUYEN_EDITOR_JSON_MODE` | `true` to request `response_format: json_object` |
 
-The credential is read at call time, never stored in the configuration, never sent inside
-the prompt and never written to the ledger or to a result (only provider, model, proposal
-hash and usage when the provider reports it).
+The credential is read at call time, never stored in the configuration and never sent
+inside the prompt; only provider, model and the proposal hash are recorded.
+
+**Metering** (`usage`: prompt and completion tokens) is recorded in the ledger and in the
+operation result, **never** in the provenance that enters the canonical hash of a version:
+the identity of the knowledge cannot depend on billing.
 
 `RecordedGraphEditor` replays an already recorded proposal, keyed by `prompt_sha256`: it
 makes an edit auditable and demonstrable without calling any model.

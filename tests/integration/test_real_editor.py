@@ -43,13 +43,25 @@ def test_a_real_model_proposes_and_kuyen_versions_it(tmp_path) -> None:
         actor={"leftraru_id": "LR-REAL", "authenticated_user": "integration",
                "authenticated_account": "integration", "service_identity": "svc-kuyen"})
     REPORT.parent.mkdir(parents=True, exist_ok=True)
+    run = result.run
     REPORT.write_text(json.dumps({
         "provider": config.public_dict(),
         "instruction": instruction,
-        "result": result.to_dict(),
+        "status": result.status,
         "base_version_id": result.base_version_id,
         "version_id": result.version_id,
-        "status": result.status,
+        "context": result.context,
+        "model": result.model,
+        "proposal": (run.proposal.to_dict() if run is not None and run.proposal else None),
+        "proposal_raw": (run.proposal.raw if run is not None and run.proposal else None),
+        "content_digest": ((memory.graph(result.version_id)["content_digest"]
+                            if result.version_id else None)),
+        "operations": result.operations,
+        "rejected": result.rejected,
+        "affected": result.affected,
+        "provenance": result.provenance,
+        "diff": result.diff,
+        "reasons": result.reasons,
     }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     assert result.status in ("COMMITTED", "CLARIFICATION_REQUIRED", "REJECTED"), result.to_dict()
     if result.status == "COMMITTED":

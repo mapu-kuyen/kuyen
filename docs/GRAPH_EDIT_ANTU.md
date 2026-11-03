@@ -73,7 +73,9 @@ Operaciones admitidas: `ADD_ENTITY`, `UPDATE_ENTITY`, `ADD_ASSERTION`,
 Reglas que KÜYEN exige y verifica:
 
 * toda operación que **modifica o retira** declara `expected` (el valor que espera
-  encontrar); si no coincide, se rechaza;
+  encontrar). Para campos escalares la comparación es exacta; para un campo con objeto
+  (`value`, `temporal`) basta con declarar las claves en las que te apoyas: cada clave
+  declarada debe coincidir con el valor actual, y un objeto vacío no cuenta como control;
 * toda operación cita la instrucción en `antu_ref`; un fragmento literal o una paráfrasis
   fiel (≥80 % de sus palabras presentes) se acepta, una justificación inventada no;
 * para agregar hay que proponer un identificador **local** (`value.ref`); la identidad
@@ -149,8 +151,12 @@ produce siempre el mismo documento. Sin argumentos compara la versión actual co
 | `KUYEN_EDITOR_JSON_MODE` | `true` para pedir `response_format: json_object` |
 
 La credencial se lee en el momento de la llamada, nunca se guarda en la configuración, no
-viaja en el prompt y no aparece en el ledger ni en los resultados (sólo proveedor, modelo,
-huella de la propuesta y consumo cuando el proveedor lo informa).
+viaja en el prompt y no aparece en el ledger ni en los resultados (sólo proveedor, modelo y
+huella de la propuesta).
+
+El **consumo** (`usage`: tokens de entrada y salida) se registra en el ledger y en el
+resultado de la operación, **nunca** en la procedencia que entra en el hash canónico de la
+versión: la identidad del conocimiento no puede depender de la facturación.
 
 `RecordedGraphEditor` reproduce una propuesta ya grabada, indexada por `prompt_sha256`:
 permite auditar y demostrar una edición sin llamar a ningún modelo.

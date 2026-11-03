@@ -105,8 +105,14 @@ class GraphEditOperation:
         return None
 
     def to_dict(self) -> dict[str, Any]:
+        """The operation as the contract describes it.
+
+        Keys prefixed with `_` are KÜYEN's internal bookkeeping (resolved identities,
+        normalised polarity) and are never part of the audit record.
+        """
+        value = {key: item for key, item in self.value.items() if not str(key).startswith("_")}
         return {"operation_id": self.operation_id, "op": self.op, "target": self.target,
-                "expected": self.expected, "value": self.value, "reason": self.reason,
+                "expected": self.expected, "value": value, "reason": self.reason,
                 "antu_ref": self.antu_ref, "affected": list(self.affected)}
 
 

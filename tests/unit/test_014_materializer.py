@@ -176,11 +176,35 @@ class MaterializerTests(unittest.TestCase):
         with self.assertRaises(CandidateMaterializationError):
             PathOwnershipRegistry().assert_unique(["entities/a.md", "entities/a.md"])
 
-    def test_invalid_offsets_are_not_silently_fixed(self):
+    def test_declared_offsets_never_override_the_quote(self):
+        """The quote is the authority; a declared offset that disagrees is recorded, not obeyed.
+
+        This is the documented policy change of KUYEN_PRODUCTIVE_GRAPH_11 §5.2: the model's
+        offsets are a hint. A verifiable exact quote is never discarded because the hint is
+        wrong, and the disagreement is never silent — it is a recorded decision and the
+        declared values are kept as auxiliary information.
+        """
         result = provider_result()
         result["entities"][0]["evidence"][0]["char_end"] = 1
         _, materialized = materialize(result)
-        self.assertIn("INVALID_OFFSET", materialized.manifest["evidence"])
+        self.assertIn("QUOTE_AUTHORITATIVE", materialized.manifest["evidence"])
+        ignored = next(item for item in materialized.manifest["decisions"]
+                       if item["classification"] == "QUOTE_AUTHORITATIVE")
+        self.assertEqual(ignored["char_start"], SOURCE.index(Q1))
+        self.assertEqual(ignored["char_end"], SOURCE.index(Q1) + len(Q1))
+        preserved = next(item for item in materialized.bundle.evidence if item.quote == Q1)
+        self.assertEqual(preserved.char_start, SOURCE.index(Q1))
+        self.assertEqual(preserved.declared_offsets, {"char_start": 0, "char_end": 1})
+        accepted = evaluate(materialized.bundle)
+        self.assertEqual(accepted.status, "ACCEPTED", accepted.validation.to_dict())
+
+    def test_a_quote_that_does_not_exist_is_still_rejected(self):
+        result = provider_result()
+        result["entities"][0]["evidence"][0]["quote"] = "esta frase no está en la fuente"
+        result["entities"][0]["evidence"][0]["char_start"] = 0
+        result["entities"][0]["evidence"][0]["char_end"] = 32
+        _, materialized = materialize(result)
+        self.assertIn("INVALID_QUOTE", materialized.manifest["evidence"])
         rejected = evaluate(materialized.bundle)
         self.assertEqual(rejected.status, "REJECTED")
 

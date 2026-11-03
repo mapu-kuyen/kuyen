@@ -33,6 +33,11 @@ from .paths import KUYEN_OWNER, PROVIDER_OWNER, PathOwnershipRegistry
 
 EXACT_SPAN = "EXACT_SPAN"
 OFFSET_RESOLVED_UNIQUE = "OFFSET_RESOLVED_UNIQUE"
+# The quote decided the span and the declared offsets disagreed with it. The evidence is
+# kept and the declared hint is recorded; nothing is silently "fixed" (KUYEN_PRODUCTIVE_GRAPH_11, §5.2).
+QUOTE_AUTHORITATIVE = "QUOTE_AUTHORITATIVE"
+# Declared offsets were not even a usable span (not integers, negative or reversed).
+DECLARED_OFFSET_IGNORED = "DECLARED_OFFSET_IGNORED"
 DOCUMENT_REFERENCE = "DOCUMENT_REFERENCE"
 AMBIGUOUS_QUOTE = "AMBIGUOUS_QUOTE"
 INVALID_QUOTE = "INVALID_QUOTE"
@@ -42,6 +47,30 @@ URI_MISMATCH = "URI_MISMATCH"
 UNSUPPORTED_UNIT = "UNSUPPORTED_OFFSET_UNIT"
 SOURCE_UNKNOWN = "SOURCE_UNKNOWN"
 NO_EVIDENCE = "NO_EVIDENCE"
+# KÜYEN owns MAPU identity: a declared MAPU that is not in this context is refused
+# instead of being replaced by the context's only MAPU (KUYEN_PRODUCTIVE_GRAPH_11, §5.1).
+MAPU_ID_NOT_IN_CONTEXT = "MAPU_ID_NOT_IN_CONTEXT"
+MAPU_RESOLVED_BY_CONTEXT = "MAPU_RESOLVED_BY_CONTEXT"
+SOURCE_UNIT_MISMATCH = "SOURCE_UNIT_MISMATCH"
+# No declared polarity, or a polarity the canonical set cannot carry: the object is not
+# admitted instead of becoming POSITIVE (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+POLARITY_UNKNOWN = "POLARITY_UNKNOWN"
+MODALITY_UNRECOGNIZED = "MODALITY_UNRECOGNIZED"
+# Evidence read without MAPU context: preserved, never presented as verified.
+DECLARED_UNVERIFIED = "DECLARED_UNVERIFIED"
+
+CANONICAL_POLARITIES = ("POSITIVE", "NEGATIVE")
+MODALITIES = ("FACT", "FORECAST", "ESTIMATE", "OPINION", "CONDITIONAL", "UNKNOWN")
+
+# The policy every materialized object is admitted under. Recorded in the manifest so a
+# reader never has to guess which rule produced the offsets or the polarity.
+EVIDENCE_POLICY = {
+    "mapu_identity": "context-authority-v1",
+    "offsets": "quote-authority-v1",
+    "polarity": "explicit-only-v1",
+    "modality": "declared-or-unknown-v1",
+    "source_unit": "verified-when-declared-v1",
+}
 
 
 def _text(value: Any) -> str | None:
@@ -83,16 +112,22 @@ class CandidateMaterializer:
     def __init__(
         self,
         *,
-        mapus: list[Mapu],
-        antu: Antu,
+        mapus: list[Mapu] | None,
+        antu: Antu | None = None,
         coverage_inventory: dict[str, list[SectionUnit]] | None = None,
         contract: str = CONTRACT_ID,
         result_filename: str = RESULT_FILENAME,
+        verify_evidence: bool = True,
     ) -> None:
-        if not mapus:
+        if verify_evidence and not mapus:
             raise CandidateMaterializationError("materialization requires at least one MAPU")
-        self.mapus = {item.mapu_id: item for item in mapus}
+        self.mapus = {item.mapu_id: item for item in (mapus or [])}
         self.antu = antu
+        # Without MAPU context evidence cannot be verified. It is still *preserved* and
+        # marked NOT_EVALUATED instead of being dropped: the deprecated compatibility
+        # reader keeps every declared quote, offset and hash so nothing is lost
+        # (KUYEN_PRODUCTIVE_GRAPH_11, §5.5).
+        self.verify_evidence = verify_evidence
         self.coverage_inventory = {
             mapu_id: [SectionUnit(**item) if isinstance(item, dict) else item for item in units]
             for mapu_id, units in (coverage_inventory or {}).items()
@@ -106,17 +141,59 @@ class CandidateMaterializer:
 
     # ---------- evidence ----------
 
-    def _mapu_for(self, raw: dict[str, Any]) -> Mapu | None:
-        mapu_id = str(raw.get("mapu_id") or "")
-        if mapu_id and mapu_id in self.mapus:
-            return self.mapus[mapu_id]
-        uri = str(raw.get("source_uri") or "")
-        for mapu in self.mapus.values():
+    def _mapu_for(self, raw: dict[str, Any]) -> tuple[Mapu | None, str | None]:
+        """Resolve the MAPU an evidence entry belongs to, without guessing an identity.
+
+        A declared `mapu_id` is authoritative in the sense that KÜYEN *checks* it: when
+        the producer names a MAPU that is not in this context the entry is refused with
+        `MAPU_ID_NOT_IN_CONTEXT` and the single-MAPU fallback never runs. When no identity
+        is declared at all, the URI decides, and KÜYEN records that it resolved the MAPU
+        from the context instead of presenting it as a declaration
+        (KUYEN_PRODUCTIVE_GRAPH_11, §5.1).
+        """
+        declared = str(raw.get("mapu_id") or "").strip()
+        uri = str(raw.get("source_uri") or "").strip()
+        if declared:
+            return (self.mapus[declared], None) if declared in self.mapus \
+                else (None, MAPU_ID_NOT_IN_CONTEXT)
+        for mapu in sorted(self.mapus.values(), key=lambda item: item.mapu_id):
             root = mapu.source_uri.rstrip("/")
             if uri == root or uri.startswith(root + "/"):
-                return mapu
+                return mapu, MAPU_RESOLVED_BY_CONTEXT
         if len(self.mapus) == 1:
-            return next(iter(self.mapus.values()))
+            return next(iter(self.mapus.values())), MAPU_RESOLVED_BY_CONTEXT
+        return None, SOURCE_UNKNOWN
+
+    def _locate_quote(self, content: str, quote: str, context: str | None) -> list[int]:
+        """Every occurrence of `quote`, narrowed by `context` when it is ambiguous."""
+        occurrences: list[int] = []
+        position = content.find(quote)
+        while position != -1:
+            occurrences.append(position)
+            position = content.find(quote, position + 1)
+        if len(occurrences) <= 1 or not context:
+            return occurrences
+        return [position for position in occurrences
+                if context in content[max(0, position - len(context)):position + len(quote) + len(context)]]
+
+    def _source_unit_problem(self, mapu: Mapu, raw: dict[str, Any], start: int, end: int) -> str | None:
+        """Verify that a declared SOURCE_UNIT really contains the resolved span."""
+        declared = str(raw.get("source_unit_id") or "").strip()
+        if not declared:
+            return None
+        units = self.coverage_inventory.get(mapu.mapu_id) or []
+        if not units:
+            return None
+        candidates = [unit for unit in units if getattr(unit, "unit_id", None) == declared]
+        if not candidates:
+            return f"declared SOURCE_UNIT {declared} is not in the inventory of MAPU {mapu.mapu_id}"
+        unit_start = getattr(candidates[0], "char_start", None)
+        unit_end = getattr(candidates[0], "char_end", None)
+        if not isinstance(unit_start, int) or not isinstance(unit_end, int):
+            return None
+        if not (unit_start <= start and end <= unit_end):
+            return (f"resolved span {start}:{end} is outside SOURCE_UNIT {declared} "
+                    f"({unit_start}:{unit_end})")
         return None
 
     def _record(self, kind: str, item_id: str, classification: str, reason: str | None,
@@ -131,11 +208,14 @@ class CandidateMaterializer:
         return decision
 
     def _resolve_evidence(self, kind: str, item_id: str, raw: dict[str, Any]) -> CandidateEvidence | None:
-        mapu = self._mapu_for(raw)
+        if not self.verify_evidence:
+            return self._declared_evidence(kind, item_id, raw)
+        mapu, mapu_resolution = self._mapu_for(raw)
         quote = str(raw.get("quote") or "")
         uri = str(raw.get("source_uri") or "")
         provided_sha = str(raw.get("source_sha256") or "")
         unit = str(raw.get("offset_unit") or "unicode_codepoint")
+        declared_unit = str(raw.get("source_unit_id") or "").strip() or None
         if unit != "unicode_codepoint":
             self._record(kind, item_id, UNSUPPORTED_UNIT, f"offset_unit={unit}")
             return None
@@ -145,9 +225,17 @@ class CandidateMaterializer:
             else:
                 self._record(kind, item_id, NO_EVIDENCE, "no quote or source URI", mapu=mapu)
             return None
+        if mapu_resolution == MAPU_ID_NOT_IN_CONTEXT:
+            self._record(kind, item_id, MAPU_ID_NOT_IN_CONTEXT,
+                         f"declared mapu_id={raw.get('mapu_id')!r} is not in this context",
+                         quote=quote)
+            return None
         if mapu is None:
             self._record(kind, item_id, SOURCE_UNKNOWN, "no MAPU matches the evidence", quote=quote)
             return None
+        if mapu_resolution == MAPU_RESOLVED_BY_CONTEXT:
+            self._record(kind, item_id, MAPU_RESOLVED_BY_CONTEXT,
+                         "no MAPU identity declared; resolved from the context", mapu=mapu, quote=quote)
         if provided_sha and provided_sha != mapu.sha256:
             self._record(kind, item_id, INVALID_HASH, "source_sha256 does not match the MAPU", mapu=mapu, quote=quote)
             return None
@@ -155,35 +243,50 @@ class CandidateMaterializer:
         if uri and not (uri == root or uri.startswith(root + "/")):
             self._record(kind, item_id, URI_MISMATCH, "source_uri is outside the MAPU resource", mapu=mapu, quote=quote)
             return None
-        start = raw.get("char_start")
-        end = raw.get("char_end")
-        if start is not None and end is not None:
-            if not isinstance(start, int) or not isinstance(end, int):
-                self._record(kind, item_id, INVALID_OFFSET, "offsets are not integers", mapu=mapu, quote=quote)
-                return None
-            if not 0 <= start <= end <= len(mapu.content) or mapu.content[start:end] != quote:
-                self._record(kind, item_id, INVALID_OFFSET, "source[char_start:char_end] != quote", mapu=mapu, quote=quote, start=start, end=end)
-                return None
-            classification = EXACT_SPAN
-            extraction = "llm"
-            reason = None
-        else:
-            occurrences = []
-            position = mapu.content.find(quote)
-            while position != -1:
-                occurrences.append(position)
-                position = mapu.content.find(quote, position + 1)
-            if not occurrences:
-                self._record(kind, item_id, INVALID_QUOTE, "quote does not occur in the MAPU", mapu=mapu, quote=quote)
-                return None
-            if len(occurrences) > 1:
-                self._record(kind, item_id, AMBIGUOUS_QUOTE, f"quote occurs {len(occurrences)} times", mapu=mapu, quote=quote)
-                return None
-            start = occurrences[0]
-            end = start + len(quote)
+
+        # The quote is the authority: it is located deterministically and the declared
+        # offsets are kept as auxiliary information, never as the address of the evidence.
+        declared_start, declared_end = raw.get("char_start"), raw.get("char_end")
+        declared_hint = None
+        if declared_start is not None or declared_end is not None:
+            declared_hint = {"char_start": declared_start, "char_end": declared_end}
+        occurrences = self._locate_quote(mapu.content, quote, raw.get("context"))
+        if not occurrences:
+            self._record(kind, item_id, INVALID_QUOTE,
+                         "quote does not occur in the MAPU; declared offsets are not authority",
+                         mapu=mapu, quote=quote)
+            return None
+        if len(occurrences) > 1:
+            self._record(kind, item_id, AMBIGUOUS_QUOTE,
+                         f"quote occurs {len(occurrences)} times and the context does not disambiguate it",
+                         mapu=mapu, quote=quote)
+            return None
+        start = occurrences[0]
+        end = start + len(quote)
+        reason: str | None = None
+        extraction = "llm"
+        if declared_hint is None:
             classification = OFFSET_RESOLVED_UNIQUE
             extraction = "llm_offset_resolved_unique"
             reason = "offsets absent; unique quote located deterministically"
+        elif not (isinstance(declared_start, int) and isinstance(declared_end, int)) \
+                or declared_start < 0 or declared_end < declared_start:
+            classification = DECLARED_OFFSET_IGNORED
+            extraction = "llm_offset_resolved_declared_ignored"
+            reason = ("declared offsets are not a usable span; the deterministic location of the "
+                      "unique quote is the address of the evidence")
+        elif (declared_start, declared_end) == (start, end):
+            classification = EXACT_SPAN
+        else:
+            classification = QUOTE_AUTHORITATIVE
+            extraction = "llm_offset_resolved_quote_authority"
+            reason = (f"declared offsets {declared_start}:{declared_end} disagree with the quote, which "
+                      f"occurs exactly once at {start}:{end}; declared offsets are recorded as auxiliary")
+        source_unit_problem = self._source_unit_problem(mapu, raw, start, end)
+        if source_unit_problem is not None:
+            self._record(kind, item_id, SOURCE_UNIT_MISMATCH, source_unit_problem,
+                         mapu=mapu, quote=quote, start=start, end=end)
+            return None
         evidence_id = stable_id(
             "ev",
             {
@@ -195,8 +298,20 @@ class CandidateMaterializer:
             evidence_id=evidence_id, mapu_id=mapu.mapu_id, source_uri=mapu.source_uri,
             source_sha256=mapu.sha256, quote=quote, char_start=start, char_end=end,
             offset_unit="unicode_codepoint", extraction_method=extraction,
+            context=raw.get("context"), source_unit_id=declared_unit,
+            declared_offsets=declared_hint,
         )
         self.evidence_pool.setdefault(evidence_id, evidence)
+        existing = self.evidence_pool[evidence_id]
+        if existing is not evidence:
+            # The same verified span declared twice is one evidence record. Auxiliary
+            # hints are merged, never dropped: the record keeps every declaration.
+            if evidence.source_unit_id and not existing.source_unit_id:
+                existing.source_unit_id = evidence.source_unit_id
+            if evidence.context and not existing.context:
+                existing.context = evidence.context
+            if evidence.declared_offsets and not existing.declared_offsets:
+                existing.declared_offsets = evidence.declared_offsets
         self._record(kind, item_id, classification, reason, evidence_id=evidence_id, mapu=mapu, quote=quote, start=start, end=end)
         return evidence
 
@@ -237,6 +352,81 @@ class CandidateMaterializer:
         if isinstance(raw, float):
             return Value(value_type="number", value=raw)
         return Value(value_type="string", value=str(raw))
+
+    def _declared_evidence(self, kind: str, item_id: str, raw: dict[str, Any]) -> CandidateEvidence | None:
+        """Keep a declared evidence entry exactly as proposed, without claiming verification.
+
+        This is the only path that produces evidence without a MAPU context (the
+        deprecated `read_candidate` compatibility reader). Nothing is discarded and
+        nothing is upgraded: `validation_status` stays NOT_EVALUATED and the decision
+        says why.
+        """
+        quote = str(raw.get("quote") or "")
+        uri = str(raw.get("source_uri") or "")
+        mapu_id = str(raw.get("mapu_id") or "")
+        if not quote and not uri:
+            self._record(kind, item_id, NO_EVIDENCE, "no quote or source URI")
+            return None
+        declared_start, declared_end = raw.get("char_start"), raw.get("char_end")
+        evidence_id = stable_id(
+            "ev",
+            {"mapu_id": mapu_id, "source_sha256": str(raw.get("source_sha256") or ""),
+             "source_uri": uri, "start": declared_start, "end": declared_end, "quote": quote},
+        )
+        evidence = CandidateEvidence(
+            evidence_id=evidence_id, mapu_id=mapu_id, source_uri=uri,
+            source_sha256=str(raw.get("source_sha256") or ""), quote=quote,
+            char_start=declared_start if isinstance(declared_start, int) else -1,
+            char_end=declared_end if isinstance(declared_end, int) else -1,
+            extraction_method="declared_unverified", validation_status="NOT_EVALUATED",
+            context=raw.get("context"),
+            source_unit_id=str(raw.get("source_unit_id") or "") or None,
+            declared_offsets=({"char_start": declared_start, "char_end": declared_end}
+                              if declared_start is not None or declared_end is not None else None),
+        )
+        self.evidence_pool.setdefault(evidence_id, evidence)
+        self._record(kind, item_id, DECLARED_UNVERIFIED,
+                     "no MAPU context: evidence preserved as declared, verification not claimed",
+                     evidence_id=evidence_id, quote=quote,
+                     start=evidence.char_start if evidence.char_start >= 0 else None,
+                     end=evidence.char_end if evidence.char_end >= 0 else None)
+        return evidence
+
+    def _admit_polarity(self, kind: str, item_id: str, raw: dict[str, Any]) -> str | None:
+        """Return the polarity to store, or None when the object cannot be admitted.
+
+        Absence is never turned into POSITIVE: the object stays out of the canonical set
+        and the reason is recorded in the materialization manifest
+        (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+        """
+        declared = _text(raw.get("polarity"))
+        if not self.verify_evidence:
+            # Compatibility reader: the candidate domain can represent UNKNOWN, so the
+            # declared value is preserved as-is and no admission decision is taken here.
+            return declared.upper() if declared else "UNKNOWN"
+        if declared is None:
+            self._record(kind, item_id, POLARITY_UNKNOWN,
+                         "no polarity declared; the object is not admitted to the canonical set")
+            return None
+        declared = declared.upper()
+        if declared not in CANONICAL_POLARITIES:
+            self._record(kind, item_id, POLARITY_UNKNOWN,
+                         f"polarity {declared!r} cannot be stored in the canonical set; "
+                         "the object stays pending")
+            return None
+        return declared
+
+    def _modality(self, kind: str, item_id: str, raw: dict[str, Any]) -> str:
+        """Declared modality, or UNKNOWN. A claim is never assumed to be a fact."""
+        declared = _text(raw.get("modality"))
+        if declared is None:
+            return "UNKNOWN"
+        declared = declared.upper()
+        if declared not in MODALITIES:
+            self._record(kind, item_id, MODALITY_UNRECOGNIZED,
+                         f"modality {declared!r} is not part of the contract; recorded as UNKNOWN")
+            return "UNKNOWN"
+        return declared
 
     def _parse_result_json(self, text: str) -> Any:
         try:
@@ -282,6 +472,7 @@ class CandidateMaterializer:
             "path_ownership": self.registry.to_dict(),
             "provider_schema": None,
             "mode": None,
+            "evidence_policy": dict(EVIDENCE_POLICY),
             "warnings": list(self.warnings),
             "decisions": [],
             "evidence": {},
@@ -351,14 +542,19 @@ class CandidateMaterializer:
             if not source or not target or not predicate:
                 raise CandidateMaterializationError("relation requires from, to and predicate")
             refs, sources = self._evidence_for_item("relation", f"{source}:{predicate}:{target}", raw)
+            polarity = self._admit_polarity("relation", f"{source}:{predicate}:{target}", raw)
+            if polarity is None:
+                continue
             relations.append(CandidateRelation(
                 from_entity=source, to_entity=target, relation=predicate,
                 label=str(raw.get("label") or predicate),
-                polarity=str(raw.get("polarity") or "POSITIVE"),
+                polarity=polarity,
                 scope=str(raw.get("scope") or "document"),
                 temporal_scope=raw.get("temporal_scope"),
                 temporal=TemporalScope.from_dict(raw.get("temporal")),
                 evidence_refs=refs, sources=sources,
+                modality=self._modality("relation", f"{source}:{predicate}:{target}", raw),
+                attribution=_text(raw.get("attribution")),
                 # Predicate layer: copied verbatim, never invented. When the
                 # provider omits it the fields stay None and the correspondence
                 # policy in `kuyen.semantics` decides, explicitly and auditable.
@@ -383,15 +579,20 @@ class CandidateMaterializer:
             if value is None and object_entity is None:
                 raise CandidateMaterializationError("assertion requires value or object_entity")
             refs, sources = self._evidence_for_item("assertion", f"{subject}:{predicate}", raw)
+            polarity = self._admit_polarity("assertion", f"{subject}:{predicate}", raw)
+            if polarity is None:
+                continue
             assertions.append(CandidateAssertion(
                 subject=subject, predicate=predicate, object_entity=object_entity, value=value,
-                polarity=str(raw.get("polarity") or "POSITIVE"),
+                polarity=polarity,
                 scope=str(raw.get("scope") or "document"),
                 temporal_scope=raw.get("temporal_scope"),
                 temporal=TemporalScope.from_dict(raw.get("temporal")),
                 evidence_refs=refs, sources=sources,
                 proposed_status=(str(raw.get("epistemic_status") or raw.get("proposed_status"))
                                  if (raw.get("epistemic_status") or raw.get("proposed_status")) else None),
+                modality=self._modality("assertion", f"{subject}:{predicate}", raw),
+                attribution=_text(raw.get("attribution")),
             ))
         coverage = self._derive_coverage(entities, relations, assertions, data["coverage"])
         return CandidateBundle(
@@ -496,14 +697,20 @@ class CandidateMaterializer:
             if not isinstance(evidence, list):
                 evidence = [evidence]
             refs, sources = self._evidence_for_item("relation", f"{source}:{predicate}:{target}", {**row, "evidence": evidence})
+            item_id = f"{source}:{predicate}:{target}"
+            polarity = self._admit_polarity("relation", item_id, row)
+            if polarity is None:
+                continue
             relations.append(CandidateRelation(
                 from_entity=source, to_entity=target, relation=predicate,
                 label=str(row.get("label") or predicate),
-                polarity=str(row.get("polarity") or "POSITIVE"),
+                polarity=polarity,
                 scope=str(row.get("scope") or "document"),
                 temporal_scope=row.get("temporal_scope"),
                 temporal=TemporalScope.from_dict(row.get("temporal")),
                 evidence_refs=refs, sources=sources,
+                modality=self._modality("relation", item_id, row),
+                attribution=_text(row.get("attribution")),
             ))
         assertions: list[CandidateAssertion] = []
         for row in self._jsonl_rows(artifacts.get("assertions.jsonl", ""), "assertions.jsonl"):
@@ -518,16 +725,22 @@ class CandidateMaterializer:
             evidence = row.get("evidence") or []
             if not isinstance(evidence, list):
                 evidence = [evidence]
-            refs, sources = self._evidence_for_item("assertion", f"{subject}:{predicate}", {**row, "evidence": evidence})
+            item_id = f"{subject}:{predicate}"
+            refs, sources = self._evidence_for_item("assertion", item_id, {**row, "evidence": evidence})
+            polarity = self._admit_polarity("assertion", item_id, row)
+            if polarity is None:
+                continue
             assertions.append(CandidateAssertion(
                 subject=subject, predicate=predicate, object_entity=object_entity, value=value,
-                polarity=str(row.get("polarity") or "POSITIVE"),
+                polarity=polarity,
                 scope=str(row.get("scope") or "document"),
                 temporal_scope=row.get("temporal_scope"),
                 temporal=TemporalScope.from_dict(row.get("temporal")),
                 evidence_refs=refs, sources=sources,
                 proposed_status=(str(row.get("epistemic_status") or row.get("proposed_status"))
                                  if (row.get("epistemic_status") or row.get("proposed_status")) else None),
+                modality=self._modality("assertion", item_id, row),
+                attribution=_text(row.get("attribution")),
             ))
         if not entities:
             raise CandidateMaterializationError("native structured output contains no entity files")

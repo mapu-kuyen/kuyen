@@ -141,13 +141,15 @@ class PolicyTests(unittest.TestCase):
 
     def test_normalizer_does_not_invent_a_source_predicate(self):
         item = self._graph(CandidateRelation(from_entity="p1", relation="related_to",
-                                             to_entity="p2", label="se relaciona con"))
+                                             to_entity="p2", label="se relaciona con",
+                                             polarity="POSITIVE"))
         self.assertIsNone(item.source_predicate)
         self.assertEqual(item.mapping_status, "UNRESOLVED")
 
     def test_preserved_native_predicate_survives_and_is_flagged(self):
         item = self._graph(CandidateRelation(
             from_entity="p1", relation="related_to", to_entity="p2", label="se relaciona con",
+            polarity="POSITIVE",
             source_predicate="coordina a", canonical_predicate="coordina a",
             mapping_status="UNMAPPED", mapping_rule_id="test-v1"))
         self.assertEqual(item.predicate, "coordina a")

@@ -65,11 +65,13 @@ class EvidenceAndCoverageTests(unittest.IsolatedAsyncioTestCase):
                 {
                     "subject": "asociacion-rio-claro", "predicate": "has_member_count",
                     "value": {"value_type": "integer", "value": 9},
+                    "polarity": "POSITIVE",
                     "sources": [SOURCE_URI], "evidence_refs": ["ev-1"],
                 },
                 {
                     "subject": "asociacion-rio-claro", "predicate": "has_member_count",
                     "value": {"value_type": "integer", "value": 10},
+                    "polarity": "POSITIVE",
                     "sources": [SOURCE_URI], "evidence_refs": ["ev-1"],
                 },
             ]

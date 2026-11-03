@@ -83,12 +83,12 @@ def candidate(coverage: list[dict] | None = None) -> dict:
         ],
         "relations": [
             {"from": "alpha", "relation": "located_in", "to": "beta", "label": "se ubica en",
-             "sources": [URI], "evidence_refs": ["ev-1"]},
+             "polarity": "POSITIVE", "sources": [URI], "evidence_refs": ["ev-1"]},
         ],
         "assertions": [
             {"subject": "alpha", "predicate": "has_member_count",
              "value": {"value_type": "integer", "value": 3, "unit": "socios"},
-             "sources": [URI], "evidence_refs": ["ev-2"]},
+             "polarity": "POSITIVE", "sources": [URI], "evidence_refs": ["ev-2"]},
         ],
         "evidence": [
             evidence("La organización Alpha está en Beta.", "ev-1"),

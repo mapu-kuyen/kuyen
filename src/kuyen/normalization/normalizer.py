@@ -9,6 +9,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..canonical import normalized_name, stable_id
+from ..errors import InvalidRequestError
 from ..models import (
     Assertion,
     EpistemicStatus,
@@ -179,6 +180,8 @@ def normalize_bundle(
                 mapping_rule_id=item.mapping_rule_id,
                 mapping_version=item.mapping_version,
                 provider_projection_status=item.provider_projection_status or "EXACT",
+                modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
+                attribution=getattr(item, "attribution", None),
             )
         )
 
@@ -231,6 +234,8 @@ def normalize_bundle(
                 sources=list(dict.fromkeys(item.sources)),
                 proposed_status=proposed,
                 proposed_status_raw=proposed_raw,
+                modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
+                attribution=getattr(item, "attribution", None),
             )
         )
 
@@ -296,7 +301,29 @@ def normalize_bundle(
 
 
 def _polarity(value: str) -> Polarity:
+    """Strict mapping of a candidate polarity onto the canonical domain.
+
+    There is no default. `UNKNOWN` (and anything else the canonical schema cannot carry)
+    is refused instead of being stored as an affirmative statement: the materializer is
+    the layer that decides whether such an object is admitted at all, and this function
+    never invents a value on its behalf (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+    """
+    text = str(value or "").strip().upper()
+    if not text:
+        raise InvalidRequestError(
+            "candidate object has no polarity; it cannot enter the canonical set",
+            details={"code": "POLARITY_REQUIRED"},
+        )
     try:
-        return Polarity(value)
-    except ValueError:
-        return Polarity.POSITIVE
+        polarity = Polarity(text)
+    except ValueError as exc:
+        raise InvalidRequestError(
+            f"polarity {value!r} is not part of the canonical domain",
+            details={"code": "POLARITY_INVALID", "polarity": text},
+        ) from exc
+    if polarity is Polarity.UNKNOWN:
+        raise InvalidRequestError(
+            "polarity UNKNOWN cannot be stored in the canonical set; the object stays pending",
+            details={"code": "POLARITY_UNKNOWN_NOT_ADMITTED", "polarity": text},
+        )
+    return polarity

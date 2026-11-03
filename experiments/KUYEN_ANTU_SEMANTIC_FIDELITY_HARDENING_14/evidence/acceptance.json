@@ -1,0 +1,14 @@
+{
+  "partial_update_keeps_modality": true,
+  "partial_update_keeps_polarity": true,
+  "modality_only_no_value_change": true,
+  "modality_only_kept_attribution": true,
+  "documentary_origin_preserved": true,
+  "multi_retraction_atomic": true,
+  "valid_relations_intact": true,
+  "schema_field_versioned": true,
+  "schema_repeat_no_version": true,
+  "no_committed_before_commit": true,
+  "operations_committed_only_after_commit": true,
+  "all_ten_verify": true
+}

@@ -1,0 +1,24 @@
+{
+  "13": {
+    "evaluations": 25,
+    "committed": 5,
+    "no_changes": 16,
+    "rejected": 3,
+    "clarification": 1,
+    "failed": 0,
+    "semantic_violations": 0,
+    "cost_usd": 0.229773,
+    "seconds": 206.09
+  },
+  "14": {
+    "evaluations": 23,
+    "committed": 8,
+    "no_changes": 11,
+    "rejected": 2,
+    "clarification": 1,
+    "failed": 1,
+    "semantic_violations": 0,
+    "cost_usd": 0.190396,
+    "seconds": 129.3
+  }
+}

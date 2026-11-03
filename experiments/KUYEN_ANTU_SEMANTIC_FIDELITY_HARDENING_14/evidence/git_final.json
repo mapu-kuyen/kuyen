@@ -1,0 +1,17 @@
+{
+  "branch": "work/kuyen-free-text-graph",
+  "head_at_start": "dfab165eec044b344dd8a5e3e2b94693153fc968",
+  "remotes": [
+    "origin\thttps://github.com/mapu-kuyen/kuyen.git (fetch)",
+    "origin\thttps://github.com/mapu-kuyen/kuyen.git (push)"
+  ],
+  "code_commits": [
+    "8bd4c05 feat(editing): contract for relation sweeps and schema fields",
+    "2ffaa89 fix(storage): list versions in creation order",
+    "e20a6cd fix(editing): partial Antu updates preserve statement semantics"
+  ],
+  "experiment_commit": "the commit that adds this file; its hash cannot contain itself",
+  "status_entries": 71,
+  "push": "not performed (brief: no push during this task)",
+  "prior_work": "untouched; 325 files of experiment 13 verified by sha256"
+}

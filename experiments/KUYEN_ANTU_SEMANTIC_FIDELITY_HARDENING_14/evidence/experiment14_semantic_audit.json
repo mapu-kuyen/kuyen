@@ -1,0 +1,40 @@
+{
+  "assertions_replaced": 3,
+  "with_semantic_loss": 0,
+  "properties_lost": 0,
+  "findings": [
+    {
+      "kuyen": "KUYEN-001",
+      "antu": "K001-VAL",
+      "version": "VER-6d440968cbb3",
+      "old": "asrt_fee8e5347fbe53a713ff",
+      "new": "asrt_8a29e31fcad20563e4dc",
+      "requested": [
+        "value"
+      ],
+      "lost": []
+    },
+    {
+      "kuyen": "KUYEN-008",
+      "antu": "K008-VAL2",
+      "version": "VER-529b4688b446",
+      "old": "asrt_59d501ee3aaa8ebb4828",
+      "new": "asrt_7c8211a7aae24dd50c52",
+      "requested": [
+        "value"
+      ],
+      "lost": []
+    },
+    {
+      "kuyen": "KUYEN-003",
+      "antu": "K003-VAL3",
+      "version": "VER-b54579461c44",
+      "old": "asrt_ff9f2dedf11b421d7757",
+      "new": "asrt_147fee5f92a4f5d617ab",
+      "requested": [
+        "value"
+      ],
+      "lost": []
+    }
+  ]
+}

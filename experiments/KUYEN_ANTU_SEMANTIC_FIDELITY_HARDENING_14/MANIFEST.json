@@ -1,0 +1,91 @@
+{
+  "experiment": "KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14",
+  "files": [
+    {
+      "path": "REPORT.md",
+      "bytes": 11544,
+      "sha256": "3a2aedf53de00b9738f7689b098bfec5e21157aa0896776bad59cbeb32013156"
+    },
+    {
+      "path": "benchmarks/runs.csv",
+      "bytes": 4650,
+      "sha256": "189397ff1e63c3824f0a2b5d797af27a408c092dbd32438a59b087938200e450"
+    },
+    {
+      "path": "evidence/acceptance.json",
+      "bytes": 461,
+      "sha256": "6cb80e6b2fd8834f536cd637373e0db1c49de27ad277a9081fb5d0938b121aa2"
+    },
+    {
+      "path": "evidence/baseline_semantic_audit.json",
+      "bytes": 1891,
+      "sha256": "765782dd85d4341c6aa151c477c02cd48c6bf4def5fb380830b1052a10f21123"
+    },
+    {
+      "path": "evidence/comparison.json",
+      "bytes": 438,
+      "sha256": "1e1d04bbd890d2c49d8df31bd8e59c1092c57114b3f2c41bcee26f341492f146"
+    },
+    {
+      "path": "evidence/experiment13_sha256.txt",
+      "bytes": 40671,
+      "sha256": "c4c85e887af4ce899a8229f6777cbd09a6703b21928c1d0541ef6a3cb9dd7fda"
+    },
+    {
+      "path": "evidence/experiment14_semantic_audit.json",
+      "bytes": 857,
+      "sha256": "b0033ce49b90b63e0328293dd4602cbe1b226dca3d2c0e688000d682254df5d7"
+    },
+    {
+      "path": "evidence/git_final.json",
+      "bytes": 743,
+      "sha256": "761b73c95b365e893a20df9fc4072ef3b076bd914c72b7c393ab6e510937f27a"
+    },
+    {
+      "path": "evidence/real_runs.json",
+      "bytes": 2939301,
+      "sha256": "bed7481c64dc089bbacc34c6aac931170cf8da68a4df157aa8ec1b472ca8d0be"
+    },
+    {
+      "path": "logs/real_retries.log",
+      "bytes": 1997,
+      "sha256": "6716dd12d4fb1267db633b168a5bceb2131d8cdfbf4d2745f48e14db11929d5e"
+    },
+    {
+      "path": "logs/real_retries3.log",
+      "bytes": 819,
+      "sha256": "afefc694f105bf5f065f526c986db06fee639e0cc99999560c02e5d959f2f1fa"
+    },
+    {
+      "path": "logs/real_runs.log",
+      "bytes": 2208,
+      "sha256": "2ded407c0738e3a4891ac1425e00d4170f8d6a76e39eec10e0a741b30c5c96dc"
+    },
+    {
+      "path": "scripts/__pycache__/audit_baseline.cpython-313.pyc",
+      "bytes": 9540,
+      "sha256": "380bc92ff67ee0f0aee1f914c7dcc0ed8523c3855408cad5d2ff0bf5af803c90"
+    },
+    {
+      "path": "scripts/analyze.py",
+      "bytes": 4594,
+      "sha256": "5875baceb853a474e7c487113a5a454cfd56273ccf9f2918299bc65751f19d19"
+    },
+    {
+      "path": "scripts/audit_baseline.py",
+      "bytes": 6182,
+      "sha256": "68c1a692ecf4a30b66a228ef1c9d3c4e26f6303dc191d127950120e2426553d7"
+    },
+    {
+      "path": "scripts/report14.py",
+      "bytes": 12617,
+      "sha256": "10bb30acecf7ad2b3043f8062df1d86b0857faa36047e677ef1da1105fc1bee0"
+    },
+    {
+      "path": "scripts/run_real.py",
+      "bytes": 14589,
+      "sha256": "7f0df940651cd759419f91cca4b05aa2350dd6c9ff66564971825a439f321155"
+    }
+  ],
+  "file_count": 17
+}

@@ -1,0 +1,8 @@
+[antu] KUYEN-003 K003-VAL3 · Cambia 54,6 por 54,7 en la afirmación de capacidad de Cantábrico Occidental.
+        COMMITTED · 4.01s · version=VER-b54579461c44 · applied=1 · violations=0 · error=None
+[antu] KUYEN-005 K005-REL3 · Hay dos relaciones incorrectas: AQUALICIOUS → España y AQUALICIOUS → Noruega. Re
+        COMMITTED · 4.32s · version=VER-924d732d0d70 · applied=2 · violations=0 · error=None
+[antu] KUYEN-010 K010-SCH3 · Declara el campo codigo_interno de tipo texto en el tipo de entidad supplier. Es
+        NO_CHANGES · 2.59s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-007 K007-REL3 · Crea la entidad Langley Research Center como organización y añade que J. Sills t
+        NO_CHANGES · 5.93s · version=None · applied=0 · violations=0 · error=None

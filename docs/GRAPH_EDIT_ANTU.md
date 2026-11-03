@@ -175,31 +175,29 @@ permite auditar y demostrar una edición sin llamar a ningún modelo.
 ## 11. Ejemplo mínimo
 
 ```python
-from kuyen import KuyenMemory, RecordedGraphEditor
-import json
+from kuyen import KuyenMemory, EditorConfig, OpenAICompatibleGraphEditor
 
 memory = KuyenMemory.open("/var/lib/kuyen")
-base = memory.current().version_id
-assertion = memory.graph()["assertions"][0]["assertion_id"]
-
-propuesta = {
-    "schema_version": "kuyen-graph-edit-v1",
-    "status": "PROPOSED",
-    "operations": [{
-        "operation_id": "op-1", "op": "UPDATE_ASSERTION",
-        "target": {"assertion_id": assertion},
-        "expected": {"value": {"value_type": "integer", "value": 12,
-                               "unit": "luminarias", "context": None}},
-        "value": {"value": {"value_type": "integer", "value": 18, "unit": "luminarias"}},
-        "reason": "la instrucción corrige la cantidad instalada",
-        "antu_ref": "de 12 a 18"}]}
+editor = OpenAICompatibleGraphEditor(EditorConfig.from_env())
 
 resultado = memory.apply_antu(
     "Cambia la cantidad de luminarias de 12 a 18",
-    editor=RecordedGraphEditor({}), dry_run=True)   # o un editor real
+    editor=editor,
+    actor={"leftraru_id": "LR-1", "authenticated_user": "ana"},
+    dry_run=True,          # valida y no escribe; quítalo para confirmar
+)
+
+resultado.status            # COMMITTED | VALIDATED | REJECTED | CONFLICT | ...
+resultado.version_id        # la versión nueva, o None
+resultado.operations        # operaciones aceptadas
+resultado.rejected          # [{operation_id, op, code, message}]
+resultado.provenance        # {kind: ANTU_INSTRUCTION, documentary_verification: False, ...}
+resultado.diff              # qué cambió exactamente
+resultado.clarification     # la pregunta, si la instrucción era ambigua
+resultado.model             # proveedor, modelo, hashes y consumo
 ```
 
-Con un editor real (`OpenAICompatibleGraphEditor(EditorConfig.from_env())`) el resultado es
-el mismo objeto `AntuEditResult`, con `status`, `version_id`, `operations`, `rejected`,
-`affected`, `provenance`, `diff`, `clarification`, `model` y `committed`.
+`dry_run=True` produce `VALIDATED` y no escribe nada: sirve para revisar antes de
+confirmar. Sin `dry_run`, o con `commit`, el resultado es `COMMITTED` y el grafo tiene una
+versión nueva.
 

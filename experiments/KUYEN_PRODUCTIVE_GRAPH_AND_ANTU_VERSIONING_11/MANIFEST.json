@@ -1,12 +1,7 @@
 {
   "base_commit": "9a5e512",
   "branch": "work/kuyen-free-text-graph",
-  "commits": [
-    "c6c398c",
-    "ea5c87d",
-    "92ca99f",
-    "5f586fd"
-  ],
+  "commits_authoritative_source": "git_state_final.txt and `git log 9a5e512..HEAD`",
   "experiment": "KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11",
   "files": {
     "REPORT.md": {
@@ -67,6 +62,7 @@
     }
   },
   "inferences": 0,
+  "note": "hashes are of this snapshot; the docs commit that follows only regenerates this file",
   "pushed": false,
   "suite": {
     "failed": 0,

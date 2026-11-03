@@ -22,7 +22,7 @@ VEREDICTO: NÚCLEO PRODUCTIVO IMPLEMENTADO Y PROBADO OFFLINE · INTEGRACIONES RE
 | --- | --- | --- |
 | Raíz real | `/private/tmp/kuyen_hardening_01/kuyen` | igual |
 | Rama | `work/kuyen-free-text-graph` | igual |
-| HEAD | `9a5e512` (con `b6ad5fc` en la historia) | `9a5e512` + 11 commits locales |
+| HEAD | `9a5e512` (con `b6ad5fc` en la historia) | `9a5e512` + los commits de §11 |
 | Remoto / upstream | `origin` `https://github.com/mapu-kuyen/kuyen.git` · **sin upstream** | igual |
 | Modificados / sin rastrear | 30 / 38 (verificado, coincide con el reporte previo) | ver §10 |
 | Suite | 377 tests · 375 passed · 2 skipped · 0 failed | **450 tests · 447 passed · 3 skipped · 0 failed** |
@@ -322,9 +322,11 @@ Ver `MANIFEST.json` (sha256 de cada archivo de `evidence/` y `logs/`).
 | `8240d97` | `editing`: `expected` parcial, identidad sin consumo, registro sin claves internas |
 | `866ea0f` | `documento`: árbol nativo, predicado declarado preservado, origen `DOCUMENT_REFERENCE` |
 | `152cbc7` | `experimento`: inferencias reales y compilación real, manifiesto y estado de git |
+| `cfe8884` | `docs(experiment)`: recuentos finales y manifiesto rehasheado |
 
 La lista autoritativa es `git log --oneline 9a5e512..HEAD`; `git_state_final.txt` se capturó antes del último commit; el estado final es el que
-muestra la lista autoritativa (11 commits desde `9a5e512`).
+muestra la lista autoritativa. El commit que cierra esta documentación no se lista a sí
+mismo: `git log --oneline 9a5e512..HEAD` es la fuente.
 
 `b6ad5fc` y `9a5e512` permanecen intactos en la historia.
 
@@ -362,7 +364,7 @@ python -m pytest -q tests/
 python -m build && python -m twine check dist/*
 
 # 2. historia local, sin secretos
-git log --oneline 9a5e512..HEAD          # 11 commits de este trabajo
+git log --oneline 9a5e512..HEAD          # los commits de este trabajo (ver §11)
 git diff 9a5e512..HEAD --stat | tail -1
 git diff 9a5e512..HEAD | grep -nE 'sk-[A-Za-z0-9]{16,}|DEEPSEEK_API_KEY=.+|OPENAI_API_KEY=.'   && echo 'SECRETO ENCONTRADO: no publicar' || echo 'sin secretos'
 

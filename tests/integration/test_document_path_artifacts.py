@@ -86,9 +86,17 @@ def mapu():
                 sha256=sha256_text(text))
 
 
-EXTRA_RELATION_TYPES = ("contracted", "supervises", "complaint")
+# Entity types the live producer uses for this document. `location` is not part of the
+# shipped `generic-v1` profile, so the operator declares it here — explicitly, in a test
+# fixture, never by patching the product ontology at runtime.
+EXTRA_ENTITY_TYPES = ("location", "group", "event", "document", "role", "product")
+
+EXTRA_RELATION_TYPES = ("contracted", "supervises", "complaint", "has_agreement",
+                        "has_complaint", "responsible_for_installation")
 EXTRA_SCALAR_PREDICATES = ("has_installed_lights", "has_pending_lights",
-                           "has_operational_lights", "expected_installation_date")
+                           "has_operational_lights", "expected_installation_date",
+                           "installed_lights", "pending_installations",
+                           "operational_lights")
 
 ONTOLOGY_EXTENSION = """profile: generic-v1
 version: 1.0.0+ftg08
@@ -107,6 +115,8 @@ def extended_ontology(tmp_path: Path) -> Path:
     import yaml
 
     base = yaml.safe_load((ROOT / "src/kuyen/config/ontologies/generic-v1.yaml").read_text())
+    for name in EXTRA_ENTITY_TYPES:
+        base["entity_types"][name] = {"description": f"Domain type {name} (operator-declared)."}
     for name in EXTRA_RELATION_TYPES:
         base["relation_types"][name] = {
             "label": name, "from_types": ["organization", "person", "group", "concept"],
@@ -159,7 +169,8 @@ def antu() -> dict:
             "purpose": "incorporar el acta de seguimiento",
             "author": "agent-design", "scope": {"include": ["acta"], "exclude": []},
             "language": "es", "ontology_profile": "generic-v1",
-            "entity_types": ["organization", "person", "place", "concept"],
+            "entity_types": ["organization", "person", "place", "concept",
+                             *EXTRA_ENTITY_TYPES],
             "relation_types": list(EXTRA_RELATION_TYPES),
             "coverage_policy": "complete", "evidence_policy": "strict",
             "scalar_policy": "literal", "conflict_policy": "preserve_unresolved",

@@ -22,12 +22,17 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 ORIGIN_DOCUMENT = "DOCUMENT_EVIDENCE"
+# The object comes from a document but KÜYEN could not verify a quote for it (the request
+# used the `document` evidence policy, or the producer only declared the source URI).
+# It is documentary provenance without documentary verification.
+ORIGIN_DOCUMENT_REFERENCE = "DOCUMENT_REFERENCE"
 ORIGIN_ANTU = "ANTU_INSTRUCTION"
 ORIGIN_PRIOR = "PRIOR_VERSION"
 ORIGIN_INFERENCE = "INFERENCE_PENDING"
 ORIGIN_UNSPECIFIED = "UNSPECIFIED"
 
-ORIGIN_KINDS = (ORIGIN_DOCUMENT, ORIGIN_ANTU, ORIGIN_PRIOR, ORIGIN_INFERENCE, ORIGIN_UNSPECIFIED)
+ORIGIN_KINDS = (ORIGIN_DOCUMENT, ORIGIN_DOCUMENT_REFERENCE, ORIGIN_ANTU, ORIGIN_PRIOR,
+                ORIGIN_INFERENCE, ORIGIN_UNSPECIFIED)
 DOCUMENT_ONLY_ORIGINS = (ORIGIN_DOCUMENT,)
 
 ORIGIN_SCHEMA_NAME = "KUYEN_STATEMENT_ORIGIN"
@@ -45,6 +50,19 @@ def document_origin(*, evidence_ids: Sequence[str], mapu_ids: Sequence[str],
         "mapu_ids": sorted({str(item) for item in mapu_ids if item}),
         "extraction_method": method,
         "antu": None,
+    }
+
+
+def document_reference_origin(*, mapu_ids: Sequence[str],
+                              reason: str = "no verifiable quote for this object") -> dict[str, Any]:
+    """Provenance of an object that comes from a document without a verifiable quote."""
+    return {
+        "schema_name": ORIGIN_SCHEMA_NAME, "schema_version": ORIGIN_SCHEMA_VERSION,
+        "kind": ORIGIN_DOCUMENT_REFERENCE,
+        "evidence_ids": [],
+        "mapu_ids": sorted({str(item) for item in mapu_ids if item}),
+        "reason": reason,
+        "documentary_verification": False,
     }
 
 
@@ -126,6 +144,11 @@ def is_documentary(record: Mapping[str, Any] | None) -> bool:
     return bool(record) and record.get("kind") in DOCUMENT_ONLY_ORIGINS
 
 
+def comes_from_document(record: Mapping[str, Any] | None) -> bool:
+    """True for both documentary origins, verified or only referenced."""
+    return bool(record) and record.get("kind") in (ORIGIN_DOCUMENT, ORIGIN_DOCUMENT_REFERENCE)
+
+
 def problems(record: Mapping[str, Any] | None, *,
              status: str | None = None, evidence_status: str | None = None,
              label: str = "object", identifier: Any = None) -> list[str]:
@@ -154,6 +177,10 @@ def problems(record: Mapping[str, Any] | None, *,
                 found.append(
                     f"ORIGIN_ANTU_CANNOT_BE_SOURCE_VERIFIED: {label} {identifier} is an "
                     f"instruction and cannot declare {key}=SOURCE_VERIFIED")
+    if kind == ORIGIN_DOCUMENT_REFERENCE and not record.get("mapu_ids"):
+        found.append(
+            f"ORIGIN_DOCUMENT_REFERENCE_WITHOUT_MAPU: {label} {identifier} does not say which "
+            "document it comes from")
     if kind == ORIGIN_DOCUMENT and not record.get("evidence_ids"):
         found.append(
             f"ORIGIN_DOCUMENT_WITHOUT_EVIDENCE: {label} {identifier} claims documentary "

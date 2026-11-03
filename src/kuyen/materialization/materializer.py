@@ -481,13 +481,28 @@ class CandidateMaterializer:
         }
         provider_result: dict[str, Any] | None = None
         if self.result_filename in artifacts:
-            payload = self._parse_result_json(artifacts[self.result_filename])
-            data = normalize_provider_result(payload)
-            provider_result = data
-            manifest["provider_schema"] = data["schema_version"]
-            manifest["warnings"].extend(data["warnings"])
-            bundle = self._structured_bundle(data)
-            manifest["mode"] = "structured_provider_result"
+            try:
+                payload = self._parse_result_json(artifacts[self.result_filename])
+                data = normalize_provider_result(payload)
+            except CandidateMaterializationError as exc:
+                # A malformed aggregate result must not destroy a valid native tree. The
+                # defect is recorded, not hidden, and the tree is the contract the Skill
+                # actually writes (measured in a real compilation, KUYEN_PRODUCTIVE_GRAPH_11).
+                if not self._has_native_structured(artifacts):
+                    raise
+                manifest["warnings"].append(
+                    f"{self.result_filename} ignored: {exc.message}")
+                manifest["provider_schema"] = NATIVE_CONTRACT_ID
+                manifest["structured_result_ignored"] = {
+                    "artifact": self.result_filename, "reason": exc.message}
+                bundle = self._native_structured_bundle(artifacts)
+                manifest["mode"] = "native_structured_after_invalid_structured_result"
+            else:
+                provider_result = data
+                manifest["provider_schema"] = data["schema_version"]
+                manifest["warnings"].extend(data["warnings"])
+                bundle = self._structured_bundle(data)
+                manifest["mode"] = "structured_provider_result"
         elif self._has_native_structured(artifacts):
             provider_result = None
             manifest["provider_schema"] = NATIVE_CONTRACT_ID
@@ -709,6 +724,20 @@ class CandidateMaterializer:
                 temporal_scope=row.get("temporal_scope"),
                 temporal=TemporalScope.from_dict(row.get("temporal")),
                 evidence_refs=refs, sources=sources,
+                # The native row declares the predicate the producer chose. Recording it as
+                # the *source* predicate is not an invention: it is what the producer wrote,
+                # and it is what lets KÜYEN preserve a term its ontology does not know as an
+                # explicit UNMAPPED projection instead of refusing the whole candidate
+                # (measured in a live OpenViking 0.5.0 compilation, KUYEN_PRODUCTIVE_GRAPH_11).
+                source_predicate=_text(row.get("source_predicate")) or predicate,
+                canonical_predicate=_text(row.get("canonical_predicate")) or predicate,
+                provider_predicate=_text(row.get("provider_predicate")),
+                display_label=_text(row.get("display_label")),
+                provider_label=_text(row.get("provider_label")),
+                mapping_status=_text(row.get("mapping_status")),
+                mapping_rule_id=_text(row.get("mapping_rule_id")),
+                mapping_version=_text(row.get("mapping_version")),
+                provider_projection_status=_text(row.get("provider_projection_status")),
                 modality=self._modality("relation", item_id, row),
                 attribution=_text(row.get("attribution")),
             ))
@@ -741,6 +770,12 @@ class CandidateMaterializer:
                                  if (row.get("epistemic_status") or row.get("proposed_status")) else None),
                 modality=self._modality("assertion", item_id, row),
                 attribution=_text(row.get("attribution")),
+                # the native row declares the assertion predicate: preserved, never invented
+                source_predicate=_text(row.get("source_predicate")) or predicate,
+                canonical_predicate=_text(row.get("canonical_predicate")) or predicate,
+                mapping_status=_text(row.get("mapping_status")),
+                mapping_rule_id=_text(row.get("mapping_rule_id")),
+                mapping_version=_text(row.get("mapping_version")),
             ))
         if not entities:
             raise CandidateMaterializationError("native structured output contains no entity files")

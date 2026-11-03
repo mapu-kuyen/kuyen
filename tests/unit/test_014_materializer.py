@@ -274,6 +274,67 @@ class MaterializerTests(unittest.TestCase):
         self.assertEqual(len(materialized.bundle.evidence), 0)
 
 
+def materialize_tree(artifacts: dict):
+    m = mapu()
+    inventory = {"MAPU-MAT": inventory_sections(SOURCE, mapu_id="MAPU-MAT")}
+    return m, CandidateMaterializer(mapus=[m], antu=_antu_obj(),
+                                   coverage_inventory=inventory).materialize(artifacts)
+
+
+class NativePredicatePreservationTests(unittest.TestCase):
+    """A predicate the producer declares is preserved, never turned into a generic one."""
+
+    def _native_tree(self):
+        import json
+
+        return {
+            "entities/municipalidad.md": (
+                "---\nid: municipalidad\nname: Municipalidad\nentity_type: organization\n"
+                f"sources:\n  - {URI}\n"
+                f"evidence:\n  - quote: \"{Q1}\"\n    source_uri: {URI}\n    mapu_id: MAPU-MAT\n"
+                "---\n\nCuerpo.\n"),
+            "entities/alpha.md": (
+                "---\nid: alpha\nname: Alpha\nentity_type: organization\n"
+                f"sources:\n  - {URI}\n"
+                f"evidence:\n  - quote: \"{Q2}\"\n    source_uri: {URI}\n    mapu_id: MAPU-MAT\n"
+                "---\n\nCuerpo.\n"),
+            "assertions.jsonl": json.dumps({
+                "subject": "alpha", "predicate": "installed_lights",
+                "value": {"value_type": "integer", "value": "47"},
+                "polarity": "POSITIVE", "modality": "FACT",
+                "evidence": [{"quote": Q2, "source_uri": URI, "mapu_id": "MAPU-MAT"}],
+            }) + "\n",
+        }
+
+    def test_a_declared_native_scalar_predicate_is_preserved_with_a_warning(self):
+        _, materialized = materialize_tree(self._native_tree())
+        self.assertEqual(materialized.bundle.assertions[0].source_predicate, "installed_lights")
+        result = evaluate(materialized.bundle)
+        codes = {item.code: item.severity for item in result.validation.issues}
+        self.assertEqual(codes.get("SCALAR_PREDICATE_PRESERVED_UNMAPPED"), "WARNING")
+        self.assertNotIn("SCALAR_PREDICATE_UNKNOWN", codes)
+        self.assertEqual(result.status, "ACCEPTED", result.validation.to_dict())
+
+    def test_an_undeclared_unknown_predicate_stays_an_error(self):
+        bundle = CandidateBundle.from_dict({
+            "entities": [{"id": "a", "name": "A", "entity_type": "organization",
+                          "sources": [URI], "evidence_refs": ["ev-1"]}],
+            "relations": [], "coverage": [],
+            "assertions": [{"subject": "a", "predicate": "invented_scalar",
+                            "value": {"value_type": "integer", "value": 1},
+                            "polarity": "POSITIVE", "sources": [URI],
+                            "evidence_refs": ["ev-1"]}],
+            "evidence": [{"evidence_id": "ev-1", "mapu_id": "MAPU-MAT",
+                          "source_uri": URI, "source_sha256": SHA, "quote": Q1,
+                          "char_start": SOURCE.index(Q1),
+                          "char_end": SOURCE.index(Q1) + len(Q1),
+                          "offset_unit": "unicode_codepoint", "extraction_method": "test"}],
+        })
+        result = evaluate(bundle)
+        self.assertEqual(result.status, "REJECTED")
+        self.assertIn("SCALAR_PREDICATE_UNKNOWN", {item.code for item in result.validation.errors})
+
+
 if __name__ == "__main__":
     unittest.main()
 

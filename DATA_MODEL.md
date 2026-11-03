@@ -106,9 +106,17 @@ the materializer records the refusal (`POLARITY_UNKNOWN`) instead of guessing it
 | `kind` | Meaning | May be `SOURCE_VERIFIED` |
 | --- | --- | --- |
 | `DOCUMENT_EVIDENCE` | derived from a MAPU through OpenViking, with quote and SOURCE_UNIT | **yes** |
+| `DOCUMENT_REFERENCE` | comes from a MAPU, but KÜYEN could not verify a quote for it | no |
 | `ANTU_INSTRUCTION` | declared by an authorised instruction on an existing version | **no** |
 | `PRIOR_VERSION` | carried over unchanged from an earlier version | inherited |
 | `INFERENCE_PENDING` | proposed, not admitted | no |
+
+`DOCUMENT_REFERENCE` is what a request that admits documentary evidence without a verified
+quote produces (`evidence_policy: "document"`, or a producer that only declares the source
+URI). It names the MAPU it comes from, carries no `evidence_ids`, and is never
+`SOURCE_VERIFIED`; the canonical validator refuses both `DOCUMENT_EVIDENCE` without evidence
+(`ORIGIN_DOCUMENT_WITHOUT_EVIDENCE`) and `DOCUMENT_REFERENCE` without a MAPU
+(`ORIGIN_DOCUMENT_REFERENCE_WITHOUT_MAPU`).
 
 An object with an `ANTU_INSTRUCTION` origin carries the literal instruction, its SHA-256,
 the Antü id, the base version, the actor (when known), the model and the reason — and never

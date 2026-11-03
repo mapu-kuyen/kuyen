@@ -510,6 +510,13 @@ class Assertion:
     semantic_status: str = "NOT_ASSESSED"
     support_method: str | None = None
     support_rationale: str | None = None
+    # Predicate layer of an assertion (mirrors `Relation`): the term the producer declared is
+    # preserved instead of being silently replaced by a generic scalar predicate.
+    source_predicate: str | None = None
+    canonical_predicate: str | None = None
+    mapping_status: str = "UNRESOLVED"
+    mapping_rule_id: str | None = None
+    mapping_version: str | None = None
     # Semantic dimensions of the statement (KUYEN_PRODUCTIVE_GRAPH_11, §5.4). An absent
     # modality is UNKNOWN, never FACT; attribution names the actor the claim is credited to.
     modality: str = "UNKNOWN"
@@ -555,6 +562,11 @@ class Assertion:
             supersedes=value.get("supersedes"),
             superseded_by=value.get("superseded_by"),
             retracted=bool(value.get("retracted", False)),
+            source_predicate=value.get("source_predicate"),
+            canonical_predicate=value.get("canonical_predicate"),
+            mapping_status=str(value.get("mapping_status") or "UNRESOLVED"),
+            mapping_rule_id=value.get("mapping_rule_id"),
+            mapping_version=value.get("mapping_version"),
         )
 
 
@@ -672,6 +684,12 @@ class CandidateAssertion:
     # Declared semantic dimensions; absence is UNKNOWN modality and no attribution.
     modality: str = "UNKNOWN"
     attribution: str | None = None
+    # Predicate layer declared by the producer (native artifacts declare it literally).
+    source_predicate: str | None = None
+    canonical_predicate: str | None = None
+    mapping_status: str = "UNRESOLVED"
+    mapping_rule_id: str | None = None
+    mapping_version: str | None = None
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "CandidateAssertion":
@@ -706,6 +724,11 @@ class CandidateAssertion:
             ),
             modality=str(value.get("modality") or "UNKNOWN"),
             attribution=value.get("attribution") if isinstance(value.get("attribution"), str) else None,
+            source_predicate=value.get("source_predicate"),
+            canonical_predicate=value.get("canonical_predicate"),
+            mapping_status=str(value.get("mapping_status") or "UNRESOLVED"),
+            mapping_rule_id=value.get("mapping_rule_id"),
+            mapping_version=value.get("mapping_version"),
         )
 
 @dataclass

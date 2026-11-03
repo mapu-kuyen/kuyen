@@ -161,7 +161,22 @@ class OntologyValidator:
                 continue
             spec = ontology.scalar_predicates.get(assertion.predicate)
             if spec is None:
-                errors.append(issue("SCALAR_PREDICATE_UNKNOWN", assertion.predicate, f"assertion:{assertion.assertion_id}"))
+                # The same correspondence policy the relation layer already applies: a term
+                # the producer declared explicitly is preserved with an explicit UNMAPPED
+                # state instead of being turned into a generic predicate or rejected
+                # (measured with a live Skill compilation, KUYEN_PRODUCTIVE_GRAPH_11).
+                preserved = bool(assertion.source_predicate or assertion.mapping_rule_id)
+                if preserved:
+                    errors.append(issue(
+                        "SCALAR_PREDICATE_PRESERVED_UNMAPPED", assertion.predicate,
+                        f"assertion:{assertion.assertion_id}", severity="WARNING",
+                        evidence=(f"mapping_status={assertion.mapping_status} "
+                                  f"rule={assertion.mapping_rule_id} "
+                                  f"source_predicate={assertion.source_predicate}"),
+                    ))
+                else:
+                    errors.append(issue("SCALAR_PREDICATE_UNKNOWN", assertion.predicate,
+                                        f"assertion:{assertion.assertion_id}"))
             elif assertion.value is not None:
                 allowed = set(spec.get("value_types") or [])
                 if allowed and assertion.value.value_type not in allowed:

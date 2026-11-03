@@ -330,6 +330,81 @@ class CompatibilityReaderTests(unittest.TestCase):
         self.assertEqual(materialized.bundle.relations[0].polarity, "UNKNOWN")
 
 
+class MalformedStructuredResultTests(unittest.TestCase):
+    """A broken aggregate file must not destroy a valid native tree (§8.1, measured)."""
+
+    def _tree(self, malformed: str | None):
+        tree = {
+            "entities/municipalidad.md": (
+                "---\nid: municipalidad\nname: Municipalidad\nentity_type: organization\n"
+                f"sources:\n  - {URI}\n"
+                f"evidence:\n  - quote: \"{DECLARED_QUOTE}\"\n    source_uri: {URI}\n"
+                f"    mapu_id: {MAPU_ID}\n---\n\nCuerpo.\n"),
+            "relations.jsonl": json.dumps(relation()) + "\n",
+        }
+        if malformed is not None:
+            tree["kuyen_result.json"] = malformed
+        return tree
+
+    def test_the_tree_is_materialized_and_the_defect_is_recorded(self):
+        materialized = materializer().materialize(self._tree('{"entities": [oops'))
+        self.assertEqual(materialized.manifest["mode"],
+                         "native_structured_after_invalid_structured_result")
+        self.assertEqual(materialized.manifest["provider_schema"], "kuyen-native-files-v1")
+        self.assertEqual(len(materialized.bundle.entities), 1)
+        self.assertEqual(len(materialized.bundle.relations), 1)
+        self.assertIn("ignored", materialized.manifest["warnings"][-1])
+        self.assertIn("kuyen_result.json",
+                      materialized.manifest["structured_result_ignored"]["artifact"])
+
+    def test_a_malformed_result_without_a_tree_is_still_fatal(self):
+        from kuyen.errors import CandidateMaterializationError
+
+        with self.assertRaises(CandidateMaterializationError):
+            materializer().materialize({"kuyen_result.json": "not json at all"})
+
+
+class StatementOriginTests(unittest.TestCase):
+    """Documentary provenance without documentary verification is its own kind."""
+
+    def test_a_reference_origin_is_documentary_but_not_verified(self):
+        from kuyen.semantics.origin import (ORIGIN_DOCUMENT_REFERENCE, comes_from_document,
+                                            document_reference_origin, is_documentary, problems)
+
+        record = document_reference_origin(mapu_ids=["MAPU-1"])
+        self.assertEqual(record["kind"], ORIGIN_DOCUMENT_REFERENCE)
+        self.assertTrue(comes_from_document(record))
+        self.assertFalse(is_documentary(record))
+        self.assertFalse(record["documentary_verification"])
+        self.assertEqual(record["evidence_ids"], [])
+        self.assertEqual(problems(record, label="assertion", identifier="a-1"), [])
+
+    def test_a_reference_origin_must_name_its_document(self):
+        from kuyen.semantics.origin import document_reference_origin, problems
+
+        record = document_reference_origin(mapu_ids=[])
+        found = problems(record, label="assertion", identifier="a-1")
+        self.assertEqual(len(found), 1)
+        self.assertIn("ORIGIN_DOCUMENT_REFERENCE_WITHOUT_MAPU", found[0])
+
+    def test_a_document_origin_without_evidence_stays_refused(self):
+        from kuyen.semantics.origin import document_origin, problems
+
+        found = problems(document_origin(evidence_ids=[], mapu_ids=["MAPU-1"]),
+                         label="relation", identifier="r-1")
+        self.assertIn("ORIGIN_DOCUMENT_WITHOUT_EVIDENCE", " ".join(found))
+
+    def test_an_instruction_can_never_declare_source_verified(self):
+        from kuyen.semantics.origin import antu_origin, problems
+
+        record = antu_origin(antu_id="ANTU-1", instruction="cambia 12 por 18",
+                             instruction_sha256=sha("cambia 12 por 18"),
+                             base_version_id="VER-000000000000")
+        found = problems(record, label="assertion", identifier="a-1",
+                         status="SOURCE_VERIFIED")
+        self.assertIn("ORIGIN_ANTU_CANNOT_BE_SOURCE_VERIFIED", " ".join(found))
+
+
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()
 

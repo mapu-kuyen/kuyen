@@ -6,7 +6,7 @@
   "files": {
     "REPORT.md": {
       "bytes": 22835,
-      "sha256": "be2a44eb6f989242734cdd93fe3ea77b31b3c38378510f7e779b22426cb219be"
+      "sha256": "c16e4de7805a936e3f5de2403a9ed0600af6f81d98480c99305db3aaadaac0d5"
     },
     "evidence/distribution_verification.json": {
       "bytes": 9475,
@@ -77,8 +77,8 @@
       "sha256": "48ccb63401b7744e689a24105740140a76ee9e96e8fbcd6e6cdd6bdd7ffbc09b"
     },
     "git_state_final.txt": {
-      "bytes": 1209,
-      "sha256": "e492e2bb972591c873f24269a934688528c44955528e366277ca3922983f8abb"
+      "bytes": 1505,
+      "sha256": "1e859ac73b08afcdcf88d6eed447478552e2fa5cc9a25099c5b76c1652c15c65"
     },
     "logs/distribution.log": {
       "bytes": 294,

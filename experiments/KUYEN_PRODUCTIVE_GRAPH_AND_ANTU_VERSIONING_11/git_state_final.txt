@@ -1,10 +1,13 @@
-# Git state at the end of KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11
+# Git state at the end of KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11 (snapshot before the closing commit)
 
 ## branch / HEAD
 work/kuyen-free-text-graph
-152cbc7 experimento 11: inferencias reales y compilacion real de OpenViking
+2c87742 docs(experiment): la comprobacion de secretos ya no se auto-menciona
 
 ## commits since the base
+2c87742 docs(experiment): la comprobacion de secretos ya no se auto-menciona
+fe9ca8a docs(experiment): make the commit list self-consistent and rehash
+cfe8884 docs(experiment): recuentos finales y manifiesto rehasheado
 152cbc7 experimento 11: inferencias reales y compilacion real de OpenViking
 866ea0f documento: arbol nativo, predicado declarado preservado, origen de referencia
 8240d97 editing: expected parcial, identidad sin consumo, registro limpio
@@ -17,8 +20,8 @@ f542db1 docs(experiment): final git state and artifact hashes
 ea5c87d feat(semantics): record where every statement comes from
 c6c398c fix(evidence): make MAPU identity, quotes and polarity authoritative
 
-## status --short (summary)
-modified=23
+## working tree outside these commits (the user pre-existing work)
+modified=22
 untracked=37
 
 ## upstream

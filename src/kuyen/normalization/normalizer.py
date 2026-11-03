@@ -10,6 +10,7 @@ from typing import Any
 
 from ..canonical import normalized_name, stable_id
 from ..errors import InvalidRequestError
+from ..semantics.origin import document_origin
 from ..models import (
     Assertion,
     EpistemicStatus,
@@ -141,6 +142,9 @@ def normalize_bundle(
             from_entity, canonical_predicate, to_entity, item.polarity, item.scope, item.temporal_scope
         )
         seen_relation_ids.add(relation_id)
+        relation_evidence = [
+            evidence_by_candidate[x] for x in item.evidence_refs if x in evidence_by_candidate
+        ]
         relations.append(
             Relation(
                 relation_id=relation_id,
@@ -182,6 +186,12 @@ def normalize_bundle(
                 provider_projection_status=item.provider_projection_status or "EXACT",
                 modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
                 attribution=getattr(item, "attribution", None),
+                # The relation comes from the document that produced its evidence.
+                origin=document_origin(
+                    evidence_ids=[evidence.evidence_id for evidence in relation_evidence],
+                    mapu_ids=sorted({evidence.mapu_id for evidence in relation_evidence
+                                     if evidence.mapu_id}),
+                ),
             )
         )
 
@@ -236,6 +246,12 @@ def normalize_bundle(
                 proposed_status_raw=proposed_raw,
                 modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
                 attribution=getattr(item, "attribution", None),
+                origin=document_origin(
+                    evidence_ids=[evidence_by_candidate[x].evidence_id
+                                  for x in item.evidence_refs if x in evidence_by_candidate],
+                    mapu_ids=sorted({evidence_by_candidate[x].mapu_id
+                                     for x in item.evidence_refs if x in evidence_by_candidate}),
+                ),
             )
         )
 

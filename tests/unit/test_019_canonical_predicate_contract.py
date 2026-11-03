@@ -109,6 +109,7 @@ class ContractFieldTests(unittest.TestCase):
     def test_candidate_relation_receives_the_predicate_layer(self):
         relation = {"from": "p1", "to": "p2", "predicate": "related_to",
                     "source_predicate": "coordina a", "canonical_predicate": "coordina a",
+                    "polarity": "POSITIVE",
                     "mapping_status": "UNMAPPED", "mapping_rule_id": "test-v1"}
         bundle = materialize([relation]).bundle
         item = bundle.relations[0]
@@ -227,6 +228,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         result, graph = await self._build({
             "from": "p1", "to": "p2", "predicate": "related_to",
             "source_predicate": "coordina a", "canonical_predicate": "coordina a",
+            "polarity": "POSITIVE",
             "mapping_status": "UNMAPPED", "mapping_rule_id": "test-v1",
             "provider_projection_status": "LOSSY_PROJECTION",
             "evidence": [{"quote": SOURCE.splitlines()[0], "source_uri": "viking://test",
@@ -242,6 +244,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
     async def test_unknown_predicate_without_provenance_still_rejected(self):
         result, _ = await self._build({"from": "p1", "to": "p2",
                                        "predicate": "invented_predicate",
+                                       "polarity": "POSITIVE",
                                        "evidence": [{"quote": SOURCE.splitlines()[0],
                                                      "source_uri": "viking://test",
                                                      "mapu_id": "MAPU-TEST"}],

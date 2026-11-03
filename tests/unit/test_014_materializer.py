@@ -83,11 +83,13 @@ def provider_result(*, offsets: bool = True, uri_only: bool = False, coverage=No
         ],
         "relations": [
             {"from": "alpha", "to": "beta", "predicate": "located_in", "label": "se ubica en",
+             "polarity": "POSITIVE",
              "evidence": [{"source_uri": URI}] if uri_only else [ev(Q1, offsets=offsets)]},
         ],
         "assertions": [
             {"subject": "alpha", "predicate": "has_member_count",
              "value": {"value_type": "integer", "value": 47, "unit": "socios"},
+             "polarity": "POSITIVE",
              "evidence": [{"source_uri": URI}] if uri_only else [ev(Q2, offsets=offsets)]},
         ],
         "coverage": coverage if coverage is not None else [
@@ -200,9 +202,9 @@ class MaterializerTests(unittest.TestCase):
         result = provider_result()
         result["relations"] = [
             {"from": "alpha", "to": "alpha", "predicate": "headquartered_in", "label": "tiene sede en",
-             "evidence": [ev(Q1)]},
+             "polarity": "POSITIVE", "evidence": [ev(Q1)]},
             {"from": "alpha", "to": "beta", "predicate": "celebrated_in", "label": "celebra en",
-             "evidence": [ev(Q1)]},
+             "polarity": "POSITIVE", "evidence": [ev(Q1)]},
         ]
         _, materialized = materialize(result)
         evaluated = evaluate(materialized.bundle)

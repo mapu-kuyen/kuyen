@@ -23,6 +23,10 @@ memory = KuyenMemory.create("./memory", leftraru_id="LR-0001")
   contracts *before* anything is committed.
 * A **sidecar contract**: every version carries its own canonical record, so the memory
   can be rebuilt from the store alone.
+* **Two ways of evolving that memory.** A document is materialized by OpenViking and
+  admitted by KÜYEN; an instruction ("change the number of lights from 12 to 18") is
+  interpreted by a model, validated and applied deterministically. Both end in the same
+  canonical commit, and every statement records which of the two produced it.
 
 ## What KÜYEN is not
 
@@ -76,6 +80,8 @@ for the full contract.
 | [DATA_MODEL.md](DATA_MODEL.md) | Entities, relations, assertions, evidence, MAPU, SOURCE_UNIT |
 | [VERSIONING.md](VERSIONING.md) | The seven version domains and immutability |
 | [ANTU_LIFECYCLE.md](ANTU_LIFECYCLE.md) | Instruction, validation, acceptance, rejection, replay |
+| [docs/GRAPH_EDIT_ANTU.md](docs/GRAPH_EDIT_ANTU.md) | Edición del grafo por ANTÜ: contrato, estados, límites (ES) |
+| [docs/GRAPH_EDIT_ANTU.en.md](docs/GRAPH_EDIT_ANTU.en.md) | Graph editing with an Antü: contract, states, limits (EN) |
 | [CANONICAL_STORAGE.md](CANONICAL_STORAGE.md) | Layout, content addressing, commit protocol, single writer |
 | [SIDECAR.md](SIDECAR.md) | The canonical sidecar contract and reconstruction |
 | [BACKUP_AND_RECOVERY.md](BACKUP_AND_RECOVERY.md) | Backup, restore, store-only recovery |
@@ -118,7 +124,7 @@ original product.
 
 ## Status
 
-Engine contracts `0.1.9`, package candidate `0.2.0`, licensed `Apache-2.0`, **unpublished**.
+Engine contracts `0.1.9`, package candidate `0.2.1rc1`, licensed `Apache-2.0`, **unpublished**.
 Applying the licence does not publish anything: no commit, tag, push, package index upload or
 release exists yet, and publication still requires the owner's authorisation.
 

@@ -1,0 +1,94 @@
+[
+  {
+    "antu_id": "ANTU-472f4b419473bba3",
+    "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+    "base_version_id": "VER-3b63dcc70cbf",
+    "version_id": "VER-1cc1d50fc685",
+    "operations": [
+      {
+        "operation_id": "op-1",
+        "op": "UPDATE_ASSERTION",
+        "target": {
+          "assertion_id": "asrt_0677645136247624437d"
+        },
+        "expected": {
+          "value": {
+            "value_type": "integer",
+            "value": 12,
+            "unit": "luminarias",
+            "context": null
+          }
+        },
+        "value": {
+          "value": {
+            "value_type": "integer",
+            "value": 18,
+            "unit": "luminarias"
+          },
+          "_canonical_id": "asrt_bd07b298b8d031f95d62",
+          "_polarity": "POSITIVE",
+          "_modality": "UNKNOWN",
+          "_value_payload": {
+            "value_type": "integer",
+            "value": 18,
+            "unit": "luminarias",
+            "context": null
+          },
+          "_object_entity": null,
+          "_target_id": "asrt_0677645136247624437d"
+        },
+        "reason": "la instrucción corrige la cantidad instalada",
+        "antu_ref": "de 12 a 18",
+        "affected": []
+      }
+    ]
+  },
+  {
+    "antu_id": "ANTU-34d6f65e382668ce",
+    "instruction": "Retira la afirmación sobre la fecha de inicio",
+    "base_version_id": "VER-1cc1d50fc685",
+    "version_id": "VER-3732d2925d8b",
+    "operations": [
+      {
+        "operation_id": "op-1",
+        "op": "RETRACT_ASSERTION",
+        "target": {
+          "assertion_id": "asrt_1a5cdb8506d830309508"
+        },
+        "expected": {
+          "status": "UNRESOLVED"
+        },
+        "value": {
+          "retracted": true,
+          "_target_id": "asrt_1a5cdb8506d830309508"
+        },
+        "reason": "la instrucción retira una afirmación incorrecta",
+        "antu_ref": "retira la afirmación sobre la fecha de inicio",
+        "affected": []
+      }
+    ]
+  },
+  {
+    "antu_id": "ANTU-03f87ada5bfc9883",
+    "instruction": "Agrega que la Junta de Vecinos Los Aromos es una organización",
+    "base_version_id": "VER-3732d2925d8b",
+    "version_id": "VER-4926159676d2",
+    "operations": [
+      {
+        "operation_id": "op-1",
+        "op": "ADD_ENTITY",
+        "target": null,
+        "expected": null,
+        "value": {
+          "ref": "junta",
+          "name": "Junta de Vecinos Los Aromos",
+          "entity_type": "organization",
+          "description": "Organización vecinal"
+        },
+        "reason": "la instrucción declara la organización",
+        "antu_ref": "la Junta de Vecinos Los Aromos es una organización",
+        "affected": []
+      }
+    ]
+  }
+]

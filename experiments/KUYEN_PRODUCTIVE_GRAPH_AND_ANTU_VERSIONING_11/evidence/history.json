@@ -1,0 +1,78 @@
+[
+  {
+    "antu_id": "ANTU-FIXTURE-01",
+    "canonical_graph_hash": "227ab0c13c993df656b3c8ae75e8ecea834c628fe867d6275a6de29e16df79bf",
+    "created_at": "2026-11-03T02:41:11.234194+00:00",
+    "detail": {
+      "import": true
+    },
+    "input_version_id": null,
+    "leftraru_id": "LR-EDIT",
+    "output_version_id": "VER-3b63dcc70cbf",
+    "schema_name": "KUYEN_UNIT_REVISION",
+    "schema_version": "1.0.0",
+    "semantic_change": true,
+    "status": "COMPLETED",
+    "unit_revision": "R0000"
+  },
+  {
+    "antu_id": "ANTU-472f4b419473bba3",
+    "canonical_graph_hash": "71b3343f655f0109c93e3876fdb752f10e445f1d5753a8cf6260a9465d83fdd3",
+    "created_at": "2026-11-03T02:41:11.260469+00:00",
+    "detail": {
+      "commit_id": "3d97ffe4bedd4a78da66",
+      "kind": "GRAPH_EDIT",
+      "operations": [
+        "UPDATE_ASSERTION"
+      ]
+    },
+    "input_version_id": "VER-3b63dcc70cbf",
+    "leftraru_id": "LR-EDIT",
+    "output_version_id": "VER-1cc1d50fc685",
+    "schema_name": "KUYEN_UNIT_REVISION",
+    "schema_version": "1.0.0",
+    "semantic_change": true,
+    "status": "COMPLETED",
+    "unit_revision": "R0001"
+  },
+  {
+    "antu_id": "ANTU-34d6f65e382668ce",
+    "canonical_graph_hash": "f8f4bf0c694027c71d557e92953af6fc0c77c159b6b5b82d9f14e468cd574125",
+    "created_at": "2026-11-03T02:41:11.286624+00:00",
+    "detail": {
+      "commit_id": "ba35f33f79081caf7c99",
+      "kind": "GRAPH_EDIT",
+      "operations": [
+        "RETRACT_ASSERTION"
+      ]
+    },
+    "input_version_id": "VER-1cc1d50fc685",
+    "leftraru_id": "LR-EDIT",
+    "output_version_id": "VER-3732d2925d8b",
+    "schema_name": "KUYEN_UNIT_REVISION",
+    "schema_version": "1.0.0",
+    "semantic_change": true,
+    "status": "COMPLETED",
+    "unit_revision": "R0002"
+  },
+  {
+    "antu_id": "ANTU-03f87ada5bfc9883",
+    "canonical_graph_hash": "ddc8bc73c0af73bd37c89ee021d5dcfb4fa2758499031b347d6ed1a6d14dc330",
+    "created_at": "2026-11-03T02:41:11.313347+00:00",
+    "detail": {
+      "commit_id": "f8fbbc4dd1d0ea313aa8",
+      "kind": "GRAPH_EDIT",
+      "operations": [
+        "ADD_ENTITY"
+      ]
+    },
+    "input_version_id": "VER-3732d2925d8b",
+    "leftraru_id": "LR-EDIT",
+    "output_version_id": "VER-4926159676d2",
+    "schema_name": "KUYEN_UNIT_REVISION",
+    "schema_version": "1.0.0",
+    "semantic_change": true,
+    "status": "COMPLETED",
+    "unit_revision": "R0003"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "problems": [],
+  "versions": [
+    {
+      "version_id": "VER-1cc1d50fc685",
+      "ok": true,
+      "problems": []
+    },
+    {
+      "version_id": "VER-3732d2925d8b",
+      "ok": true,
+      "problems": []
+    },
+    {
+      "version_id": "VER-3b63dcc70cbf",
+      "ok": true,
+      "problems": []
+    },
+    {
+      "version_id": "VER-4926159676d2",
+      "ok": true,
+      "problems": []
+    }
+  ],
+  "current": "VER-4926159676d2",
+  "registry": {
+    "ok": true,
+    "versions": 4,
+    "indexed": 4,
+    "current": "VER-4926159676d2"
+  },
+  "ledger": {
+    "state": "INTACT",
+    "events": 19,
+    "tail": null,
+    "recovery": {
+      "repaired": false,
+      "records": []
+    }
+  },
+  "objects": {
+    "ok": true,
+    "blobs": null,
+    "ignored_temporaries": 0
+  },
+  "unit_history": {
+    "ok": true,
+    "revisions": 4,
+    "unreconciled": []
+  }
+}

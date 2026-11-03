@@ -1,0 +1,76 @@
+{
+  "base_commit": "9a5e512",
+  "branch": "work/kuyen-free-text-graph",
+  "commits": [
+    "c6c398c",
+    "ea5c87d",
+    "92ca99f"
+  ],
+  "experiment": "KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11",
+  "files": {
+    "REPORT.md": {
+      "bytes": 16026,
+      "sha256": "7a1715019173cd937c84b43378c5e4a37c80b8d8094f4592e8c8c19920116364"
+    },
+    "evidence/distribution_verification.json": {
+      "bytes": 9475,
+      "sha256": "3eb1f63cad92c4dea9b17e982da8d60ddad7882fd0fb7eb9093a5bef2e45e638"
+    },
+    "evidence/document_path_runs.json": {
+      "bytes": 23409,
+      "sha256": "5b01d566da9654fcd656394876a72996d567aeb1de04b58476578b36205f8503"
+    },
+    "evidence/graph_edit_runs.json": {
+      "bytes": 2699,
+      "sha256": "8c1351ee123c21ba9653e3efcdbc27df889f263e0cccc0b657032c45e6d9b32a"
+    },
+    "evidence/history.json": {
+      "bytes": 2379,
+      "sha256": "6c5e233e76384b662308f0d6021ff2d1bd865fe3c8abf1f20fb1d953cc17bfa3"
+    },
+    "evidence/integrity.json": {
+      "bytes": 879,
+      "sha256": "33d03488ca55af1c7e24320cc0782df7ddb704b4474d1ba127bd94163b9a61e3"
+    },
+    "evidence/ledger.jsonl": {
+      "bytes": 11241,
+      "sha256": "472469d9b3b8e8320d9a16fa2f2b6129dd80d2775c2e1fba2904367ae6155571"
+    },
+    "evidence/versions_and_diffs.json": {
+      "bytes": 79361,
+      "sha256": "48ccb63401b7744e689a24105740140a76ee9e96e8fbcd6e6cdd6bdd7ffbc09b"
+    },
+    "git_state_final.txt": {
+      "bytes": 2946,
+      "sha256": "dca50b4ec3b5d49560402a9d71d8ca3a8a2caf29c7ef8cb7c849db1d79dfede3"
+    },
+    "logs/distribution.log": {
+      "bytes": 294,
+      "sha256": "6ac5934563a4fa30d4ebc2b9a400a4574fb884f2469ca8bce226dbac8d1014d3"
+    },
+    "logs/suite_after.log": {
+      "bytes": 701,
+      "sha256": "ce1b674352a519b7e562c7887df7c85461203cdcd7cd3527b7c5a965fa3df62d"
+    },
+    "logs/suite_after.xml": {
+      "bytes": 65889,
+      "sha256": "0cd7cf571d364902c4914761565264f00bde5f26c06fd63e9464e0d9ac72a802"
+    },
+    "logs/suite_before.log": {
+      "bytes": 568,
+      "sha256": "85e36a53c22259bbc145e3106e0ff692a9d152c9304b99035ac4d4ca2d73792b"
+    },
+    "logs/suite_before.xml": {
+      "bytes": 56164,
+      "sha256": "a8fc2062c111a829c236b61f0754a86f32086293853cb0acc14dc0634e073213"
+    }
+  },
+  "inferences": 0,
+  "pushed": false,
+  "suite": {
+    "failed": 0,
+    "passed": 435,
+    "skipped": 3,
+    "tests": 438
+  }
+}

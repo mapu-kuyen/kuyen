@@ -1,0 +1,79 @@
+ M ANTU_LIFECYCLE.md
+ M ARCHITECTURE.md
+ M BACKUP_AND_RECOVERY.md
+ M CHANGELOG.md
+ M DATA_MODEL.md
+ M PUBLIC_API.md
+ M README.md
+ M SECURITY.md
+ M SIDECAR.md
+ M VERSION
+ M examples/quickstart.py
+ M pyproject.toml
+ M src/kuyen/adapters/openviking.py
+ M src/kuyen/backup/archive.py
+ M src/kuyen/canonical.py
+ M src/kuyen/engine.py
+ M src/kuyen/errors.py
+ M src/kuyen/ingest.py
+ M src/kuyen/lifecycle/unit.py
+ M src/kuyen/projection/native.py
+ M src/kuyen/projection/openviking.py
+ M src/kuyen/projection/outbox.py
+ M src/kuyen/storage/commit.py
+ M src/kuyen/storage/registry.py
+ M src/kuyen/storage/store.py
+ M src/kuyen/storage/versions.py
+ M tests/editing/test_022_graph_edit.py
+ M tests/editing/test_023_versioning.py
+ M tests/unit/test_013_ingestion.py
+?? MANIFEST.in
+?? docs/GRAPH_EDIT_ANTU.en.md
+?? docs/GRAPH_EDIT_ANTU.md
+?? docs/KUYEN_OPENVIKING_VLM_CONFIGURATION_05.md
+?? docs/KUYEN_RELEASE_QUICKSTART_REPAIR_02.md
+?? docs/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03.md
+?? docs/reports/
+?? experiments/KUYEN_EXPLICIT_POLARITY_FIXTURES_10/
+?? experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/
+?? experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/
+?? experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/
+?? experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/
+?? experiments/KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11/
+?? experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/
+?? experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/
+?? scripts/
+?? src/kuyen/provenance.py
+?? src/kuyen/vlm.py
+?? tests/api/test_a1_canonical_validation.py
+?? tests/editing/__init__.py
+?? tests/examples/
+?? tests/integration/test_document_path_artifacts.py
+?? tests/integration/test_real_editor.py
+?? tests/integration/test_two_paths.py
+?? tests/lifecycle/test_antu_contract.py
+?? tests/lifecycle/test_b1_staging_classification.py
+?? tests/lifecycle/test_m1_ledger_concurrency.py
+?? tests/lifecycle/test_m1_ledger_multiprocess.py
+?? tests/lifecycle/test_m1_m2_combined.py
+?? tests/lifecycle/test_m2_ledger_recovery.py
+?? tests/lifecycle/test_m6_append_scaling.py
+?? tests/lifecycle/test_operation_boundary.py
+?? tests/lifecycle/test_reconciliation_metadata.py
+?? tests/lifecycle/test_source_provenance.py
+?? tests/projection/
+?? tests/projection_helpers.py
+?? tests/security/test_tamper_detection.py
+?? tests/security/test_version_id_containment.py
+?? tests/storage/test_a2_stale_base_commit.py
+?? tests/storage/test_a3_backup_target.py
+?? tests/storage/test_atomic_write_boundary.py
+?? tests/storage/test_b2_restore_target.py
+?? tests/test_source_unit_disambiguation.py
+?? tests/unit/test_vlm_configuration.py
+92ca99f feat(editing): edit the graph through an Antü, validate and version it
+ea5c87d feat(semantics): record where every statement comes from
+c6c398c fix(evidence): make MAPU identity, quotes and polarity authoritative
+9a5e512 test(semantics): make fixture polarity explicit
+b6ad5fc refactor(architecture): align KÜYEN with OpenViking-first design
+5fd8777 Release KÜYEN 0.2.0

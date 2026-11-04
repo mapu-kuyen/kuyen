@@ -85,6 +85,13 @@ jobs:
         run: |
           test -z "$(find . -name '.env*' -not -path './.git/*' | head -1)"
           test -z "$(find . -name '*.pem' -o -name '*.key' | head -1)"
+      # The package lives in `src/`, so `import kuyen` cannot work from the checkout root
+      # without installing it. This job used to run the assertion below with no install and
+      # therefore failed on every commit, including the 0.2.0 release; the assertion itself is
+      # unchanged and still fails when `VERSION` and `kuyen.__version__` disagree
+      # (KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17).
+      - name: install the package without dependencies
+        run: python -m pip install --no-deps -e .
       - name: version agrees
         run: |
           python -c "import kuyen; assert kuyen.__version__ == open('VERSION').read().strip(), kuyen.__version__"

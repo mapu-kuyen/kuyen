@@ -1,6 +1,6 @@
 # MAPU, KÜYEN and ANTÜ: what each one is
 
-Product note. It describes the behaviour implemented in KÜYEN 0.2.1 and claims no capability
+Product note. It describes the behaviour implemented in KÜYEN 0.3.0 and claims no capability
 that has only been simulated.
 
 ## MAPU — the document

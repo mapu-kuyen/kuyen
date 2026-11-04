@@ -1,6 +1,6 @@
 # MAPU, KÜYEN y ANTÜ: qué es cada cosa
 
-Documento de producto. Describe el comportamiento implementado en KÜYEN 0.2.1 y no atribuye
+Documento de producto. Describe el comportamiento implementado en KÜYEN 0.3.0 y no atribuye
 capacidades que solo se hayan simulado.
 
 ## MAPU — el documento

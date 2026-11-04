@@ -1,6 +1,15 @@
 # CHANGELOG
 
-## Unreleased — operational coverage of Antü operations
+## 0.3.0
+
+First stable release after `0.2.0`. Everything from here down to the `0.2.1rc1` section is
+the change set of this version: the document path through OpenViking and the
+`knowledge-graph` Skill, the canonical model with evidence and provenance, the versioned
+memory with its ledger and recovery, and the direct editing of the graph through an Antü.
+`0.2.1rc1` was never published; its content is part of this release, so the four sections
+below that were written as *Unreleased* are now sections of `0.3.0`.
+
+### operational coverage of Antü operations
 
 KUYEN_ANTU_OPERATIONAL_COVERAGE_15. Twelve real evaluations on the ten memories of experiment
 13 (no document recompilation, same model, no fallback) completed the operations experiments 13
@@ -43,7 +52,7 @@ multi-operation instructions. Additive: existing stores remain readable and veri
 * An `ALREADY_SATISFIED` claim that says `retracted: false` for a record without that key is
   verifiable (`None` means "not retracted") instead of being refused.
 
-## Unreleased — semantic fidelity of Antü operations
+### semantic fidelity of Antü operations
 
 KUYEN_ANTU_SEMANTIC_FIDELITY_HARDENING_14. Ten real memories, no document recompilation. The
 editor now patches what the instruction names and preserves everything else. Additive: stores
@@ -69,7 +78,7 @@ written before this change remain readable and verifiable.
 * An `UPDATE_ASSERTION` on an existing target no longer forces the model to modify the value:
   `VALUE_INCOMPLETE` is gone for modality/attribution-only patches.
 
-## Unreleased — ten real MAPU and real Antu operations
+### ten real MAPU and real Antu operations
 
 KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13. Ten public documents were materialised into ten
 independent memories through OpenViking 0.5.0 and the real Skill, and each memory then received
@@ -96,7 +105,7 @@ compatible: no persisted format changed.
   ledger keeps the exact Antu status in the event and in `detail.edit_status`. Regression test
   added.
 
-## Unreleased — productive graph and Antu versioning
+### productive graph and Antu versioning
 
 KUYEN_PRODUCTIVE_GRAPH_11. Two additive capabilities and the hardening they required. No
 persisted-format change: every store written before this work remains readable.

@@ -100,7 +100,7 @@ Contracts are versioned independently (see [VERSIONING.md](VERSIONING.md)): stor
 version of KÜYEN that declares the same format is readable; a different format is refused
 with `StoreError` instead of being best-effort parsed.
 
-## Direct Antü editing (0.2.1)
+## Direct Antü editing (0.3.0)
 
 ```python
 from kuyen import (KuyenMemory, apply_graph_edit, incorporate_document, classify_antu,

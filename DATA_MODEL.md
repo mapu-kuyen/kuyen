@@ -86,7 +86,7 @@ is part of the canonical record, so "what was read but produced nothing" is audi
 `candidate_producer`); `provenance.coverage_inventory` holds the unit inventory as the
 producer delivered it.
 
-## Statement semantics (0.2.1)
+## Statement semantics (0.3.0)
 
 Every relation and assertion may declare three dimensions that are *data*, not decoration:
 
@@ -99,7 +99,7 @@ Every relation and assertion may declare three dimensions that are *data*, not d
 A candidate whose polarity was never declared stays `UNKNOWN` in the candidate domain and
 the materializer records the refusal (`POLARITY_UNKNOWN`) instead of guessing it.
 
-## Statement origin (0.2.1)
+## Statement origin (0.3.0)
 
 `origin` records where a statement comes from, and the four values are not interchangeable:
 
@@ -123,14 +123,14 @@ the Antü id, the base version, the actor (when known), the model and the reason
 a MAPU, SOURCE_UNIT, quote or hash it does not have. The canonical validator refuses an
 `ANTU_INSTRUCTION` object that declares `SOURCE_VERIFIED`.
 
-## Supersession and retraction (0.2.1)
+## Supersession and retraction (0.3.0)
 
 KÜYEN never deletes. A correction leaves the previous statement with `status: SUPERSEDED`
 and `superseded_by`, and the new one with `supersedes`. A removal leaves the object with
 `status: RETRACTED`, `retracted: true` and a `retraction` record. Both remain readable in
 the version that contains them and in every earlier version.
 
-## Evidence additions (0.2.1)
+## Evidence additions (0.3.0)
 
 Three optional evidence fields were added to `evidence.schema.json` (`context`,
 `source_unit_id`, `declared_offsets`). They are additive: every document written before

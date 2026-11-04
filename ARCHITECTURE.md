@@ -71,7 +71,7 @@ backup is reported as a problem and never silently accepted. `verify()` and
 `recover_from_store()` return data instead of raising, so an operator can see exactly what
 is wrong.
 
-## Two ways of evolving the memory (0.2.1)
+## Two ways of evolving the memory (0.3.0)
 
 ```
 document ──► OpenViking + Skill ──► candidate ──► KÜYEN gate ──► ANTÜ commit ──► v(n+1)

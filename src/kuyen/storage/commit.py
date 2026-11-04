@@ -24,14 +24,17 @@ from __future__ import annotations
 import json
 import shutil
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from ..lifecycle.ledger import append_event
+from ..validation.canonical import validate_canonical_objects
 from .store import CanonicalStore
 from ..canonical import canonical_json_pretty, digest, read_json, sha256_text, write_atomic
 from ..errors import CommitError, ConflictError, InjectedFailure, StoreError
 from ..contracts import ANTU_PROCESSOR_VERSION, BACKUP_ADAPTER_VERSION, EXPORTER_VERSION, PROJECTOR_VERSION, RECONSTRUCTOR_VERSION, SIDECAR_SCHEMA_VERSION, STORE_ADAPTER_VERSION
-from .versions import build_manifest, read_version, version_id_for, write_version
+from .versions import (build_manifest, read_version, version_id_for, version_manifest_path,
+                       write_version)
 from ..projection.outbox import enqueue
 from .registry import index_version, set_current
 from ..sidecar import exporter as upstream_exporter
@@ -110,9 +113,26 @@ def _validate(document: dict[str, Any]) -> dict[str, Any]:
                 problems.append(f"assertion {assertion['assertion_id']} references unknown evidence {reference}")
         if assertion.get("object_entity") and assertion["object_entity"] not in entity_ids:
             problems.append(f"assertion {assertion['assertion_id']} references an unknown object entity")
+    problems.extend(validate_canonical_objects(
+        entities=graph["entities"], relations=graph["relations"], assertions=graph["assertions"],
+        evidence=graph["evidence"], mapus=document.get("mapus")))
     if problems:
         raise CommitError("; ".join(problems))
     return {"schema": schema, "entity_ids": len(entity_ids), "evidence_ids": len(evidence_ids)}
+
+
+def _require_expected_base(store: CanonicalStore, expected_parent_version_id: str | None) -> None:
+    """Refuse to publish a version whose declared base is no longer current.
+
+    Same condition and message as the final compare-and-swap (`write_current`), evaluated
+    at the start of the writer critical section so a rejected commit writes nothing. It is
+    the minimal protection compatible with the contract: no merge, no rebase, no
+    reconciliation and no new branch (KUYEN_PACKAGE_HARDENING_01, A2).
+    """
+    observed = (store.read_current() or {}).get("version_id")
+    if observed != expected_parent_version_id:
+        raise StoreError(
+            f"current pointer moved: expected {expected_parent_version_id!r}, found {observed!r}")
 
 
 def _object_hashes(store: CanonicalStore, document: dict[str, Any]) -> dict[str, str]:
@@ -132,6 +152,31 @@ their logical identity: deduplication is measured, never assumed.
     for unit in document["canonical"].get("source_units") or []:
         hashes[f"source_units/{unit['unit_id']}"] = store.put_blob(canonical_json(unit))
     return hashes
+
+
+def prepare_commit_artifacts(document: dict[str, Any], *, created_at: str,
+                            projector_version: str = PROJECTOR_VERSION,
+                            openviking_version: str | None = None) -> dict[str, Any]:
+    """Validate a document and build + verify its companion artifacts, without any I/O.
+
+    `commit_version` uses this as its first step, and the Antü lifecycle uses it to decide
+    whether a candidate may be called `VALIDATED`: the two must agree, otherwise a defect
+    becomes a late commit failure instead of an honest rejection
+    (KUYEN_SEMANTIC_SECURITY_HARDENING_04, M5).
+    """
+    validation = _validate(document)
+    projector = upstream_projector.NativeProjector()
+    projector.version = projector_version
+    projection = projector.project(document)
+    mapping = upstream_mapping.build_mapping(document, projection.manifest)
+    sidecar = upstream_sidecar.build_sidecar(document, projection.manifest, mapping,
+                                             openviking_version=openviking_version or "",
+                                             contract_snapshot_sha256="", created_at=created_at)
+    sidecar_check = upstream_sidecar.verify_sidecar(sidecar)
+    if not sidecar_check["ok"]:
+        raise CommitError(f"sidecar failed verification: {sidecar_check['problems'][:3]}")
+    return {"validation": validation, "projection": projection, "mapping": mapping,
+            "sidecar": sidecar}
 
 
 def commit_version(
@@ -155,40 +200,20 @@ def commit_version(
         identity = {**identity, "kuyen_version": document["kuyen"]["version"],
                     "identity_version_override": identity.get("kuyen_version")}
 
-    # 1 validate
-    validation = _validate(document)
-
-    # 2 canonical companion + deterministic projection record
-    projector = upstream_projector.NativeProjector()
-    projector.version = projector_version
-    projection = projector.project(document)
-    mapping = upstream_mapping.build_mapping(document, projection.manifest)
-    sidecar = upstream_sidecar.build_sidecar(document, projection.manifest, mapping,
-                            openviking_version=openviking_version or "",
-                            contract_snapshot_sha256="", created_at=created_at)
-    sidecar_check = upstream_sidecar.verify_sidecar(sidecar)
-    if not sidecar_check["ok"]:
-        raise CommitError(f"sidecar failed verification: {sidecar_check['problems'][:3]}")
+    # 1 validate + 2 canonical companion and deterministic projection record
+    prepared = prepare_commit_artifacts(document, created_at=created_at,
+                                        projector_version=projector_version,
+                                        openviking_version=openviking_version)
+    validation = prepared["validation"]
+    projection = prepared["projection"]
+    mapping = prepared["mapping"]
+    sidecar = prepared["sidecar"]
 
     # 3 hashes
     canonical_graph_hash = document["kuyen"]["canonical_graph_hash"]
     sidecar_text = canonical_json_pretty(sidecar)
     mapping_text = canonical_json_pretty(mapping)
     projection_text = canonical_json_pretty(projection.manifest)
-    object_hashes = _object_hashes(store, document)
-    integrity = {
-        "schema_name": "KUYEN_CANONICAL_VERSION_INTEGRITY",
-        "schema_version": "1.0.0",
-        "kuyen_id": identity["kuyen_id"], "kuyen_version": identity["kuyen_version"],
-        "canonical_graph_hash": canonical_graph_hash,
-        "sidecar_sha256": sha256_text(sidecar_text),
-        "mapping_sha256": sha256_text(mapping_text),
-        "projection_manifest_sha256": sha256_text(projection_text),
-        "object_count": len(object_hashes),
-        "objects": object_hashes,
-    }
-    integrity["integrity_id"] = digest({key: value for key, value in integrity.items() if key != "integrity_id"})
-
     commit_id = digest({"domain": "KUYEN_CANONICAL_COMMIT", "kuyen_id": identity["kuyen_id"],
                         "kuyen_version": identity["kuyen_version"],
                         "canonical_graph_hash": canonical_graph_hash,
@@ -197,6 +222,29 @@ def commit_version(
     staging = store.staging_dir / commit_id
 
     with store.writer_lock():
+        # 3b fail closed before publishing anything: the CURRENT pointer is the only
+        # authority for the next version. Publishing the manifest first and discovering
+        # the conflict at the final compare-and-swap would leave an orphan version that no
+        # lineage can reach and that `verify()` still reports as healthy (A2). The check
+        # runs inside the writer lock, so it also gates two writers released together.
+        _require_expected_base(store, expected_parent_version_id)
+
+        # 3c object blobs are writes: they belong to the writer critical section
+        object_hashes = _object_hashes(store, document)
+        integrity = {
+            "schema_name": "KUYEN_CANONICAL_VERSION_INTEGRITY",
+            "schema_version": "1.0.0",
+            "kuyen_id": identity["kuyen_id"], "kuyen_version": identity["kuyen_version"],
+            "canonical_graph_hash": canonical_graph_hash,
+            "sidecar_sha256": sha256_text(sidecar_text),
+            "mapping_sha256": sha256_text(mapping_text),
+            "projection_manifest_sha256": sha256_text(projection_text),
+            "object_count": len(object_hashes),
+            "objects": object_hashes,
+        }
+        integrity["integrity_id"] = digest({key: value for key, value in integrity.items()
+                                            if key != "integrity_id"})
+
         # 4 staging intent
         if staging.exists():
             shutil.rmtree(staging)
@@ -290,6 +338,69 @@ def commit_version(
             "commit_id": commit_id}
 
 
+STAGING_NOT_PUBLISHED = "NOT_PUBLISHED"
+STAGING_PUBLISHED = "PUBLISHED"
+STAGING_UNCLASSIFIED = "UNCLASSIFIED"
+
+IDENTITY_CORE_KEYS = ("kuyen_id", "kuyen_version", "canonical_graph_hash", "parent_version_id",
+                      "antu_id", "unit_revision")
+
+
+def classify_staging(store: CanonicalStore, path: Path) -> dict[str, Any]:
+    """Decide what a leftover staging directory *is*, from the store, not from its name.
+
+    The previous classification asked `INTENT.json` for an `identity_core` key — a key the
+    writer never puts there — so every staging was reported as unpublished even when its
+    manifest had already been published, and the directory was removed before anybody could
+    tell the difference (B1, KUYEN_RELEASE_CANDIDATE_05).
+
+    The identity of the version is derived exactly as the commit derives it (the six fields
+    of `identity_core`, all of them written to `INTENT.json`), and the *manifest* is the
+    evidence of publication: a published version always has its manifest, so the state of a
+    staging is a property of the store and not a guess.
+    """
+    record: dict[str, Any] = {"staging": path.name, "commit_id": None, "version_id": None,
+                              "state": STAGING_UNCLASSIFIED, "reason": None, "evidence": {}}
+    intent_path = path / "INTENT.json"
+    if not intent_path.is_file():
+        record["reason"] = "no INTENT.json: the staging cannot be attributed to a version"
+        return record
+    try:
+        intent = read_json(intent_path)
+    except (StoreError, ValueError, OSError):
+        record["reason"] = "INTENT.json is not readable JSON"
+        return record
+    record["commit_id"] = intent.get("commit_id")
+    core = {key: intent.get(key) for key in IDENTITY_CORE_KEYS}
+    missing = [key for key in IDENTITY_CORE_KEYS
+               if core[key] is None and key != "parent_version_id"]
+    if missing:
+        record["reason"] = f"INTENT.json does not declare {missing}"
+        return record
+    try:
+        version_id = version_id_for(core)
+        manifest_path = version_manifest_path(store, version_id)
+    except StoreError as error:
+        record["reason"] = f"the staged identity is not a usable version id: {error}"
+        return record
+    record["version_id"] = version_id
+    record["evidence"] = {"manifest": manifest_path.is_file(),
+                          "canonical_graph_hash": core["canonical_graph_hash"],
+                          "parent_version_id": core["parent_version_id"]}
+    if not manifest_path.is_file():
+        record["state"] = STAGING_NOT_PUBLISHED
+        record["reason"] = ("the version manifest was never published: the commit was "
+                            "interrupted before the commit point")
+        return record
+    manifest = read_json(manifest_path)
+    if manifest.get("canonical_graph_hash") != core["canonical_graph_hash"]:
+        record["reason"] = "the published manifest does not match the staged intent"
+        return record
+    record["state"] = STAGING_PUBLISHED
+    record["reason"] = "the manifest is published; the staging is only pending cleanup"
+    return record
+
+
 def pending_commits(store: CanonicalStore) -> dict[str, Any]:
     """Versions that exist (manifest published) but whose post-commit bookkeeping is incomplete."""
     from ..lifecycle.ledger import events_of_type
@@ -314,35 +425,31 @@ def pending_commits(store: CanonicalStore) -> dict[str, Any]:
 
 
 def recover_pending(store: CanonicalStore, *, created_at: str | None = None) -> dict[str, Any]:
-    """Deterministically finish every published-but-unconfirmed commit; drop staging only."""
+    """Deterministically finish every published-but-unconfirmed commit.
+
+    Order matters: every staging is classified from the store first (B1), the post-commit
+    bookkeeping is completed, and only then is a staging removed — a published version is
+    reported as published, and a staging that cannot be attributed is kept instead of being
+    destroyed. Nothing here creates a second version, a second event or a second operation:
+    each action is conditional on the absence of its own evidence.
+    """
     created_at = created_at or now()
     from ..lifecycle.ledger import events_of_type
     from ..projection.outbox import list_operations
     from .registry import index_entries
 
-    completed, discarded = [], []
+    completed = []
     advanced = None
     with store.writer_lock():
-        for path in sorted(store.staging_dir.iterdir()):
-            if not path.is_dir():
-                continue
-            intent = path / "INTENT.json"
-            version_id = None
-            if intent.is_file():
-                try:
-                    version_id = version_id_for(read_json(intent)["identity_core"]) \
-                        if "identity_core" in read_json(intent) else None
-                except Exception:  # noqa: BLE001
-                    version_id = None
-            discarded.append({"staging": path.name, "version_id": version_id,
-                              "reason": "STAGING_WITHOUT_PUBLISHED_MANIFEST" if version_id is None
-                                        else "STAGING_ALREADY_PUBLISHED"})
-            shutil.rmtree(path, ignore_errors=True)
+        staging = [classify_staging(store, path) for path in sorted(store.staging_dir.iterdir())
+                   if path.is_dir()]
+        by_version = {item["version_id"]: item for item in staging if item["version_id"]}
 
         manifests = [path.parent.name for path in store.versions_dir.glob("*/manifest.json")]
         indexed = {entry["version_id"] for entry in index_entries(store)}
         committed = {event.get("version_id") for event in events_of_type(store, "VERSION_COMMITTED")}
         enqueued = {operation["version_id"] for operation in list_operations(store)}
+        actions_taken: dict[str, list[str]] = {}
         for version_id in manifests:
             manifest = read_version(store, version_id).manifest
             actions = []
@@ -362,10 +469,28 @@ def recover_pending(store: CanonicalStore, *, created_at: str | None = None) -> 
                         projector_version=PROJECTOR_VERSION, openviking_version=None,
                         created_at=created_at, antu_id=manifest["antu_id"])
                 actions.append("outbox_enqueued")
+            actions_taken[version_id] = actions
             if actions:
                 completed.append({"version_id": version_id, "actions": actions})
         pointer = store.read_current()
         advanced = None
+        adopted = None
+        ambiguous: list[str] = []
+        if pointer is None and manifests:
+            # the last stage of a published commit never ran: the version exists, its
+            # manifest is the commit point, and nothing points at it (B1). With exactly one
+            # accepted version the intent is unambiguous and CURRENT is created; with more
+            # than one, recovery reports the fork instead of guessing.
+            if len(manifests) == 1:
+                manifest = read_version(store, manifests[0]).manifest
+                set_current(store, manifest, expected_previous=None,
+                            antu_id=manifest["antu_id"], created_at=created_at)
+                append_event(store, "RECONCILIATION", {
+                    "action": "CURRENT_CREATED_FOR_ACCEPTED_VERSION", "to": manifests[0],
+                    "recorded_at": created_at})
+                adopted = manifests[0]
+            else:
+                ambiguous = sorted(manifests)
         if pointer is not None:
             manifests = [path.parent.name for path in store.versions_dir.glob("*/manifest.json")]
             tip = pointer["version_id"]
@@ -383,8 +508,24 @@ def recover_pending(store: CanonicalStore, *, created_at: str | None = None) -> 
                     "action": "CURRENT_ADVANCED_TO_ACCEPTED_TIP", "from": pointer["version_id"],
                     "to": tip, "recorded_at": created_at})
                 advanced = {"from": pointer["version_id"], "to": tip}
-    return {"completed": completed, "staging_discarded": discarded, "current_advanced": advanced,
-            "pending_after": pending_commits(store)}
+
+        removed, kept = [], []
+        for item in staging:
+            record = dict(item)
+            if record["state"] == STAGING_UNCLASSIFIED:
+                record["removed"] = False
+                kept.append(record)
+                continue
+            record["actions_completed"] = actions_taken.get(record["version_id"], [])
+            if record["state"] == STAGING_PUBLISHED:
+                record["state"] = ("PUBLISHED_COMPLETE" if not record["actions_completed"]
+                                   else "PUBLISHED_PARTIAL")
+            record["removed"] = True
+            removed.append(record)
+            shutil.rmtree(Path(store.staging_dir) / item["staging"], ignore_errors=True)
+    return {"completed": completed, "staging_discarded": removed, "staging_kept": kept,
+            "current_advanced": advanced, "current_adopted": adopted,
+            "current_ambiguous": ambiguous, "pending_after": pending_commits(store)}
 
 
 def verify_commit(store: CanonicalStore, version_id: str) -> dict[str, Any]:

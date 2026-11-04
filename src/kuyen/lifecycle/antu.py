@@ -7,6 +7,8 @@ accepted version and never touches OpenViking.
 """
 from __future__ import annotations
 
+import copy
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -187,6 +189,10 @@ def seal_document(document: dict[str, Any], *, version: str, antu_id: str) -> di
         "coverage": canonical["coverage"],
         "provenance": document["kuyen"]["provenance"],
     }
+    # §6: the schema of the version is part of its identity. A document without schema keeps
+    # producing exactly the same hash it produced before this capability existed.
+    if "schema" in document:
+        graph["schema"] = copy.deepcopy(document["schema"])
     graph["content_digest"] = digest({"entities": graph["entities"], "relations": graph["relations"],
                                        "assertions": graph["assertions"], "evidence": graph["evidence"]})[:20]
     graph["provenance_digest"] = digest(graph["provenance"])[:20]

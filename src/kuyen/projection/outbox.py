@@ -31,23 +31,24 @@ def enqueue(store: CanonicalStore, *, version_id: str, kuyen_id: str, kuyen_vers
             created_at: str, antu_id: str, instance_tag: str | None = None) -> dict[str, Any]:
     key = operation_key(version_id, projector_version, openviking_version, instance_tag)
     path = store.outbox_dir / f"{key}.json"
-    if path.is_file():
-        return read_json(path)
-    operation = {
-        "schema_name": "KUYEN_PROJECTION_OUTBOX",
-        "schema_version": OUTBOX_FORMAT_VERSION,
-        "operation_key": key,
-        "version_id": version_id, "kuyen_id": kuyen_id, "kuyen_version": kuyen_version,
-        "canonical_graph_hash": canonical_graph_hash,
-        "projector_version": projector_version,
-        "openviking_version": openviking_version,
-        "instance_tag": instance_tag,
-        "status": STATUS_PENDING,
-        "created_at": created_at, "created_by_antu": antu_id,
-        "attempts": [], "projection_id": None, "last_error": None,
-    }
-    write_atomic(path, canonical_json_pretty(operation))
-    return operation
+    with store.writer_lock():
+        if path.is_file():
+            return read_json(path)
+        operation = {
+            "schema_name": "KUYEN_PROJECTION_OUTBOX",
+            "schema_version": OUTBOX_FORMAT_VERSION,
+            "operation_key": key,
+            "version_id": version_id, "kuyen_id": kuyen_id, "kuyen_version": kuyen_version,
+            "canonical_graph_hash": canonical_graph_hash,
+            "projector_version": projector_version,
+            "openviking_version": openviking_version,
+            "instance_tag": instance_tag,
+            "status": STATUS_PENDING,
+            "created_at": created_at, "created_by_antu": antu_id,
+            "attempts": [], "projection_id": None, "last_error": None,
+        }
+        write_atomic(path, canonical_json_pretty(operation))
+        return operation
 
 
 def list_operations(store: CanonicalStore) -> list[dict[str, Any]]:
@@ -60,12 +61,14 @@ def get(store: CanonicalStore, key: str) -> dict[str, Any] | None:
 
 
 def update(store: CanonicalStore, key: str, **changes: Any) -> dict[str, Any]:
-    operation = get(store, key)
-    if operation is None:
-        raise KeyError(key)
-    operation.update(changes)
-    write_atomic(store.outbox_dir / f"{key}.json", canonical_json_pretty(operation))
-    return operation
+    """Read-modify-write of one operation, serialized by the store writer lock."""
+    with store.writer_lock():
+        operation = get(store, key)
+        if operation is None:
+            raise KeyError(key)
+        operation.update(changes)
+        write_atomic(store.outbox_dir / f"{key}.json", canonical_json_pretty(operation))
+        return operation
 
 
 def record_attempt(store: CanonicalStore, key: str, attempt: dict[str, Any], *,
@@ -90,3 +93,44 @@ def stats(store: CanonicalStore) -> dict[str, int]:
     for operation in list_operations(store):
         counts[operation["status"]] = counts.get(operation["status"], 0) + 1
     return dict(sorted(counts.items()))
+
+
+CLAIMABLE = (STATUS_PENDING, STATUS_FAILED)
+
+
+def claim(store: CanonicalStore, key: str) -> dict[str, Any] | None:
+    """Take ownership of one operation, or return None when it cannot be taken.
+
+    The read of the status and the write of `IN_PROGRESS` happen inside the store writer
+    lock, so two runners can never execute the same operation: the second one finds it
+    `IN_PROGRESS` (held) or `DONE` (finished) and returns None
+    (KUYEN_TRANSACTION_BOUNDARY_HARDENING_03, front 1). An operation left `IN_PROGRESS` by
+    a runner that died is not stolen here; `release_interrupted()` returns it to `PENDING`
+    explicitly during recovery.
+    """
+    with store.writer_lock():
+        operation = get(store, key)
+        if operation is None or operation.get("status") not in CLAIMABLE:
+            return None
+        claimed = dict(operation)
+        claimed["status"] = STATUS_IN_PROGRESS
+        write_atomic(store.outbox_dir / f"{key}.json", canonical_json_pretty(claimed))
+        return claimed
+
+
+def release_interrupted(store: CanonicalStore, *, released_at: str | None = None) -> list[str]:
+    """Return the operations held by a dead runner to `PENDING`, recording the release.
+
+    Idempotent: a second call finds no `IN_PROGRESS` operation and changes nothing.
+    """
+    released: list[str] = []
+    with store.writer_lock():
+        for operation in list_operations(store):
+            if operation.get("status") != STATUS_IN_PROGRESS:
+                continue
+            attempts = list(operation.get("attempts") or [])
+            attempts.append({"attempt": len(attempts) + 1, "released_at": released_at,
+                             "result": "RELEASED_AFTER_INTERRUPTION"})
+            update(store, operation["operation_key"], status=STATUS_PENDING, attempts=attempts)
+            released.append(operation["operation_key"])
+    return released

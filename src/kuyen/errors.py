@@ -67,6 +67,16 @@ class OpenAIExtractionError(OpenAIProviderError):
     code = "OPENAI_EXTRACTION_FAILED"
 
 
+class OpenAIConfigurationError(OpenAIProviderError):
+    """The caller asked for OpenAI extraction but the configuration is not usable.
+
+    Raised *before* any extraction is attempted (KUYEN_OPENAI_DOCUMENT_TO_GRAPH_E2E_01).
+    The message names the environment variable that needs configuration and never
+    contains its value: the credential is read only inside the trusted process.
+    """
+    code = "OPENAI_CONFIGURATION_BLOCKED"
+
+
 class ValidationRejected(KuyenError):
     code = "RESULT_REJECTED"
 
@@ -127,6 +137,18 @@ class StoreError(KuyenError):
 class ImmutableViolation(StoreError):
     """An immutable artifact was about to be overwritten with different content."""
     code = "IMMUTABLE_VIOLATION"
+
+
+class AmbiguousSourceUnit(StoreError):
+    """A SOURCE_UNIT identifier resolves to more than one unit and nothing disambiguates it.
+
+    `unit_id` is local to its MAPU (see `DATA_MODEL.md`), so a version that holds two
+    documents can legitimately contain two `u00` units. Resolving that identifier without a
+    MAPU is ambiguous, and returning the first match would attribute evidence to the wrong
+    document; the lookup therefore fails instead of guessing
+    (KUYEN_SOURCE_UNIT_DISAMBIGUATION_03).
+    """
+    code = "AMBIGUOUS_SOURCE_UNIT"
 
 
 class CommitError(KuyenError):

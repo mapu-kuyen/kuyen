@@ -22,7 +22,9 @@ from __future__ import annotations
 import errno
 import fcntl
 import os
+import re
 import shutil
+import threading
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -35,12 +37,21 @@ from ..contracts import STORE_ADAPTER_VERSION, STORE_FORMAT_VERSION
 
 HASH_ALGORITHM = "sha256"
 
+# Re-entrancy bookkeeping for the writer lock (KUYEN_LEDGER_RECOVERY_HARDENING_02, M1).
+# `flock` is per open file description, so a second descriptor opened by the same process
+# blocks against the first: nesting the lock must reuse the held descriptor instead of
+# opening another one.
+_WRITER_SCOPES = threading.local()
+
 
 @dataclass(frozen=True)
 class StoreConfig:
     root: Path
     format_version: str = STORE_FORMAT_VERSION
     adapter_version: str = STORE_ADAPTER_VERSION
+
+
+BLOB_NAME_RE = re.compile(r"[0-9a-f]{64}")
 
 
 class CanonicalStore:
@@ -140,7 +151,27 @@ class CanonicalStore:
     # -- writer lock --------------------------------------------------------
     @contextmanager
     def writer_lock(self, *, timeout: float | None = None) -> Iterator[None]:
-        """Advisory single-writer lock. A second writer is blocked, never corrupting."""
+        """Advisory writer lock, exclusive across threads and processes, re-entrant per thread.
+
+        A second *thread* or *process* is blocked (each opens its own descriptor, and
+        `flock` conflicts between descriptors). The same thread may nest the lock: the
+        write API wraps a whole operation and the ledger/history primitives it calls take
+        the lock again, so nesting must not open a second descriptor that would block
+        against itself.
+        """
+        scopes = getattr(_WRITER_SCOPES, "depth", None)
+        if scopes is None:
+            scopes = {}
+            _WRITER_SCOPES.depth = scopes
+        key = str(self.root.resolve())
+        if scopes.get(key):
+            scopes[key] += 1
+            try:
+                yield
+            finally:
+                scopes[key] -= 1
+            return
+
         path = self.root / "locks/writer.lock"
         path.parent.mkdir(parents=True, exist_ok=True)
         handle = path.open("a+")
@@ -157,6 +188,7 @@ class CanonicalStore:
                     handle.close()
                     raise StoreError("writer lock is held by another process (single-writer store)") from None
                 time.sleep(0.02)
+        scopes[key] = 1
         try:
             handle.seek(0)
             handle.truncate()
@@ -164,6 +196,7 @@ class CanonicalStore:
             handle.flush()
             yield
         finally:
+            scopes.pop(key, None)
             try:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
             finally:
@@ -198,7 +231,11 @@ class CanonicalStore:
         if failpoint:
             failpoint("during_current_update")
         write_atomic(self.current_path, canonical_json_pretty(payload))
-        write_atomic(self.root / "refs/history" / f"{(current or {}).get('version_id', 'GENESIS')}.json",
+        previous_id = (current or {}).get("version_id", "GENESIS")
+        if previous_id != "GENESIS":
+            from .versions import validate_version_id  # local: avoids an import cycle
+            validate_version_id(previous_id)
+        write_atomic(self.root / "refs/history" / f"{previous_id}.json",
                      canonical_json_pretty({"replaced_by": payload.get("version_id"),
                                             "replaced_at": payload.get("updated_at"),
                                             "previous": current}))
@@ -206,15 +243,30 @@ class CanonicalStore:
 
     # -- verification -------------------------------------------------------
     def verify_objects(self, *, deep: bool = True) -> dict[str, Any]:
-        problems, checked = [], 0
+        """Every file under `objects/` must be a blob named by its own SHA-256.
+
+        An abandoned `write_atomic` temporary is inert: no reader ever opens it and its name
+        is not a content address, so it is counted and ignored instead of being reported as
+        corruption (a crash is not damage). Any other unexpected file is reported, because
+        nothing but a blob belongs there (KUYEN_SEMANTIC_SECURITY_HARDENING_04, review of the
+        previous experiment).
+        """
+        problems, checked, ignored = [], 0, 0
         for path in sorted(self.objects_dir.rglob("*")):
             if not path.is_file():
                 continue
+            if path.name.startswith(".tmp-"):
+                ignored += 1
+                continue
             checked += 1
             expected = path.name
+            if not BLOB_NAME_RE.fullmatch(expected):
+                problems.append({"blob": str(path.relative_to(self.root)), "problem": "UNEXPECTED_FILE"})
+                continue
             if deep and sha256_file(path) != expected:
                 problems.append({"blob": str(path.relative_to(self.root)), "problem": "HASH_MISMATCH"})
-        return {"checked": checked, "problems": problems, "ok": not problems}
+        return {"checked": checked, "ignored_temporaries": ignored, "problems": problems,
+                "ok": not problems}
 
     def info(self) -> dict[str, Any]:
         stat = os.stat(self.root)

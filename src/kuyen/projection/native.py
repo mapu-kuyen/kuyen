@@ -14,7 +14,8 @@ from ..canonical import digest, read_json, sha256_text, write_atomic, canonical_
 from ..errors import StoreError
 from ..contracts import PROJECTION_DOMAIN, PROJECTION_REGISTRY_FORMAT_VERSION, PROJECTOR_VERSION
 from ..storage.versions import read_version
-from .outbox import STATUS_DONE, STATUS_FAILED, STATUS_IN_PROGRESS, STATUS_PENDING, get, record_attempt, update
+from .outbox import (STATUS_DONE, STATUS_FAILED, STATUS_IN_PROGRESS, STATUS_PENDING, claim, get,
+                     record_attempt, update)
 from . import mapping as upstream_mapping
 from . import openviking as upstream_persistence
 from . import projector as upstream_projector
@@ -22,12 +23,16 @@ from . import projector as upstream_projector
 
 def document_from_sidecar(sidecar: dict[str, Any]) -> dict[str, Any]:
     """The projector's input view, rebuilt from the canonical sidecar alone."""
-    return {
+    document = {
         "kuyen": sidecar["kuyen"],
         "canonical": sidecar["canonical"],
         "mapus": sidecar.get("mapus") or [],
         "counts": sidecar.get("object_counts") or {},
     }
+    # The schema is part of the version when the instance declares one (KUYEN_DISTRIBUTED_ANTU_12).
+    if "schema" in sidecar:
+        document["schema"] = sidecar["schema"]
+    return document
 
 
 def load_sidecar(store: CanonicalStore, version_id: str) -> dict[str, Any]:
@@ -103,15 +108,19 @@ def uri_root(kuyen_id: str, version_id: str, projector_version: str,
 
 
 def project(store: CanonicalStore, operation_key: str, *, client: upstream_persistence.OpenVikingStore,
-            openviking_version: str, created_at: str, failpoint=None) -> dict[str, Any]:
-    """Execute one outbox operation against OpenViking, idempotently."""
-    operation = get(store, operation_key)
-    if operation is None:
+            openviking_version: str, created_at: str, failpoint=None) -> dict[str, Any] | None:
+    """Execute one outbox operation against OpenViking, at most once per claim.
+
+    Returns the projection entry, or None when the operation was already done or is held by
+    another runner: executing it twice would duplicate external work, the registry entry
+    and the completion event (front 1).
+    """
+    if get(store, operation_key) is None:
         raise KeyError(operation_key)
-    if operation["status"] == STATUS_DONE:
-        return operation
+    operation = claim(store, operation_key)
+    if operation is None:
+        return None
     attempt = {"started_at": created_at, "attempt": len(operation.get("attempts") or []) + 1}
-    update(store, operation_key, status=STATUS_IN_PROGRESS)
     try:
         built = build(store, operation["version_id"], projector_version=operation["projector_version"],
                       instance_tag=operation.get("instance_tag"))
@@ -165,18 +174,42 @@ def project(store: CanonicalStore, operation_key: str, *, client: upstream_persi
             "outbox_operation_key": operation_key,
         }
         entry["entry_hash"] = digest(entry)
-        write_atomic(store.projections_dir / f"{entry['projection_id']}.json", canonical_json_pretty(entry))
-        if failpoint:
-            failpoint("after_projection_complete", {"projection_id": entry["projection_id"]})
-        attempt.update({"finished_at": created_at, "result": "DONE",
-                        "projection_id": entry["projection_id"], "byte_exact": verification["byte_exact"]})
-        record_attempt(store, operation_key, attempt, status=STATUS_DONE,
-                       projection_id=entry["projection_id"])
+        with store.writer_lock():
+            write_atomic(store.projections_dir / f"{entry['projection_id']}.json",
+                         canonical_json_pretty(entry))
+            if failpoint:
+                failpoint("after_projection_complete", {"projection_id": entry["projection_id"]})
+            record_completion_event(store, entry, created_at=created_at)
+            attempt.update({"finished_at": created_at, "result": "DONE",
+                            "projection_id": entry["projection_id"],
+                            "byte_exact": verification["byte_exact"]})
+            record_attempt(store, operation_key, attempt, status=STATUS_DONE,
+                           projection_id=entry["projection_id"])
         return entry
     except Exception as exc:  # noqa: BLE001 - a failed projection is data, not a crash
         attempt.update({"finished_at": created_at, "result": "FAILED", "error": str(exc)[:500]})
         record_attempt(store, operation_key, attempt, status=STATUS_FAILED, error=str(exc)[:500])
         raise
+
+
+def record_completion_event(store: CanonicalStore, entry: dict[str, Any], *, created_at: str) -> bool:
+    """Record the completion of a projection once, inside the finalization lock.
+
+    The event is part of the same critical section as the registry entry and the `DONE`
+    status, so `DONE` always implies both. It is written *before* `DONE` and skipped when a
+    previous attempt already recorded it, so a retry after an interruption never duplicates
+    the event (front 1).
+    """
+    from ..lifecycle.ledger import append_event, events_of_type  # local import: no cycle
+
+    already = [event for event in events_of_type(store, "PROJECTION_COMPLETED")
+               if event.get("projection_id") == entry["projection_id"]]
+    if already:
+        return False
+    append_event(store, "PROJECTION_COMPLETED", {
+        "version_id": entry["version_id"], "projection_id": entry["projection_id"],
+        "recorded_at": created_at})
+    return True
 
 
 def list_projections(store: CanonicalStore) -> list[dict[str, Any]]:

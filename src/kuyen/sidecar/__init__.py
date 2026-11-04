@@ -99,6 +99,10 @@ def build_sidecar(
             "sidecar_content_hash": None,
         },
     }
+    # A document that declares a schema travels with it; a document written before the
+    # capability keeps exactly the same sidecar bytes it had (KUYEN_DISTRIBUTED_ANTU_12).
+    if "schema" in document:
+        sidecar["schema"] = document["schema"]
     sidecar["integrity"]["sidecar_content_hash"] = referenced_digest(sidecar)
     return sidecar
 

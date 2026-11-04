@@ -1,0 +1,18 @@
+baseline: ..........................                                               [100%]
+src/kuyen/adapters/openviking.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/backup/archive.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/canonical.py: necessary=True import_ok=False 
+src/kuyen/editing/context.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/engine.py: necessary=False import_ok=True ..........................                                            
+src/kuyen/errors.py: necessary=True import_ok=False 
+src/kuyen/ingest.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/lifecycle/antu.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/lifecycle/unit.py: necessary=True import_ok=False 
+src/kuyen/product.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/projection/native.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/projection/openviking.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/projection/outbox.py: necessary=True import_ok=False 
+src/kuyen/sidecar/__init__.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/storage/commit.py: necessary=True import_ok=False 
+src/kuyen/storage/registry.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!
+src/kuyen/storage/store.py: necessary=True import_ok=True !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!

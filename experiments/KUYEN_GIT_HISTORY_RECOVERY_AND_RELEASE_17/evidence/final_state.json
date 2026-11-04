@@ -1,0 +1,92 @@
+{
+  "branch": "work/kuyen-free-text-graph",
+  "head": "485c423b1749c5810d3c2f6066841c1379ab08e8",
+  "base": "71e37c4",
+  "origin_main": "5fd8777a8305097792380fceb9ff861de208147a",
+  "ahead_of_origin_main": 36,
+  "version": "0.3.0",
+  "commits": [
+    {
+      "sha": "71d882c",
+      "subject": "fix(package): add the four modules the published history imports",
+      "shortstat": "4 files changed, 927 insertions(+)"
+    },
+    {
+      "sha": "25da16b",
+      "subject": "fix(domain): publish the corrections the engine and storage already use",
+      "shortstat": "12 files changed, 773 insertions(+), 114 deletions(-)"
+    },
+    {
+      "sha": "9de0be5",
+      "subject": "fix(product): align the document flow and the Antü context with the tested code",
+      "shortstat": "5 files changed, 123 insertions(+), 20 deletions(-)"
+    },
+    {
+      "sha": "394bae3",
+      "subject": "test: publish the suites that prove what the history now contains",
+      "shortstat": "27 files changed, 4214 insertions(+), 2 deletions(-)"
+    },
+    {
+      "sha": "31d5da6",
+      "subject": "docs: publish the VLM, quickstart and source-unit guides and the quickstart itself",
+      "shortstat": "13 files changed, 3747 insertions(+), 78 deletions(-)"
+    },
+    {
+      "sha": "e854e1c",
+      "subject": "build: ship the manifest and the distribution verifier, and fix the build floor",
+      "shortstat": "3 files changed, 250 insertions(+), 2 deletions(-)"
+    },
+    {
+      "sha": "2d3fd09",
+      "subject": "test: publish the real provider artefacts the document-path suite reads",
+      "shortstat": "8 files changed, 100 insertions(+)"
+    },
+    {
+      "sha": "485c423",
+      "subject": "release: align the version to 0.3.0",
+      "shortstat": "7 files changed, 22 insertions(+), 13 deletions(-)"
+    }
+  ],
+  "tracked": {
+    "src_py_modules": 91,
+    "test_modules": 55,
+    "docs": 15
+  },
+  "tracked_before": {
+    "src_py_modules": 87,
+    "test_modules": 32
+  },
+  "worktree": {
+    "modified_tracked": 0,
+    "untracked": [
+      "experiments/KUYEN_DISTRIBUTED_ANTU_APPLICABILITY_12/",
+      "experiments/KUYEN_EXPLICIT_POLARITY_FIXTURES_10/",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/MANIFEST.json",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/REPORT.md",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/evidence/kuyen_build_report.json",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/evidence/kuyen_result.invalid.json",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/evidence/openviking_demo_report.json",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/evidence/openviking_graph/",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/git_state_final.txt",
+      "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/logs/",
+      "experiments/KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17/",
+      "experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/MANIFEST.json",
+      "experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/REPORT.md",
+      "experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/",
+      "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/",
+      "experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/",
+      "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/",
+      "experiments/KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13/"
+    ]
+  },
+  "clone": {
+    "path": "/tmp/kuyen17_clone",
+    "suite": "527 passed, 3 skipped",
+    "version": "0.3.0",
+    "public_names": 40,
+    "wheel": "kuyen-0.3.0-py3-none-any.whl",
+    "wheel_files": 111,
+    "wheel_has_restored_modules": true,
+    "verify_distribution": "all_passed=True results=4"
+  }
+}

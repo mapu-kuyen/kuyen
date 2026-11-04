@@ -1,0 +1,33 @@
+{
+  "modules_in_source": 91,
+  "modules_at_head": 87,
+  "missing_from_history": [
+    "src/kuyen/provenance.py",
+    "src/kuyen/semantics/schema.py",
+    "src/kuyen/semantics/scope.py",
+    "src/kuyen/vlm.py"
+  ],
+  "importers": {
+    "src/kuyen/vlm.py": [
+      "src/kuyen/__init__.py",
+      "src/kuyen/projection/openviking.py"
+    ],
+    "src/kuyen/provenance.py": [
+      "src/kuyen/api/memory.py",
+      "src/kuyen/ingest.py"
+    ],
+    "src/kuyen/semantics/scope.py": [
+      "src/kuyen/api/memory.py",
+      "src/kuyen/editing/context.py",
+      "src/kuyen/editing/service.py",
+      "src/kuyen/editing/validator.py"
+    ],
+    "src/kuyen/semantics/schema.py": [
+      "src/kuyen/editing/applier.py",
+      "src/kuyen/editing/context.py",
+      "src/kuyen/editing/validator.py",
+      "src/kuyen/product.py"
+    ]
+  },
+  "first_import_failure": "ModuleNotFoundError: No module named 'kuyen.semantics.schema'"
+}

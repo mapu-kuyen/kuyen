@@ -1,14 +1,16 @@
 # KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17
 
-**Resultado: el producto ya está en Git.** Ocho commits convierten el historial publicado en algo
-que se clona, se instala y se ejecuta:
+**Resultado: el producto ya está en Git y publicado.** Once commits convierten el historial en
+algo que se clona, se instala, se ejecuta y pasa su propia CI:
 
 ```
-git clone --branch work/kuyen-free-text-graph → 0.3.0 · 40 nombres públicos
-pytest desde el clon                          → 527 passed, 3 skipped, 0 failed
-wheel 0.3.0 (111 archivos) + sdist (162)      → twine PASSED, 3.11 y 3.13, pip check ok
+git clone --branch work/kuyen-free-text-graph → 0.3.0 · 40 nombres públicos · working tree limpio
+pytest desde el clon (3.13)                   → 527 passed, 3 skipped, 0 failed
+pytest del mismo árbol (3.10)                 → 526 passed, 4 skipped, 0 failed
+wheel 0.3.0 (111 archivos) + sdist (162)      → twine PASSED · 3.11 y 3.13 · pip check ok
 quickstart desde la wheel instalada           → 2 versiones, evidencia, backup, restore, verify
 verify_distribution.py                        → all_passed=True results=4
+CI de la rama en GitHub                       → success (6/6 jobs: 3.10, 3.11, 3.12, 3.13, artefactos, higiene)
 ```
 
 La auditoría 16 decía `NOT_READY` y tenía razón: el `git clone` no importaba. Ahora importa, y la
@@ -91,13 +93,15 @@ flujo documental validado en los experimentos 01–05: excluirlo publicaría un 
 del que produjo los diez KÜYEN reales. Es la única incorporación que no está cubierta por un test,
 y se dice aquí en lugar de dejarla implícita.
 
-## 4. Los commits (estructura finalmente adoptada: 8)
+## 4. Los commits (estructura finalmente adoptada: 11)
 
-La separación prevista eran siete commits. La reconstrucción limpia obligó a uno más: en el
-commit 6 el clon todavía fallaba **11 pruebas** porque la suite publicada lee artefactos reales de
-OpenViking que no estaban en Git. En lugar de tocar las pruebas para que pasaran (que habría
-ocultado el defecto) se publicó exactamente la evidencia que leen. No se mezcló ninguna
-responsabilidad para llegar a un número.
+La separación prevista eran siete commits. La realidad impuso cuatro más, y ninguno se hizo para
+"llegar al número":
+
+* el **7** porque la reconstrucción limpia demostró que las pruebas publicadas leen artefactos de
+  OpenViking que no estaban en Git (11 fallos en el clon del commit 6);
+* los **9, 10 y 11** porque la primera ejecución real de CI encontró un defecto de portabilidad en
+  Python 3.10 y un paso de CI que nunca había podido pasar.
 
 | # | commit | asunto | archivos | +/− |
 | --- | --- | --- | --- | --- |
@@ -109,9 +113,14 @@ responsabilidad para llegar a un número.
 | 6 | `e854e1c` | build: ship the manifest and the distribution verifier, and fix the build floor | 3 | +250 −2 |
 | 7 | `2d3fd09` | test: publish the real provider artefacts the document-path suite reads | 8 | +100 |
 | 8 | `485c423` | release: align the version to 0.3.0 | 7 | +22 −13 |
+| 9 | `df65a03` | fix(config): keep the package importable on Python 3.10 | 2 | +23 −3 |
+| 10 | `5c88002` | ci(hygiene): give the version check the import it needs | 1 | +7 |
+| 11 | `c98a289` | ci(hygiene): install the runtime dependencies the import needs | 1 | +2 −2 |
 
 Cada commit se preparó con `git add` de rutas explícitas (nunca `git add -A`), se revisó con
-`git diff --cached`, y `git diff --cached --check` quedó en **0** en los ocho.
+`git diff --cached`, y `git diff --cached --check` quedó en **0** en los once. El duodécimo commit
+de la rama es este informe; la rama queda 40 commits por delante de `origin/main`.
+
 
 ### 4.1 Commit 1 — módulos fundamentales
 
@@ -198,6 +207,38 @@ seguían marcadas *Unreleased* (`0.2.1rc1` queda como el candidato no publicado 
 marcadores de capacidad que decían `0.2.1` pasan a `0.3.0` en `ARCHITECTURE.md`, `DATA_MODEL.md`,
 `PUBLIC_API.md` y los dos `PRODUCT_MAPU_KUYEN_ANTU`.
 
+### 4.9 Commit 9 — Python 3.10
+
+La primera ejecución de CI sobre la rama recién publicada dio **cinco jobs bien y dos mal**. Uno de
+los dos era un defecto real del producto: `config.py` importaba `tomllib` en la cabecera del
+módulo, `tomllib` es de 3.11, y `pyproject.toml` declara `requires-python = ">=3.10"` con 3.10 en
+los classifiers y en la matriz de CI. En 3.10 el paquete entero era **no importable** y la suite
+moria antes de coleccionar.
+
+Ahora la lectura TOML es opcional: el import va protegido y pedir una configuración TOML en un
+intérprete sin `tomllib` lanza una explicación (`TOML_UNAVAILABLE`) en vez de romper el import;
+`KuyenConfig.from_mapping()`, que es la vía programática documentada, sigue funcionando en 3.10.
+La prueba que leía `pyproject.toml` con `tomllib` se salta en esos intérpretes (de ahí el cuarto
+skip en 3.10). Verificado con CPython 3.10.16 y 3.13.1: **526 passed / 4 skipped** y **527 passed /
+3 skipped**.
+
+### 4.10 y 4.11 Commits 10 y 11 — el paso de CI que nunca pudo pasar
+
+El otro job rojo era `secrets and metadata`, en el paso `version agrees`:
+
+```
+python -c "import kuyen; assert kuyen.__version__ == open('VERSION').read().strip()"
+```
+
+El proyecto usa *src layout* y ese job no instalaba el paquete, así que `import kuyen` no podía
+funcionar **nunca**: es una de las dos causas del rojo histórico de `main`@`5fd8777`. El commit 10
+añade el `pip install -e .` que faltaba y el 11 corrige el primer intento (`--no-deps` dejaba el
+import sin `PyYAML`, reproducido en un venv limpio). **La aserción no se tocó**: sigue siendo la
+misma línea, y sigue fallando si `VERSION` y `kuyen.__version__` no coinciden. No se saltó ningún
+paso, no se marcó nada como no bloqueante y no se cambió la matriz.
+
+Con los dos commits, el workflow completo queda en **success** (§11).
+
 ## 5. Archivos preservados fuera de los commits
 
 Siguen sin rastrear, intactos:
@@ -232,7 +273,16 @@ $ env -u PYTHONPATH python3 -m pytest tests/
 
 Antes del commit 7 el mismo clon daba `11 failed, 516 passed, 3 skipped`; el detalle del fallo y
 su causa están en §4.7. La reconstrucción se repitió **desde cero** después de cada corrección:
-clon nuevo, no copia.
+clon nuevo, no copia. Con el HEAD final (`c98a289`) se repitió una última vez, y también sobre
+Python 3.10:
+
+```
+/tmp/kuyen17_verify  (clon de c98a289)
+  py3.13.1 → 527 passed, 3 skipped        py3.10.16 → 526 passed, 4 skipped
+  wheel + sdist → twine PASSED · verify_distribution → all_passed=True results=4
+```
+
+El cuarto skip de 3.10 es la prueba que lee `pyproject.toml` con `tomllib` (§4.9).
 
 Pruebas por capacidad, todas ejecutadas en el clon:
 
@@ -330,16 +380,34 @@ No se imprimió ni copió ninguna clave. El `.env` del workspace no se tocó ni 
 
 ## 11. CI
 
-El workflow `.github/workflows/ci.yml` no se modificó: `on: push` y `pull_request`, matriz 3.10,
-3.11, 3.12 y 3.13 con `pip install -e ".[dev]"` y `pytest -m "not openviking"`, job de artefactos
-con instalación limpia de wheel y sdist, y job `hygiene` con `forbidden files`, `version agrees` y
-`license agrees`.
+**Resultado real sobre la rama publicada: `success`.**
 
-Los dos runs históricos en rojo eran de `main`@`5fd8777` («Release KÜYEN 0.2.0») y fallaban
-justamente por lo que este trabajo arregla: `product suite` e `import kuyen` no funcionaban sin los
-cuatro módulos, y `version agrees` fallaba al importar. **No hay ningún run de esta rama todavía**
-porque nunca se había publicado. El push dispara el workflow sobre
-`work/kuyen-free-text-graph`; el resultado real se comprobará después del push.
+```
+run 41750565691 · work/kuyen-free-text-graph · c98a289 · completed success
+  suite (py3.10)  success      suite (py3.13)  success
+  suite (py3.11)  success      wheel and sdist          success
+  suite (py3.12)  success      secrets and metadata     success
+```
+
+El camino hasta ahí, con las tres ejecuciones reales:
+
+| run | commit | resultado | qué falló |
+| --- | --- | --- | --- |
+| 1 | `9a5e22d` | failure | `suite (py3.10)` (`tomllib`) y `version agrees` (import sin instalar) |
+| 2 | `5c88002` | failure | sólo `version agrees` (el `--no-deps` dejaba el import sin `PyYAML`) |
+| 3 | `c98a289` | **success** | nada |
+
+Los dos fallos eran defectos reales: uno del producto (§4.9) y otro del propio workflow (§4.10-11).
+Ninguno se silenció: no se añadieron `continue-on-error`, no se marcaron pasos como no bloqueantes,
+no se recortó la matriz y las aserciones siguen intactas.
+
+El workflow: `on: push` y `pull_request`, matriz 3.10, 3.11, 3.12 y 3.13 con
+`pip install -e ".[dev]"` y `pytest -m "not openviking"` más un import fuera del árbol, job de
+artefactos que construye, inspecciona el contenido e instala wheel y sdist en limpio, y job
+`hygiene` con `forbidden files`, `version agrees` y `license agrees`.
+
+Los dos runs históricos en rojo de `main`@`5fd8777` («Release KÜYEN 0.2.0») siguen ahí como
+evidencia de que la release 0.2.0 nunca pasó su propia CI; no son fallos de esta rama.
 
 ## 12. Versión final
 
@@ -358,17 +426,41 @@ La etiqueta `v0.3.0` y la publicación en PyPI **no** se hicieron en esta fase.
 
 ## 13. Estado del push
 
-Antes de publicar, comprobado:
+**Publicado.** `work/kuyen-free-text-graph` existe en el remoto.
 
-| comprobación | resultado |
+| comprobación previa | resultado |
 | --- | --- |
-| rama local | `work/kuyen-free-text-graph` en `485c423` (código); 37 commits por delante de `origin/main` contando el de este informe |
+| rama local | `work/kuyen-free-text-graph`, 40 commits por delante de `origin/main` |
 | `main` remoto | `5fd8777` — sin cambios desde la auditoría 16 |
-| rama remota homónima | **no existe** (`git ls-remote --heads origin` sólo devuelve `main`) |
-| divergencia posible | ninguna: el push crea la referencia, no sobrescribe nada |
+| rama remota homónima | no existía (`git ls-remote --heads origin` sólo devolvía `main`) |
+| divergencia posible | ninguna: el push creó la referencia, no sobrescribió nada |
 | force push | no se usó |
 | merge a main / etiquetas / PyPI / release de GitHub | no se hicieron |
-| contenido del push | sólo los commits revisados de la rama; los 10 directorios de experimentos siguen fuera |
+| contenido | sólo los commits revisados; los 10 directorios de experimentos siguen fuera |
+
+```
+$ git push -u origin work/kuyen-free-text-graph
+ * [new branch]      work/kuyen-free-text-graph -> work/kuyen-free-text-graph
+branch 'work/kuyen-free-text-graph' set up to track 'origin/work/kuyen-free-text-graph'
+```
+
+Dos detalles de transporte, dichos para que no sorprendan a quien repita la operación:
+
+1. El `origin` configurado es HTTPS y en este entorno no había credencial válida
+   (`gh` tenía un token inválido en el llavero y el helper pedía contraseña). El push se hizo por
+   SSH con una reescritura **de una sola invocación**
+   (`git -c url."ssh://git@github.com/".insteadOf="https://github.com/" push …`), que autenticó
+   como `mapu-kuyen`. La URL de `origin` no se modificó.
+2. Los commits 9, 10 y 11 se publicaron con dos pushes de avance rápido (`9a5e22d..5c88002` y
+   `5c88002..c98a289`) tras cada corrección de CI. La rama remota y la local terminan en el mismo
+   `c98a289`.
+
+Estado final del remoto:
+
+```
+5fd8777  refs/heads/main
+c98a289  refs/heads/work/kuyen-free-text-graph
+```
 
 ## 14. Hashes y artefactos
 
@@ -376,11 +468,13 @@ Antes de publicar, comprobado:
 | --- | --- |
 | `evidence/pre_intervention_sha256.json` | SHA-256 de los 56 archivos del producto tal como estaban antes de intervenir |
 | `evidence/necessity_matrix.json` y `.log` | las 17 reversiones medidas (import + suite) y su veredicto |
-| `evidence/final_state.json` | HEAD, 8 commits, conteos rastreados antes/después, estado del workspace y del clon |
+| `evidence/final_state.json` | HEAD, commits, conteos rastreados antes/después, estado del workspace y del clon |
 | `evidence/clone_suite.log` | `527 passed, 3 skipped` en el clon |
 | `evidence/clone_build.log`, `clone_twine.log` | build y `twine check` del clon |
 | `evidence/clone_verify_distribution.log` | 4/4 PASS de `verify_distribution.py` |
+| `evidence/ci_branch_run.json`, `ci_branch_jobs.json` | el run verde de la rama y sus seis jobs |
 | `MANIFEST.json` | SHA-256 de todos los archivos de este experimento |
+
 
 Integridad de los experimentos 13, 14 y 15: 712 archivos con el mismo hash que en la auditoría 16
 (`experiments/KUYEN_PRODUCTION_READINESS_16/evidence/working_tree_sha256.json`, clave
@@ -419,7 +513,8 @@ Integridad de los experimentos 13, 14 y 15: 712 archivos con el mismo hash que e
 | La versión del paquete coincide con la del repositorio | sí: `VERSION` = metadatos = `kuyen.__version__` = `0.3.0` |
 | No se incorporan cambios previos ajenos | sí: 10 directorios de experimentos quedan fuera; de 08 y 09 sólo la evidencia que citan las pruebas |
 | Los experimentos 13, 14 y 15 permanecen íntegros | sí: 712 archivos con el mismo hash |
-| El push publica únicamente la rama revisada | sí (ver §13) |
+| El push publica únicamente la rama revisada | sí: `work/kuyen-free-text-graph` @ `c98a289`; `main` intacto |
+| La CI de la rama pasa | sí: run `41750565691` en **success**, seis jobs en verde |
 
 **La autoridad del producto es Git.** Se comprobó clonando: el árbol de trabajo no aporta nada que
 el clon no tenga (0 archivos rastreados modificados).

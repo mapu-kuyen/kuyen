@@ -1,9 +1,9 @@
 {
   "branch": "work/kuyen-free-text-graph",
-  "head": "485c423b1749c5810d3c2f6066841c1379ab08e8",
+  "head": "c98a289f88d7665919758c226293a0337de98b58",
   "base": "71e37c4",
   "origin_main": "5fd8777a8305097792380fceb9ff861de208147a",
-  "ahead_of_origin_main": 36,
+  "ahead_of_origin_main": 40,
   "version": "0.3.0",
   "commits": [
     {
@@ -45,6 +45,26 @@
       "sha": "485c423",
       "subject": "release: align the version to 0.3.0",
       "shortstat": "7 files changed, 22 insertions(+), 13 deletions(-)"
+    },
+    {
+      "sha": "9a5e22d",
+      "subject": "docs(experiment): Git history recovery and release 17",
+      "shortstat": "12 files changed, 1587 insertions(+)"
+    },
+    {
+      "sha": "df65a03",
+      "subject": "fix(config): keep the package importable on Python 3.10",
+      "shortstat": "2 files changed, 23 insertions(+), 3 deletions(-)"
+    },
+    {
+      "sha": "5c88002",
+      "subject": "ci(hygiene): give the version check the import it needs",
+      "shortstat": "1 file changed, 7 insertions(+)"
+    },
+    {
+      "sha": "c98a289",
+      "subject": "ci(hygiene): install the runtime dependencies the import needs",
+      "shortstat": "1 file changed, 2 insertions(+), 2 deletions(-)"
     }
   ],
   "tracked": {
@@ -69,7 +89,8 @@
       "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/evidence/openviking_graph/",
       "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/git_state_final.txt",
       "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/logs/",
-      "experiments/KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17/",
+      "experiments/KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17/evidence/ci_branch_jobs.json",
+      "experiments/KUYEN_GIT_HISTORY_RECOVERY_AND_RELEASE_17/evidence/ci_branch_run.json",
       "experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/MANIFEST.json",
       "experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/REPORT.md",
       "experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/",

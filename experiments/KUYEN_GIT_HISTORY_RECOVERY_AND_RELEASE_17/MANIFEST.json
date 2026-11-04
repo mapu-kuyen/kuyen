@@ -3,7 +3,7 @@
   "branch": "work/kuyen-free-text-graph",
   "version": "0.3.0",
   "head_before": "71e37c4",
-  "head_at_audit": "485c423b1749c5810d3c2f6066841c1379ab08e8",
+  "head_at_audit": "c98a289f88d7665919758c226293a0337de98b58",
   "head_contains_this_manifest": "the commit that carries this file; a manifest cannot contain its own hash",
   "commits_added": [
     "71d882c",
@@ -13,7 +13,11 @@
     "31d5da6",
     "e854e1c",
     "2d3fd09",
-    "485c423"
+    "485c423",
+    "9a5e22d",
+    "df65a03",
+    "5c88002",
+    "c98a289"
   ],
   "tracked": {
     "src_py_modules": 91,
@@ -41,12 +45,14 @@
     }
   },
   "artifacts": {
-    "REPORT.md": "b84ebdfded6468a8a105d479a3663fde54b20f027d1926f9699ce99feee3a2ce",
+    "REPORT.md": "cdd5aa1e88b3b5cb73e57bcdf5c18c8313f50e7238e3b6d19ce54b208606af61",
+    "evidence/ci_branch_jobs.json": "f99e063b9b1da13af91a9bf971076d06e68f55c8989a8bdb97a0d38a1ac96ac4",
+    "evidence/ci_branch_run.json": "89ab6e0414e6d9dc3c02501cdda7ed3ac6795c75f1f05b127ee8864d951da4b8",
     "evidence/clone_build.log": "62dfd25a517d8c520ac6be68f78c171ef88ceafaca7f35781cbcbe61212dcc02",
     "evidence/clone_suite.log": "1df93d2583406a4b5116cace65a8df17eb13d20400d37dcf18c8de3278d59f0c",
     "evidence/clone_twine.log": "f5b7b184dd57c41d71cdf82f98396faac509fd032ed338e8f7e5a0c4e13bb489",
     "evidence/clone_verify_distribution.log": "045f48d41c3f8adb9c682013eee0ced4367224aea9bc4ef685c2e2db9166c0a9",
-    "evidence/final_state.json": "f9dfaff41b5a27baeca87bf2fc68fbb1c68a9da2680f735a0a84d2c02fd76ed5",
+    "evidence/final_state.json": "490e39b4798fdfff746b00ac95cf38773a6920e9d3e12a1ecaabc9c9220b841a",
     "evidence/necessity_matrix.json": "584e3d77270a542ae051a6dd4a4bd5ec05090285feb967f7103f1d2a4bbd0928",
     "evidence/necessity_matrix.log": "3a189628b9667de909bf8c12e670226136aeee3719d516b45ea1c8189dd6f7a9",
     "evidence/pre_intervention_sha256.json": "d41e39e6313e2d32dc12e39bc07272bd55fa59004fe917795be6f241efa7158d",

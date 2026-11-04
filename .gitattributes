@@ -1,3 +1,7 @@
 # Los parches archivados en experiments/ son evidencia byte-exacta: reproducen el contenido
 # original, incluidos sus espacios finales. Git no debe reescribirlos ni marcarlos como error.
 *.patch -whitespace
+
+# Archived experiment evidence is byte-exact: provider artefacts (OpenViking) and the quotes
+# the suites verify cannot be rewritten, so Git must not flag their trailing spaces.
+experiments/**/evidence/** -whitespace

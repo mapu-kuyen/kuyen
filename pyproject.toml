@@ -12,7 +12,10 @@ build-backend = "setuptools.build_meta"
 name = "kuyen"
 dynamic = ["version"]
 description = "KUYEN: governed canonical memory and knowledge for Leftraru agents"
-readme = "README.md"
+# The README is bilingual: `README.md` is the Spanish edition and `README.en.md` the English
+# one. The package metadata (PyPI long description) uses the English edition; both are shipped
+# in the sdist, and each links to the other.
+readme = "README.en.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]

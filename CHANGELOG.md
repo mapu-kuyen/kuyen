@@ -9,6 +9,22 @@ memory with its ledger and recovery, and the direct editing of the graph through
 `0.2.1rc1` was never published; its content is part of this release, so the four sections
 below that were written as *Unreleased* are now sections of `0.3.0`.
 
+### Documented
+* **The README is bilingual and was checked against the code.** `README.md` is the Spanish
+  edition and `README.en.md` the English one, cross-linked, with the same status, install path
+  and documentation index. Every snippet in them was executed against this tree and every
+  relative link resolves.
+* **Four statements were corrected while validating them.** The install section no longer
+  suggests `pip install kuyen`: there is no release on PyPI yet (`pip index versions kuyen`
+  reports no matching distribution). The `build_document` example now passes `source_uris=`,
+  because evidence that does not cite its MAPU's URI is refused at commit
+  (`EVIDENCE_URI_MISMATCH`) and the default URI is `viking://resources/<mapu_id>`. The Antü
+  example states what `commit` accepts (`VALIDATED`, and `REPLAYED` as the replay) and that the
+  other terminal states raise `CommitError`. And the list of what KÜYEN does not do now names
+  the limit of tamper detection that [SECURITY.md](SECURITY.md) already documented: there is no
+  external anchor, so a complete and consistent rewrite of the store is not distinguishable from
+  an authorised one.
+
 ### operational coverage of Antü operations
 
 KUYEN_ANTU_OPERATIONAL_COVERAGE_15. Twelve real evaluations on the ten memories of experiment

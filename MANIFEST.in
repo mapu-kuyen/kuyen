@@ -2,8 +2,19 @@
 # The wheel needs none of them: they are documentation, not runtime assets.
 include *.md
 
+# QUICKSTART.md names its executable copy, so the sdist carries exactly that one file and
+# nothing else from examples/: the walkthrough a recipient reads is the one they can run.
+include examples/quickstart.py
+
 # Never ship build noise or a development cache in a distributed source tree.
 global-exclude *.py[cod]
 global-exclude __pycache__/*
 prune docs
+
+# The two documents the README links under docs/ are the only ones the sdist must carry;
+# they are re-included *after* `prune docs` on purpose, because MANIFEST commands are applied
+# in order. Everything else in docs/ stays out of the distribution.
+recursive-include docs GRAPH_EDIT_ANTU.md GRAPH_EDIT_ANTU.en.md
+recursive-include docs PRODUCT_MAPU_KUYEN_ANTU.md PRODUCT_MAPU_KUYEN_ANTU.en.md
+
 prune tests

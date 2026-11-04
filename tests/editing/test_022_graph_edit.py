@@ -252,6 +252,12 @@ class TestRefusals:
         assert len(memory.versions()) == 1
         assert any(event["event_type"] == "ANTU_CLARIFICATION_REQUIRED"
                    for event in memory.ledger())
+        # the history must remain verifiable: the revision says "no change", the ledger
+        # keeps the exact ANTÜ status (KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13)
+        assert memory.verify()["ok"] is True
+        detail = memory.history()[-1]
+        assert detail["status"] == "NO_SEMANTIC_CHANGE"
+        assert detail["detail"]["edit_status"] == "CLARIFICATION_REQUIRED"
 
     def test_an_operation_without_a_citable_instruction_is_refused(self, tmp_path) -> None:
         memory = h.memory_at(tmp_path)

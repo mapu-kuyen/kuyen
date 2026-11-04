@@ -11,6 +11,7 @@ from typing import Any
 
 from kuyen import KuyenMemory, build_document
 from kuyen.canonical import sha256_text, stable_id
+from kuyen.semantics.schema import GraphSchema
 
 MAPU_ID = "MAPU-EDIT-01"
 SOURCE_URI = "viking://resources/tests/MAPU-EDIT-01.md"
@@ -130,6 +131,39 @@ def memory_at(tmp_path: Path) -> KuyenMemory:
     return memory
 
 
+SCHEMA_PROFILE = {
+    "profile": "fixture-v1", "profile_version": "1.0.0",
+    "entity_types": {
+        "organization": {"description": "Cuerpo organizado", "attributes": {}},
+        "person": {"description": "Persona nombrada", "attributes": {}},
+        "place": {"description": "Lugar", "attributes": {}},
+    },
+    "scalar_predicates": {"installed_lights": {"value_type": "integer"}},
+    "relation_types": {"supervises": {"label": "supervisa"}},
+}
+
+
+def schema_document(extra_fields: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    """The controlled document with a declared schema (entity types and fields)."""
+    profile = {**SCHEMA_PROFILE, "entity_types": {
+        name: {**spec, "attributes": {
+            "description": {"name": "description", "value_type": "text"},
+            **(extra_fields or {}).get(name, {})}}
+        for name, spec in SCHEMA_PROFILE["entity_types"].items()}}
+    return build_document(graph(), {MAPU_ID: TEXT}, mapu_versions={MAPU_ID: "1.0.0"},
+                          source_uris={MAPU_ID: SOURCE_URI},
+                          schema=GraphSchema.from_dict(profile).to_dict())
+
+
+def schema_memory_at(tmp_path: Path, *,
+                     extra_fields: dict[str, dict[str, Any]] | None = None,
+                     scope: Any = None) -> KuyenMemory:
+    """A memory whose version declares its schema, for the schema Antü tests."""
+    memory = KuyenMemory.create(tmp_path / "schema-memory", leftraru_id="LR-SCHEMA")
+    memory.import_canonical(schema_document(extra_fields), antu_id="ANTU-FIXTURE-SCHEMA")
+    return memory
+
+
 def ids(memory: KuyenMemory, version_id: str | None = None) -> dict[str, Any]:
     value = memory.graph(version_id)
     return {"entities": {item["name"]: item["entity_id"] for item in value["entities"]},
@@ -184,7 +218,7 @@ class ScriptedEditor:
 
 
 def proposal(operations: list[dict[str, Any]], **overrides: Any) -> dict[str, Any]:
-    value = {"schema_version": "kuyen-graph-edit-v1", "status": "PROPOSED",
+    value = {"schema_version": "kuyen-graph-edit-v2", "status": "PROPOSED",
              "interpretation": "instrucción interpretada por el editor determinista",
              "operations": operations}
     value.update(overrides)

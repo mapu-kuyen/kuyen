@@ -329,3 +329,21 @@ class TestAcceptedVersion:
         lineage = [item.version_id for item in memory.lineage()]
         assert lineage == [outcome.version_id]
         assert memory.current().parent_version_id is None
+
+
+class TestProviderExecutionIdentity:
+    """The committed version must name the provider execution it came from.
+
+    Without it the native artifacts of a real compilation cannot be archived afterwards
+    without guessing a URI (KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13).
+    """
+
+    def test_the_outcome_names_the_execution_and_its_candidate_uri(self, tmp_path: Path) -> None:
+        memory, outcome, _ = run(tmp_path, "citations")
+        assert outcome.status == "COMMITTED"
+        assert outcome.request_key
+        assert outcome.candidate_uri
+        assert outcome.candidate_uri.endswith(outcome.request_key)
+        payload = outcome.to_dict()
+        assert payload["request_key"] == outcome.request_key
+        assert payload["candidate_uri"] == outcome.candidate_uri

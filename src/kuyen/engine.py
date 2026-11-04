@@ -765,6 +765,7 @@ def _graph_compile_instruction(antu: Antu, mapus: list[Mapu], to_uri: str) -> st
     """
     sources = "\n".join(
         f"- mapu_id={mapu.mapu_id} source_uri={mapu.source_uri} source_sha256={mapu.sha256}"
+        + (f" title={mapu.metadata['title']!r}" if mapu.metadata.get("title") else "")
         for mapu in mapus
     )
     return "\n".join([

@@ -20,6 +20,9 @@ import unicodedata
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Mapping
 
+from ..semantics.scope import AntuScope
+from ..semantics.schema import GraphSchema
+
 SMALL_GRAPH_OBJECT_LIMIT = 200
 _KEYWORD = re.compile(r"[0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ_]{4,}")
 _STOPWORDS = frozenset({
@@ -60,10 +63,14 @@ class EditContext:
     mapu_ids: list[str] = field(default_factory=list)
     authorized_ids: dict[str, list[str]] = field(default_factory=dict)
     selection: dict[str, Any] = field(default_factory=dict)
+    # §3/§4: the schema the model may see and the permissions it works under. Both are
+    # filtered by the scope before the payload exists; nothing outside it is serialised.
+    schema: dict[str, Any] | None = None
+    capabilities: dict[str, Any] = field(default_factory=dict)
 
     def to_payload(self) -> dict[str, Any]:
         """The exact JSON object handed to the model: canonical ids, nothing invented."""
-        return {
+        payload: dict[str, Any] = {
             "version": {"version_id": self.version_id, "kuyen_id": self.kuyen_id,
                         "kuyen_version": self.kuyen_version},
             "mapu_ids": list(self.mapu_ids),
@@ -73,6 +80,11 @@ class EditContext:
             },
             "selection": dict(self.selection),
         }
+        if self.schema is not None:
+            payload["schema"] = self.schema
+        if self.capabilities:
+            payload["capabilities"] = dict(self.capabilities)
+        return payload
 
     def is_authorized(self, identifier: str) -> bool:
         return any(identifier in ids for ids in self.authorized_ids.values())
@@ -119,12 +131,22 @@ def _matches(text: str, tokens: Iterable[str]) -> bool:
 
 
 def build_context(graph: Mapping[str, Any], instruction: str, *,
-                  version_id: str, object_limit: int = SMALL_GRAPH_OBJECT_LIMIT) -> EditContext:
-    """Build the deterministic edit context of one graph version."""
-    entities = [dict(item) for item in (graph.get("entities") or [])]
-    relations = [dict(item) for item in (graph.get("relations") or [])]
-    assertions = [dict(item) for item in (graph.get("assertions") or [])]
-    evidence = {str(item.get("evidence_id")): dict(item) for item in (graph.get("evidence") or [])}
+                  version_id: str, object_limit: int = SMALL_GRAPH_OBJECT_LIMIT,
+                  scope: Any = None, schema: Mapping[str, Any] | None = None) -> EditContext:
+    """Build the deterministic edit context of one graph version.
+
+    The scope decides what exists for this Antü (§4): without `DATA_READ` no object of the
+    graph is read at all — not filtered afterwards, never read — and without `SCHEMA_READ`
+    the schema is not serialised. The payload is therefore incapable of carrying what this
+    KÜYEN does not authorise, whatever the model later asks for.
+    """
+    scope = AntuScope.from_dict(scope)
+    data_visible = scope.data_read
+    entities = [dict(item) for item in (graph.get("entities") or [])] if data_visible else []
+    relations = [dict(item) for item in (graph.get("relations") or [])] if data_visible else []
+    assertions = [dict(item) for item in (graph.get("assertions") or [])] if data_visible else []
+    evidence = ({str(item.get("evidence_id")): dict(item)
+                 for item in (graph.get("evidence") or [])} if data_visible else {})
     total = len(entities) + len(relations) + len(assertions)
     tokens = keywords(instruction)
 
@@ -182,9 +204,9 @@ def build_context(graph: Mapping[str, Any], instruction: str, *,
         "evidence": [str(item.get("evidence_id")) for item in selected_evidence],
     }
     selection = {
-        "mode": mode,
+        "mode": mode if data_visible else "DATA_WITHHELD",
         "object_limit": object_limit,
-        "total_objects": total,
+        "total_objects": total if data_visible else None,
         "included": {"entities": len(selected_entities), "relations": len(selected_relations),
                      "assertions": len(selected_assertions), "evidence": len(selected_evidence)},
         "excluded": {"entities": len(entities) - len(selected_entities),
@@ -198,11 +220,21 @@ def build_context(graph: Mapping[str, Any], instruction: str, *,
         "note": ("objects outside `authorized_ids` are not part of this edit and an operation "
                  "targeting them is refused"),
     }
+    if not data_visible:
+        selection["data_withheld"] = {"reason": "DATA_READ is not granted to this Antü",
+                                      "granted": list(scope.granted())}
+    selection["scope"] = scope.public_dict()
+    visible_schema = None
+    if scope.schema_read:
+        candidate_schema = schema if schema is not None else graph.get("schema")
+        if candidate_schema is not None:
+            visible_schema = GraphSchema.from_dict(candidate_schema).public_view()
     return EditContext(
         version_id=version_id, kuyen_id=str(graph.get("kuyen_id") or ""),
         kuyen_version=str(graph.get("version") or ""),
         entities=selected_entities, relations=selected_relations,
         assertions=selected_assertions, evidence=selected_evidence,
+        schema=visible_schema, capabilities=scope.context_capabilities(),
         mapu_ids=[str(item) for item in (graph.get("mapu_ids") or [])],
         authorized_ids=authorized, selection=selection,
     )

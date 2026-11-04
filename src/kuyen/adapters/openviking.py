@@ -420,12 +420,19 @@ class SdkOpenVikingAdapter:
 
     async def compile(self, *, from_uris: list[str], to_uri: str, skill_uri: str, instruction: str) -> str:
         await self.initialize()
+        # `args` is a provider-specific extension. The local VikingBot runtime of OpenViking
+        # 0.5.0 rejects any `args` with INVALID_ARGUMENT ("does not implement provider-specific
+        # args"), and the compile mode is meaningful only for the external Compile API. The
+        # default mode is therefore expressed by sending nothing.
+        options: dict[str, Any] = {"instruction": instruction}
+        if self.compile_mode != "full":
+            options["args"] = {"mode": self.compile_mode}
         try:
             response = await self._client.compile(
                 from_uris=from_uris,
                 to=to_uri,
                 skill=skill_uri,
-                options={"instruction": instruction, "args": {"mode": self.compile_mode}},
+                options=options,
             )
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"compile request failed: {exc}") from exc

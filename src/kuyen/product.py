@@ -21,6 +21,7 @@ from .editing.editors import GraphEditorPort
 from .errors import AdapterError, InvalidRequestError
 from .ingest import build_document
 from .models import ActorContext, Mapu
+from .semantics.schema import GraphSchema
 
 ANTU_KIND_DOCUMENT = "DOCUMENT_INGESTION"
 ANTU_KIND_GRAPH_EDIT = "GRAPH_EDIT"
@@ -63,6 +64,10 @@ class DocumentIncorporation:
     provenance: dict[str, Any] = field(default_factory=dict)
     issues: list[dict[str, Any]] = field(default_factory=list)
     source_units: int = 0
+    #: Identity of the provider execution this version came from, so the native artifacts it
+    #: produced can be archived and audited after the fact without guessing a URI.
+    request_key: str | None = None
+    candidate_uri: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {"antu_id": self.antu_id, "status": self.status, "kind": ANTU_KIND_DOCUMENT,
@@ -73,8 +78,24 @@ class DocumentIncorporation:
                 "evidence_ids": list(self.evidence_ids), "mapu_ids": list(self.mapu_ids),
                 "counts": dict(self.counts), "validation": dict(self.validation),
                 "provenance": dict(self.provenance), "issues": list(self.issues),
-                "source_units": self.source_units}
+                "source_units": self.source_units, "request_key": self.request_key,
+                "candidate_uri": self.candidate_uri}
 
+
+
+def declared_schema(engine: Any) -> dict[str, Any] | None:
+    """The schema an instance declares, derived from its own ontology profile.
+
+    It is read from the engine that produced the candidate, so a KÜYEN is born with the
+    structure its profile declares and no instance inherits another's.
+    """
+    ontology = getattr(engine, "ontology", None)
+    if ontology is None:
+        return None
+    try:
+        return GraphSchema.from_ontology(ontology).to_dict()
+    except Exception:  # noqa: BLE001 - a broken profile must not fabricate a schema
+        return None
 
 
 def incorporate_document(memory: KuyenMemory, *, engine: Any, antu: Mapping[str, Any],
@@ -118,7 +139,9 @@ def incorporate_document(memory: KuyenMemory, *, engine: Any, antu: Mapping[str,
     document = build_document(
         graph, {item.mapu_id: item.content for item in mapus},
         mapu_versions={key: value.get("version") for key, value in provenance_mapus.items()},
-        source_uris={key: value.get("source_uri") for key, value in provenance_mapus.items()})
+        source_uris={key: value.get("source_uri") for key, value in provenance_mapus.items()},
+        # the schema of the instance travels with the version it produces (§6)
+        schema=declared_schema(engine))
     parent = memory.current().version_id if memory.current() else None
     commit = memory.import_canonical(document, antu_id=antu_id)
     sidecar = memory.sidecar(commit.version.version_id)
@@ -138,16 +161,26 @@ def incorporate_document(memory: KuyenMemory, *, engine: Any, antu: Mapping[str,
                     "skill_sha256": (graph.get("provenance") or {}).get("skill_sha256"),
                     "materialization": (graph.get("provenance") or {}).get("materialization"),
                     "operation_key": commit.operation_key},
-        source_units=len(canonical.get("source_units") or []))
+        source_units=len(canonical.get("source_units") or []),
+        request_key=result.request_key,
+        candidate_uri=(f"{engine.config.candidate_container_uri.rstrip('/')}/{result.request_key}"
+                       if result.request_key and engine is not None else None))
 
 
 def apply_graph_edit(memory: KuyenMemory, instruction: str, *, editor: GraphEditorPort,
                      antu_id: str | None = None, actor: Mapping[str, Any] | None = None,
-                     base_version_id: str | None = None, dry_run: bool = False) -> AntuEditResult:
-    """Run one direct edit Antü. OpenViking is never started from this path."""
+                     base_version_id: str | None = None, dry_run: bool = False,
+                     scope: Any = None) -> AntuEditResult:
+    """Run one direct edit Antü. OpenViking is never started from this path.
+
+    `scope` is what this KÜYEN authorises for this Antü (§4). The same portable text can be
+    applied here, declined there and blocked elsewhere: that decision belongs to the
+    instance, never to the instruction.
+    """
     if not isinstance(instruction, str) or not instruction.strip():
         raise InvalidRequestError("a graph edit requires a literal instruction",
                                   details={"code": "INSTRUCTION_EMPTY"})
     return memory.apply_antu(instruction, editor=editor, antu_id=antu_id,
                              actor=dict(actor) if actor else None,
-                             base_version_id=base_version_id, dry_run=dry_run)
+                             base_version_id=base_version_id, dry_run=dry_run,
+                             scope=scope)

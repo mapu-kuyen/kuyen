@@ -1,0 +1,130 @@
+{
+  "base_commit": "9a5e512",
+  "branch": "work/kuyen-free-text-graph",
+  "commits_authoritative_source": "git log --oneline 9a5e512..HEAD",
+  "experiment": "KUYEN_PRODUCTIVE_GRAPH_AND_ANTU_VERSIONING_11",
+  "files": {
+    "REPORT.md": {
+      "bytes": 22835,
+      "sha256": "c16e4de7805a936e3f5de2403a9ed0600af6f81d98480c99305db3aaadaac0d5"
+    },
+    "evidence/distribution_verification.json": {
+      "bytes": 9475,
+      "sha256": "3eb1f63cad92c4dea9b17e982da8d60ddad7882fd0fb7eb9093a5bef2e45e638"
+    },
+    "evidence/document_path_runs.json": {
+      "bytes": 23409,
+      "sha256": "5b01d566da9654fcd656394876a72996d567aeb1de04b58476578b36205f8503"
+    },
+    "evidence/graph_edit_runs.json": {
+      "bytes": 2699,
+      "sha256": "8c1351ee123c21ba9653e3efcdbc27df889f263e0cccc0b657032c45e6d9b32a"
+    },
+    "evidence/history.json": {
+      "bytes": 2379,
+      "sha256": "6c5e233e76384b662308f0d6021ff2d1bd865fe3c8abf1f20fb1d953cc17bfa3"
+    },
+    "evidence/integrity.json": {
+      "bytes": 879,
+      "sha256": "33d03488ca55af1c7e24320cc0782df7ddb704b4474d1ba127bd94163b9a61e3"
+    },
+    "evidence/ledger.jsonl": {
+      "bytes": 11241,
+      "sha256": "472469d9b3b8e8320d9a16fa2f2b6129dd80d2775c2e1fba2904367ae6155571"
+    },
+    "evidence/live_compile/assertions.jsonl": {
+      "bytes": 819,
+      "sha256": "23c3986d44693330a305898c9d051f54cc0a12e2686788bfde96aeefd814a1cb"
+    },
+    "evidence/live_compile/entities/comite-de-adelanto-el-arrayan.md": {
+      "bytes": 691,
+      "sha256": "fa843be63efb0f3e2889a599395a7426fd92a00f12907835a003d7246cd2e611"
+    },
+    "evidence/live_compile/entities/cooperativa-tecnica-faro-sur.md": {
+      "bytes": 808,
+      "sha256": "48f2baa1d07efc9e4657b7293a180a86b8008683a6e9722ee4f68b176c23c755"
+    },
+    "evidence/live_compile/entities/municipalidad-de-bahia-clara.md": {
+      "bytes": 674,
+      "sha256": "a05f229cce6e0885a63b5b9ae45bc132cf7e90225eba5f27732260963047ed0c"
+    },
+    "evidence/live_compile/relations.jsonl": {
+      "bytes": 1231,
+      "sha256": "1d596032e3a6c181d290d748927ac64dd49225efe4f447acb816ad3b36e03efb"
+    },
+    "evidence/real_model_inference.json": {
+      "bytes": 6266,
+      "sha256": "9638a0f59a43ba7e0c0c2e71aa612d1dcc325514c103bb9404a39d53d54eecb8"
+    },
+    "evidence/real_openviking_compilation.json": {
+      "bytes": 17407,
+      "sha256": "75f7829a708366c2a6564e846a846b182055da56deea05f38606ea5e6e331caf"
+    },
+    "evidence/real_openviking_runs.json": {
+      "bytes": 4348,
+      "sha256": "ccec7d4eb1fd581749e0c97f829f6bc0e3449b9fdcf7dfaf9531d7468f49225a"
+    },
+    "evidence/real_openviking_version.json": {
+      "bytes": 7726,
+      "sha256": "498c9e35cd17ca7c8658aa8bad5a41c933e06bdb4441addaa8fd35e4ecf53a78"
+    },
+    "evidence/replay_determinism.json": {
+      "bytes": 1187,
+      "sha256": "e6279c1fb605f52fcf7bf41468daea6daaf07bf3298fbc5eb61fd00fcf00dd96"
+    },
+    "evidence/versions_and_diffs.json": {
+      "bytes": 79361,
+      "sha256": "48ccb63401b7744e689a24105740140a76ee9e96e8fbcd6e6cdd6bdd7ffbc09b"
+    },
+    "git_state_final.txt": {
+      "bytes": 1505,
+      "sha256": "1e859ac73b08afcdcf88d6eed447478552e2fa5cc9a25099c5b76c1652c15c65"
+    },
+    "logs/distribution.log": {
+      "bytes": 294,
+      "sha256": "6ac5934563a4fa30d4ebc2b9a400a4574fb884f2469ca8bce226dbac8d1014d3"
+    },
+    "logs/suite_after.log": {
+      "bytes": 701,
+      "sha256": "ce1b674352a519b7e562c7887df7c85461203cdcd7cd3527b7c5a965fa3df62d"
+    },
+    "logs/suite_after.xml": {
+      "bytes": 65889,
+      "sha256": "0cd7cf571d364902c4914761565264f00bde5f26c06fd63e9464e0d9ac72a802"
+    },
+    "logs/suite_before.log": {
+      "bytes": 568,
+      "sha256": "85e36a53c22259bbc145e3106e0ff692a9d152c9304b99035ac4d4ca2d73792b"
+    },
+    "logs/suite_before.xml": {
+      "bytes": 56164,
+      "sha256": "a8fc2062c111a829c236b61f0754a86f32086293853cb0acc14dc0634e073213"
+    }
+  },
+  "inferences": {
+    "evidence": "evidence/real_model_inference.json",
+    "outcome": "COMMITTED VER-23a9a1a23e39 (runs 4 and 5 identical)",
+    "prompt_tokens_each": 2701,
+    "provider": "openai-compatible/deepseek-chat",
+    "real_model_calls": 5
+  },
+  "pushed": false,
+  "real_openviking_compilations": {
+    "compile_input_tokens_total": 1588856,
+    "engine_version": "0.5.0",
+    "evidence": [
+      "evidence/real_openviking_runs.json",
+      "evidence/real_openviking_version.json",
+      "evidence/live_compile/"
+    ],
+    "isolated_instance": "127.0.0.1:19700 (+vikingbot 19701), apagada al terminar",
+    "outcome": "COMMITTED VER-7a5acc125b47 (run 8)",
+    "runs": 8
+  },
+  "suite": {
+    "failed": 0,
+    "passed": 447,
+    "skipped": 3,
+    "tests": 450
+  }
+}

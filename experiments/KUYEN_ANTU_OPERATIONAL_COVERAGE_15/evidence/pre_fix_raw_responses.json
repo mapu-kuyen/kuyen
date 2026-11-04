@@ -1,0 +1,290 @@
+{
+  "experiment": "KUYEN_ANTU_OPERATIONAL_COVERAGE_15",
+  "model": "deepseek-flash",
+  "endpoint": "https://api.deepseek.com/v1",
+  "runs": {
+    "K004-DRY-SHORT": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-DRY-SHORT",
+      "case": "long_vs_short_short",
+      "instruction": "El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación entre las dos entidades.",
+      "version_before": "VER-8732e4ef6f56",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:40:17.611494+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 4.6,
+      "status": "INTERPRETATION_INCOMPLETE",
+      "outcome": "EXECUTION_FAILED",
+      "version_after": "VER-8732e4ef6f56",
+      "committed": false,
+      "operations": [],
+      "applied": [],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": null,
+          "op": null,
+          "outcome": "EXECUTION_FAILED"
+        }
+      ],
+      "applicability": {},
+      "schema_changes": [],
+      "reasons": [
+        "NO_OPERATION_WITHOUT_EXPLANATION: the editor produced no operation and did not explain why; this is an incomplete interpretation, not an absence of changes"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "",
+        "clarification": null,
+        "conflict": null,
+        "operations": [],
+        "warnings": [
+          "the proposal declares no operation: the interpretation must explain why, or it is incomplete"
+        ]
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"contract\":{\"antu_id\":\"K004-DRY-SHORT\",\"schema_version\":\"kuyen-graph-edit-v2\",\"permissions\":[\"SCHEMA_READ\",\"SCHEMA_WRITE\",\"DATA_READ\",\"DATA_WRITE\"],\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_RELATION\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico\",\"reason\":\"La instrucción pide incorporar una relación de pertenencia entre el IDAE y el MITECO; ninguna relación part_of existente une ent_bc056f56aab09664ec33 con ent_0c69f0a6a8c528a584bd (la única part_of hacia el MITECO parte de ent_bfe93958793134fa429a, la Dirección General).\",\"expected\":{\"from_entity\":\"ent_bc056f56aab09664ec33\",\"predicate\":\"part_of\",\"to_entity\":\"ent_0c69f0a6a8c528a584bd\",\"existing_relation\":false},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"label\":\"pertenece a\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\",\"scope\":\"document\"}}]}}",
+      "prompt_sha256": "e2d01101b7670dbcef627f19f107b31cea78b8bd59d191284457c6992575c537",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 40,
+        "included": {
+          "entities": 15,
+          "relations": 14,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "pertenece",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "incorpora",
+          "relacion",
+          "entidades"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 14,
+        "relations_after": 14,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56"
+      ],
+      "finished_at": "2026-11-03T23:40:22.229061+00:00",
+      "usage": {
+        "prompt_tokens": 20834,
+        "completion_tokens": 759,
+        "cost_usd": 0.007161
+      }
+    },
+    "K004-DRY-LONG": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-DRY-LONG",
+      "case": "long_vs_short_long",
+      "instruction": "Estoy revisando la ficha de la central hidráulica reversible de Los Guájares en este KÜYEN y hay varias cosas que deben quedar registradas en una sola petición. Primero, el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente. Segundo, la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias. Tercero, añade el alias «Los Guájares» a la misma central. Son tres cambios independientes sobre entidades que ya están en el KÜYEN: no inventes entidades nuevas, no omitas ninguno y no los resumas en uno solo.",
+      "version_before": "VER-8732e4ef6f56",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:40:22.238564+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 10.21,
+      "status": "INTERPRETATION_INCOMPLETE",
+      "outcome": "EXECUTION_FAILED",
+      "version_after": "VER-8732e4ef6f56",
+      "committed": false,
+      "operations": [],
+      "applied": [],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": null,
+          "op": null,
+          "outcome": "EXECUTION_FAILED"
+        }
+      ],
+      "applicability": {},
+      "schema_changes": [],
+      "reasons": [
+        "NO_OPERATION_WITHOUT_EXPLANATION: the editor produced no operation and did not explain why; this is an incomplete interpretation, not an absence of changes"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": "K004-DRY-LONG",
+        "base_version_id": null,
+        "interpretation": "",
+        "clarification": null,
+        "conflict": null,
+        "operations": [],
+        "warnings": [
+          "the proposal declares no operation: the interpretation must explain why, or it is incomplete"
+        ]
+      },
+      "raw_response": "{\n  \"antu_id\": \"K004-DRY-LONG\",\n  \"contract\": {\n    \"schema_version\": \"kuyen-graph-edit-v2\",\n    \"status\": \"PROPOSED\",\n    \"permissions\": [\"SCHEMA_READ\", \"SCHEMA_WRITE\", \"DATA_READ\", \"DATA_WRITE\"],\n    \"operations\": [\n      {\n        \"operation_id\": \"op-1\",\n        \"antu_ref\": \"el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente\",\n        \"op\": \"ADD_RELATION\",\n        \"applicability\": \"APPLICABLE\",\n        \"reason\": \"IDAE (ent_bc056f56aab09664ec33) y MITECO (ent_0c69f0a6a8c528a584bd) existen en el grafo, pero no hay relación part_of entre ellas; sólo existe part_of de la Dirección General hacia el MITECO (rel_1a56ab03a01e0b9d90ea), que no se toca. `part_of` es un tipo de relación admitido por el esquema vigente.\",\n        \"value\": {\n          \"from\": \"ent_bc056f56aab09664ec33\",\n          \"to\": \"ent_0c69f0a6a8c528a584bd\",\n          \"predicate\": \"part_of\",\n          \"label\": \"forma parte de\",\n          \"polarity\": \"POSITIVE\",\n          \"modality\": \"FACT\"\n        },\n        \"expected\": {\n          \"from_entity\": \"ent_bc056f56aab09664ec33\",\n          \"to_entity\": \"ent_0c69f0a6a8c528a584bd\",\n          \"predicate\": \"part_of\",\n          \"absent\": true\n        }\n      },\n      {\n        \"operation_id\": \"op-2\",\n        \"antu_ref\": \"la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias\",\n        \"op\": \"UPDATE_ENTITY\",\n        \"applicability\": \"APPLICABLE\",\n        \"reason\": \"Se corrige la denominación de la entidad existente ent_7e7f581782f7f38e5d7e (misma identidad canónica, no se crea otra entidad) y se conserva la forma anterior «Central Hidráulica Reversible Los Guajares» como alias, junto con el alias ya existente «Los Guajares».\",\n        \"target\": {\"entity_id\": \"ent_7e7f581782f7f38e5d7e\"},\n        \"value\": {\n          \"name\": \"Central Hidráulica Reversible Los Guájares\",\n          \"aliases\": [\"Los Guajares\", \"Central Hidráulica Reversible Los Guajares\"]\n        },\n        \"expected\": {\n          \"name\": \"Central Hidráulica Reversible Los Guajares\",\n          \"aliases\": [\"Los Guajares\"]\n        }\n      },\n      {\n        \"operation_id\": \"op-3\",\n        \"antu_ref\": \"añade el alias «Los Guájares» a la misma central\",\n        \"op\": \"UPDATE_ENTITY\",\n        \"applicability\": \"APPLICABLE\",\n        \"depends_on\": [\"op-2\"],\n        \"reason\": \"Se añade el alias «Los Guájares» (con tilde) a la misma entidad ent_7e7f581782f7f38e5d7e, conservando los alias previos y el nombre corregido por op-2. Cambio independiente del anterior, pero su lista de alias parte del resultado de op-2.\",\n        \"target\": {\"entity_id\": \"ent_7e7f581782f7f38e5d7e\"},\n        \"value\": {\n          \"aliases\": [\n            \"Los Guajares\",\n            \"Central Hidráulica Reversible Los Guajares\",\n            \"Los Guájares\"\n          ]\n        },\n        \"expected\": {\n          \"aliases\": [\"Los Guajares\", \"Central Hidráulica Reversible Los Guajares\"]\n        }\n      }\n    ]\n  }\n}",
+      "prompt_sha256": "e399dc44ced036cc85b57d17263c15095b26b20fcc9a4f3b4b64959835f7a5ec",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 40,
+        "included": {
+          "entities": 15,
+          "relations": 14,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "estoy",
+          "revisando",
+          "ficha",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "kuyen",
+          "varias",
+          "cosas",
+          "quedar",
+          "registradas",
+          "sola",
+          "peticion",
+          "primero",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "organismo",
+          "adscrito",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "modo",
+          "entidades",
+          "existen",
+          "figurar",
+          "relacion",
+          "pertenencia",
+          "correspondiente",
+          "segundo",
+          "denominacion",
+          "aparece",
+          "tilde",
+          "nombre",
+          "correcto",
+          "entidad",
+          "existente",
+          "conservando",
+          "forma",
+          "anterior",
+          "alias",
+          "tercero",
+          "misma",
+          "tres",
+          "cambios",
+          "independientes",
+          "estan",
+          "inventes",
+          "nuevas",
+          "omitas",
+          "ninguno",
+          "resumas",
+          "solo"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 14,
+        "relations_after": 14,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56"
+      ],
+      "finished_at": "2026-11-03T23:40:32.469316+00:00",
+      "usage": {
+        "prompt_tokens": 21144,
+        "completion_tokens": 2172,
+        "cost_usd": 0.00895
+      }
+    }
+  },
+  "cash": {
+    "cost_usd": 0.016111,
+    "prompt_tokens": 41978,
+    "completion_tokens": 2931
+  }
+}

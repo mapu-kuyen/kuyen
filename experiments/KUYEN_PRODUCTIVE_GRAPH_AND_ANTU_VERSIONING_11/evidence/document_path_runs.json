@@ -1,0 +1,624 @@
+{
+  "artifacts": [
+    "assertions.jsonl",
+    "camila-soto.md",
+    "comite-adelanto-el-arrayan.md",
+    "cooperativa-tecnica-faro-sur.md",
+    "municipality-bahia-clara.md",
+    "relations.jsonl"
+  ],
+  "source_document_sha256": "c0fb197150c14012ef6cc37d8e848abbaa50c298c756f44a195602aff1603fbd",
+  "scenarios": {
+    "raw": {
+      "materializer": {
+        "mode": "native_structured",
+        "provider_schema": "kuyen-native-files-v1",
+        "evidence": {
+          "MAPU_ID_NOT_IN_CONTEXT": 4,
+          "MAPU_RESOLVED_BY_CONTEXT": 7,
+          "INVALID_QUOTE": 2,
+          "QUOTE_AUTHORITATIVE": 5
+        },
+        "counts": {
+          "entities": 4,
+          "relations": 3,
+          "assertions": 4,
+          "evidence": 5
+        }
+      }
+    },
+    "identity": {
+      "materializer": {
+        "mode": "native_structured",
+        "provider_schema": "kuyen-native-files-v1",
+        "evidence": {
+          "QUOTE_AUTHORITATIVE": 7,
+          "INVALID_QUOTE": 4,
+          "MAPU_RESOLVED_BY_CONTEXT": 7
+        },
+        "counts": {
+          "entities": 4,
+          "relations": 3,
+          "assertions": 4,
+          "evidence": 5
+        }
+      }
+    },
+    "citations": {
+      "materializer": {
+        "mode": "native_structured",
+        "provider_schema": "kuyen-native-files-v1",
+        "evidence": {
+          "QUOTE_AUTHORITATIVE": 11,
+          "MAPU_RESOLVED_BY_CONTEXT": 7
+        },
+        "counts": {
+          "entities": 4,
+          "relations": 3,
+          "assertions": 4,
+          "evidence": 7
+        }
+      }
+    }
+  },
+  "committed": {
+    "antu_id": "ANTU-FTG08-DOC",
+    "status": "COMMITTED",
+    "kind": "DOCUMENT_INGESTION",
+    "kuyen_id": "KUY-ae1f3c3df4e6",
+    "version_id": "VER-4c05dc1327bf",
+    "parent_version_id": null,
+    "entity_ids": [
+      "ent_46a975acd58eebf94a24",
+      "ent_568610878c1b87788f35",
+      "ent_7e8fa077eab916268a6a",
+      "ent_9ddfbdd56c5fc702d058"
+    ],
+    "relation_ids": [
+      "rel_091a31f2e47e320ffc49",
+      "rel_781aba93c976e422fc52",
+      "rel_84153e6233b039d72fdf"
+    ],
+    "assertion_ids": [
+      "asrt_6a60bb5f27d213de3f2d",
+      "asrt_b804f659c37decd8f6f5",
+      "asrt_deaf510f7575a8e5b75a",
+      "asrt_e19affc87b95f2b7f25f"
+    ],
+    "evidence_ids": [
+      "ev_2831358e77cc124450b4",
+      "ev_2af14f7e0d2636b650fc",
+      "ev_5b5e52a7c1f3c0f7ffba",
+      "ev_8052cd6e9b008f5f05a8",
+      "ev_882954f99cddf3c0598b",
+      "ev_9635f2b2415cb11de65a",
+      "ev_a576fc913f60baea4e8a"
+    ],
+    "mapu_ids": [
+      "MAPU-FTG08-01"
+    ],
+    "counts": {
+      "assertions": 4,
+      "coverage": 1,
+      "entities": 4,
+      "evidence": 7,
+      "mapus": 1,
+      "relations": 3,
+      "source_units": 1
+    },
+    "validation": {
+      "structural": "PASS",
+      "evidence": "PASS",
+      "ontology": "PASS",
+      "coverage": "PASS",
+      "epistemic": "PASS",
+      "temporal": "PASS",
+      "accepted": true,
+      "issues": []
+    },
+    "provenance": {
+      "kind": "DOCUMENT_ANTU",
+      "engine": "openviking",
+      "openviking_version": "0.5.2.1",
+      "skill_sha256": "483c9321bba4259e298fd8b6f6e7faa419330ed2c296535cf90071ec9d9e5ed1",
+      "materialization": {
+        "artifacts": {
+          "assertions.jsonl": {
+            "chars": 1572,
+            "sha256": "9b2f4feb8dcefb0249ba136f65d78313ef3c7f398f907b65749e045306f94e5a"
+          },
+          "entities/camila-soto.md": {
+            "chars": 543,
+            "sha256": "874a2fce3bc80e85e7e68dcc2f74624eb3b26501aab68461384d053de104b87f"
+          },
+          "entities/comite-adelanto-el-arrayan.md": {
+            "chars": 656,
+            "sha256": "ccff2bf268cde79defacae22557c44dca6ce4cdb90939a1795500ca00ceb74c3"
+          },
+          "entities/cooperativa-tecnica-faro-sur.md": {
+            "chars": 688,
+            "sha256": "5aee8101f23f322635871b8248c932cae03c287b746b6c27531ab7c985c71def"
+          },
+          "entities/municipality-bahia-clara.md": {
+            "chars": 716,
+            "sha256": "df2512d57893e44d19cd0688376d40ba47b1d5da828728f39e954a01c562c00f"
+          },
+          "relations.jsonl": {
+            "chars": 1172,
+            "sha256": "224dc904c3d9eb19a7a3054b1167817dad21926e717d680b22338d85a91fe513"
+          }
+        },
+        "candidate_hash": "0a58ca5766c2c239b3fa41aff245c59fa3ffb33fcb93c66d6ff46afbdd6d5f2e",
+        "contract": "kuyen-materialization-v1",
+        "coverage": {
+          "derived_from": "evidence_spans + provider hints for no-fact/skip/fail",
+          "inventory_units": 1,
+          "ledger_units": 1,
+          "states": {
+            "PROCESSED_WITH_OUTPUT": 1
+          },
+          "unknown_provider_units": []
+        },
+        "decisions": [
+          {
+            "char_end": 677,
+            "char_start": 618,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_5b5e52a7c1f3c0f7ffba",
+            "item_id": "camila-soto",
+            "item_kind": "entity",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "Camila Soto, inspectora municipal, coordina la supervisión.",
+            "reason": "declared offsets 0:64 disagree with the quote, which occurs exactly once at 618:677; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": 1224,
+            "char_start": 1127,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_2831358e77cc124450b4",
+            "item_id": "comite-adelanto-el-arrayan",
+            "item_kind": "entity",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "El Comité de Adelanto El Arrayán presentó el 20 de octubre una reclamación ante la Municipalidad.",
+            "reason": "declared offsets 0:82 disagree with the quote, which occurs exactly once at 1127:1224; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": 487,
+            "char_start": 350,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_882954f99cddf3c0598b",
+            "item_id": "cooperativa-tecnica-faro-sur",
+            "item_kind": "entity",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "la Municipalidad de Bahía Clara y la Cooperativa Técnica Faro Sur firmaron un acuerdo para instalar 18 luminarias solares en ese trayecto",
+            "reason": "declared offsets 0:130 disagree with the quote, which occurs exactly once at 350:487; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": 487,
+            "char_start": 350,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_882954f99cddf3c0598b",
+            "item_id": "municipality-bahia-clara",
+            "item_kind": "entity",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "la Municipalidad de Bahía Clara y la Cooperativa Técnica Faro Sur firmaron un acuerdo para instalar 18 luminarias solares en ese trayecto",
+            "reason": "declared offsets 0:130 disagree with the quote, which occurs exactly once at 350:487; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "municipality-bahia-clara:contracted:cooperativa-tecnica-faro-sur",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "la Municipalidad de Bahía Clara y la Cooperativa Técnica Faro Sur firmaron un acuerdo para instalar 18 luminarias solares en ese trayecto",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 487,
+            "char_start": 350,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_882954f99cddf3c0598b",
+            "item_id": "municipality-bahia-clara:contracted:cooperativa-tecnica-faro-sur",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "la Municipalidad de Bahía Clara y la Cooperativa Técnica Faro Sur firmaron un acuerdo para instalar 18 luminarias solares en ese trayecto",
+            "reason": "declared offsets 0:130 disagree with the quote, which occurs exactly once at 350:487; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "cooperativa-tecnica-faro-sur:supervises:camila-soto",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "Camila Soto, inspectora municipal, coordina la supervisión.",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 677,
+            "char_start": 618,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_5b5e52a7c1f3c0f7ffba",
+            "item_id": "cooperativa-tecnica-faro-sur:supervises:camila-soto",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "Camila Soto, inspectora municipal, coordina la supervisión.",
+            "reason": "declared offsets 0:64 disagree with the quote, which occurs exactly once at 618:677; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "comite-adelanto-el-arrayan:complaint:municipality-bahia-clara",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "El Comité de Adelanto El Arrayán presentó el 20 de octubre una reclamación ante la Municipalidad.",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 1224,
+            "char_start": 1127,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_2831358e77cc124450b4",
+            "item_id": "comite-adelanto-el-arrayan:complaint:municipality-bahia-clara",
+            "item_kind": "relation",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "El Comité de Adelanto El Arrayán presentó el 20 de octubre una reclamación ante la Municipalidad.",
+            "reason": "declared offsets 0:82 disagree with the quote, which occurs exactly once at 1127:1224; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "cooperativa-tecnica-faro-sur:has_installed_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "se instalaron 12 de las 18 luminarias previstas: nueve están operativas y tres permanecen sin funcionar porque están pendientes de baterías.",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 875,
+            "char_start": 735,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_9635f2b2415cb11de65a",
+            "item_id": "cooperativa-tecnica-faro-sur:has_installed_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "se instalaron 12 de las 18 luminarias previstas: nueve están operativas y tres permanecen sin funcionar porque están pendientes de baterías.",
+            "reason": "declared offsets 0:152 disagree with the quote, which occurs exactly once at 735:875; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "cooperativa-tecnica-faro-sur:has_pending_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "Las seis luminarias restantes todavía no han sido instaladas.",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 937,
+            "char_start": 876,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_8052cd6e9b008f5f05a8",
+            "item_id": "cooperativa-tecnica-faro-sur:has_pending_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "Las seis luminarias restantes todavía no han sido instaladas.",
+            "reason": "declared offsets 0:57 disagree with the quote, which occurs exactly once at 876:937; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "cooperativa-tecnica-faro-sur:has_operational_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "nueve están operativas",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 806,
+            "char_start": 784,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_a576fc913f60baea4e8a",
+            "item_id": "cooperativa-tecnica-faro-sur:has_operational_lights",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "nueve están operativas",
+            "reason": "declared offsets 0:26 disagree with the quote, which occurs exactly once at 784:806; declared offsets are recorded as auxiliary"
+          },
+          {
+            "char_end": null,
+            "char_start": null,
+            "classification": "MAPU_RESOLVED_BY_CONTEXT",
+            "evidence_id": null,
+            "item_id": "cooperativa-tecnica-faro-sur:expected_installation_date",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "La Municipalidad comunicó que espera instalar las seis luminarias restantes antes del 10 de noviembre",
+            "reason": "no MAPU identity declared; resolved from the context"
+          },
+          {
+            "char_end": 1498,
+            "char_start": 1397,
+            "classification": "QUOTE_AUTHORITATIVE",
+            "evidence_id": "ev_2af14f7e0d2636b650fc",
+            "item_id": "cooperativa-tecnica-faro-sur:expected_installation_date",
+            "item_kind": "assertion",
+            "mapu_id": "MAPU-FTG08-01",
+            "quote": "La Municipalidad comunicó que espera instalar las seis luminarias restantes antes del 10 de noviembre",
+            "reason": "declared offsets 0:84 disagree with the quote, which occurs exactly once at 1397:1498; declared offsets are recorded as auxiliary"
+          }
+        ],
+        "evidence": {
+          "MAPU_RESOLVED_BY_CONTEXT": 7,
+          "QUOTE_AUTHORITATIVE": 11
+        },
+        "evidence_policy": {
+          "mapu_identity": "context-authority-v1",
+          "modality": "declared-or-unknown-v1",
+          "offsets": "quote-authority-v1",
+          "polarity": "explicit-only-v1",
+          "source_unit": "verified-when-declared-v1"
+        },
+        "mode": "native_structured",
+        "path_ownership": {
+          "KUYEN_MATERIALIZER": [
+            {
+              "owner": "KUYEN_MATERIALIZER",
+              "path": "staging/kuyen_candidates.json",
+              "purpose": "canonical_candidate"
+            }
+          ],
+          "OPENVIKING_AGENT": [
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "assertions.jsonl",
+              "purpose": "provider_output"
+            },
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "entities/camila-soto.md",
+              "purpose": "provider_output"
+            },
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "entities/comite-adelanto-el-arrayan.md",
+              "purpose": "provider_output"
+            },
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "entities/cooperativa-tecnica-faro-sur.md",
+              "purpose": "provider_output"
+            },
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "entities/municipality-bahia-clara.md",
+              "purpose": "provider_output"
+            },
+            {
+              "owner": "OPENVIKING_AGENT",
+              "path": "relations.jsonl",
+              "purpose": "provider_output"
+            }
+          ]
+        },
+        "provider": {
+          "output_uri": "viking://resources/kuyen/candidates/req_243f811e00d271b703c0a0d839fd6cd2",
+          "task_id": "cmp_ftg08"
+        },
+        "provider_schema": "kuyen-native-files-v1",
+        "warnings": []
+      },
+      "operation_key": "proj-5825b4a5e71e33d2"
+    },
+    "issues": [],
+    "source_units": 1
+  },
+  "graph": {
+    "entities": [
+      {
+        "entity_id": "ent_46a975acd58eebf94a24",
+        "name": "Municipalidad de Bahía Clara",
+        "type": "organization",
+        "status": "SOURCE_VERIFIED"
+      },
+      {
+        "entity_id": "ent_568610878c1b87788f35",
+        "name": "Camila Soto",
+        "type": "person",
+        "status": "SOURCE_VERIFIED"
+      },
+      {
+        "entity_id": "ent_7e8fa077eab916268a6a",
+        "name": "Cooperativa Técnica Faro Sur",
+        "type": "organization",
+        "status": "SOURCE_VERIFIED"
+      },
+      {
+        "entity_id": "ent_9ddfbdd56c5fc702d058",
+        "name": "Comité de Adelanto El Arrayán",
+        "type": "organization",
+        "status": "SOURCE_VERIFIED"
+      }
+    ],
+    "relations": [
+      {
+        "relation_id": "rel_091a31f2e47e320ffc49",
+        "predicate": "supervises",
+        "status": "UNRESOLVED"
+      },
+      {
+        "relation_id": "rel_781aba93c976e422fc52",
+        "predicate": "complaint",
+        "status": "UNRESOLVED"
+      },
+      {
+        "relation_id": "rel_84153e6233b039d72fdf",
+        "predicate": "contracted",
+        "status": "UNRESOLVED"
+      }
+    ],
+    "assertions": [
+      {
+        "assertion_id": "asrt_6a60bb5f27d213de3f2d",
+        "predicate": "has_installed_lights",
+        "value": {
+          "context": null,
+          "unit": "lights",
+          "value": "12",
+          "value_type": "integer"
+        },
+        "polarity": "POSITIVE",
+        "modality": "UNKNOWN",
+        "status": "UNRESOLVED",
+        "evidence_status": "SOURCE_VERIFIED"
+      },
+      {
+        "assertion_id": "asrt_b804f659c37decd8f6f5",
+        "predicate": "has_operational_lights",
+        "value": {
+          "context": null,
+          "unit": "lights",
+          "value": "9",
+          "value_type": "integer"
+        },
+        "polarity": "POSITIVE",
+        "modality": "UNKNOWN",
+        "status": "UNRESOLVED",
+        "evidence_status": "SOURCE_VERIFIED"
+      },
+      {
+        "assertion_id": "asrt_deaf510f7575a8e5b75a",
+        "predicate": "has_pending_lights",
+        "value": {
+          "context": null,
+          "unit": "lights",
+          "value": "6",
+          "value_type": "integer"
+        },
+        "polarity": "POSITIVE",
+        "modality": "UNKNOWN",
+        "status": "UNRESOLVED",
+        "evidence_status": "SOURCE_VERIFIED"
+      },
+      {
+        "assertion_id": "asrt_e19affc87b95f2b7f25f",
+        "predicate": "expected_installation_date",
+        "value": {
+          "context": null,
+          "unit": null,
+          "value": "2026-11-10",
+          "value_type": "string"
+        },
+        "polarity": "POSITIVE",
+        "modality": "UNKNOWN",
+        "status": "UNRESOLVED",
+        "evidence_status": "SOURCE_VERIFIED"
+      }
+    ],
+    "evidence": [
+      {
+        "evidence_id": "ev_2831358e77cc124450b4",
+        "quote": "El Comité de Adelanto El Arrayán presentó el 20 de octubre una reclamación ante la Municipalidad.",
+        "char_start": 1127,
+        "char_end": 1224,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_2af14f7e0d2636b650fc",
+        "quote": "La Municipalidad comunicó que espera instalar las seis luminarias restantes antes del 10 de noviembre",
+        "char_start": 1397,
+        "char_end": 1498,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_5b5e52a7c1f3c0f7ffba",
+        "quote": "Camila Soto, inspectora municipal, coordina la supervisión.",
+        "char_start": 618,
+        "char_end": 677,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_8052cd6e9b008f5f05a8",
+        "quote": "Las seis luminarias restantes todavía no han sido instaladas.",
+        "char_start": 876,
+        "char_end": 937,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_882954f99cddf3c0598b",
+        "quote": "la Municipalidad de Bahía Clara y la Cooperativa Técnica Faro Sur firmaron un acuerdo para instalar 18 luminarias solares en ese trayecto",
+        "char_start": 350,
+        "char_end": 487,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_9635f2b2415cb11de65a",
+        "quote": "se instalaron 12 de las 18 luminarias previstas: nueve están operativas y tres permanecen sin funcionar porque están pendientes de baterías.",
+        "char_start": 735,
+        "char_end": 875,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      },
+      {
+        "evidence_id": "ev_a576fc913f60baea4e8a",
+        "quote": "nueve están operativas",
+        "char_start": 784,
+        "char_end": 806,
+        "extraction_method": "llm_offset_resolved_quote_authority"
+      }
+    ]
+  },
+  "trace": {
+    "claim_id": "asrt_6a60bb5f27d213de3f2d",
+    "evidence": [
+      {
+        "evidence_id": "ev_9635f2b2415cb11de65a",
+        "quote": "se instalaron 12 de las 18 luminarias previstas: nueve están operativas y tres permanecen sin funcionar porque están pendientes de baterías.",
+        "char_start": 735,
+        "char_end": 875,
+        "source_unit_id": "u00",
+        "source_unit_mapu_id": "MAPU-FTG08-01",
+        "source_unit_section": "body",
+        "mapu_id": "MAPU-FTG08-01",
+        "mapu_content_sha256": "c0fb197150c14012ef6cc37d8e848abbaa50c298c756f44a195602aff1603fbd"
+      }
+    ]
+  },
+  "integrity_ok": true,
+  "ledger": [
+    {
+      "seq": 1,
+      "event_type": "ANTU_RECEIVED",
+      "antu_id": "ANTU-FTG08-DOC",
+      "version_id": null
+    },
+    {
+      "seq": 2,
+      "event_type": "ANTU_COMPLETED",
+      "antu_id": "ANTU-FTG08-DOC",
+      "version_id": "VER-4c05dc1327bf"
+    },
+    {
+      "seq": 3,
+      "event_type": "PROJECTION_ENQUEUED",
+      "antu_id": "ANTU-FTG08-DOC",
+      "version_id": "VER-4c05dc1327bf"
+    },
+    {
+      "seq": 4,
+      "event_type": "VERSION_COMMITTED",
+      "antu_id": "ANTU-FTG08-DOC",
+      "version_id": "VER-4c05dc1327bf"
+    }
+  ]
+}

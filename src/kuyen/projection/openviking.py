@@ -267,7 +267,31 @@ def recover_bundle(store: OpenVikingStore, uri_root: str, target_dir: Path,
 
 
 def start_isolated_server(root: Path, *, server_bin: Path | None = None,
-                          port: int | None = None, health_timeout: float = 150.0) -> dict[str, Any]:
+                          port: int | None = None, health_timeout: float = 150.0,
+                          vlm: Any | None = None,
+                          server_overrides: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Start one isolated OpenViking instance from a KÜYEN-owned `ov.conf`.
+
+    Single lifecycle manager of the package: `kuyen.vlm.OpenVikingVlmRuntime` and the
+    projection path both end up here, so there is exactly one place that writes a config,
+    spawns the process, waits for `/health` and stops it.
+
+    `vlm` (optional) is a `kuyen.vlm.VlmProviderConfig`. When given:
+
+    * the credential is resolved **before** any file is written or process is spawned, so a
+      missing key fails closed and leaves no partial state;
+    * `ov.conf` receives a `${KUYEN_VLM_API_KEY}` **reference** — never the value;
+    * the value travels only in the environment of the child process; `os.environ` of the
+      caller is never modified;
+    * the returned mapping reports the credential source and never a secret.
+
+    `server_overrides` merges into the `server` section (used for diagnostics such as
+    `with_bot` / `bot_api_url`); nothing is invented and no global OpenViking file is read
+    or written: the instance lives entirely under `root`.
+    """
+    from ..vlm import EMBEDDING_SECRET_ENV_VAR as _EMBEDDING_SECRET_ENV
+    from ..vlm import SECRET_ENV_VAR as _VLM_SECRET_ENV
+
     root = Path(root).resolve()
     (root / "workspace").mkdir(parents=True, exist_ok=True)
     (root / "home").mkdir(parents=True, exist_ok=True)
@@ -276,24 +300,60 @@ def start_isolated_server(root: Path, *, server_bin: Path | None = None,
         raise RuntimeError(f"openviking-server not found: {binary}")
     if port is None:
         port = _free_port()
+    secret: str | None = None
+    embedding_secret: str | None = None
+    if vlm is not None:
+        # fail closed before writing anything or spawning a process
+        vlm.validated()
+        secret = vlm.resolve_secret()
+        embedding_secret = vlm.resolve_embedding_secret()
     config = {
         "server": {"host": "127.0.0.1", "port": port, "workers": 1, "auth_mode": "dev",
-                   "cors_origins": ["http://127.0.0.1"]},
+                   "cors_origins": ["http://127.0.0.1"], **(server_overrides or {})},
         "storage": {"workspace": str(root / "workspace"),
                     "vectordb": {"name": "context", "backend": "local", "project": "default"},
                     "agfs": {"backend": "local"}},
     }
+    if vlm is not None:
+        config["vlm"] = vlm.to_openviking(env_var=_VLM_SECRET_ENV)
+        # Without an embedding provider the instance falls back to a local embedder that is not
+        # installed and every ingestion fails (KUYEN_DISTRIBUTED_ANTU_12, measured).
+        embedding_block = vlm.to_openviking_embedding(env_var=_VLM_SECRET_ENV)
+        if embedding_block is not None:
+            config["embedding"] = embedding_block
     config_path = root / "ov.conf"
-    config_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
+    _write_private_config(config_path, config)
     env = dict(os.environ)
+    # a stale provider key inherited from the caller must never decide what the instance
+    # authenticates with: the environment of the child is owned by KÜYEN
+    env.pop(_VLM_SECRET_ENV, None)
+    env.pop(_EMBEDDING_SECRET_ENV, None)
     env.update({"HOME": str(root / "home"), "OPENVIKING_CONFIG_FILE": str(config_path),
                 "NO_PROXY": "127.0.0.1,localhost", "no_proxy": "127.0.0.1,localhost",
                 "HTTP_PROXY": "", "HTTPS_PROXY": "", "http_proxy": "", "https_proxy": ""})
+    if secret is not None:
+        env[_VLM_SECRET_ENV] = secret
+    if embedding_secret is not None:
+        env[_EMBEDDING_SECRET_ENV] = embedding_secret
     log_path = root / "server.log"
+    # A compile needs a local compile backend: without `--bot` OpenViking answers
+    # `compile API: compile_api.base_url is not configured` and no document can be compiled
+    # (measured in KUYEN_DISTRIBUTED_ANTU_12). The bot runs on its own port, inside the same
+    # isolated root, and is only started when the caller asks for it.
+    command = [str(binary), "--host", "127.0.0.1", "--port", str(port)]
+    config_server = config.get("server") or {}
+    if config_server.get("with_bot"):
+        bot_port = int(config_server.get("bot_port") or (port + 1))
+        command += ["--bot", "--bot-port", str(bot_port)]
+        config["server"]["bot_api_url"] = f"http://127.0.0.1:{bot_port}"
+        _write_private_config(config_path, config)
     log = log_path.open("w", encoding="utf-8")
-    proc = subprocess.Popen([str(binary), "--host", "127.0.0.1", "--port", str(port)],
-                            cwd=str(root), env=env, stdout=log, stderr=subprocess.STDOUT,
-                            start_new_session=True)
+    try:
+        proc = subprocess.Popen(command,
+                                cwd=str(root), env=env, stdout=log, stderr=subprocess.STDOUT,
+                                start_new_session=True)
+    finally:
+        log.close()
     store = OpenVikingStore(f"http://127.0.0.1:{port}")
     deadline = time.time() + health_timeout
     health: dict[str, Any] = {}
@@ -308,8 +368,45 @@ def start_isolated_server(root: Path, *, server_bin: Path | None = None,
     if not health:
         stop_server(proc, port)
         raise RuntimeError(f"server did not become healthy; see {log_path}")
-    return {"proc": proc, "port": port, "store": store, "health": health,
-            "config_path": config_path, "log_path": log_path, "root": root, "binary": str(binary)}
+    handle: dict[str, Any] = {
+        "proc": proc, "port": port, "store": store, "health": health,
+        "config_path": config_path, "log_path": log_path, "root": root, "binary": str(binary),
+        "config_sha256": sha256_file(config_path),
+        # names only: a full environment dump would leak the caller's secrets
+        "child_env_keys": sorted({name for name, value in
+                                  ((_VLM_SECRET_ENV, secret),
+                                   (_EMBEDDING_SECRET_ENV, embedding_secret))
+                                  if value is not None}),
+        "vlm": vlm.to_public_dict() if vlm is not None else None,
+        "vlm_credential_fingerprint": vlm.credential_fingerprint() if vlm is not None else None,
+        "vlm_secret_env": _VLM_SECRET_ENV if vlm is not None else None,
+        "embedding_secret_env": (_EMBEDDING_SECRET_ENV if embedding_secret is not None else None),
+        "embedding_credential_fingerprint": (vlm.embedding_credential_fingerprint()
+                                            if vlm is not None else None),
+        "bot": bool(config_server.get("with_bot")),
+        "embedding": (vlm.to_public_dict().get("embedding_model") if vlm is not None else None),
+    }
+    return handle
+
+
+def _write_private_config(path: Path, config: dict[str, Any]) -> str:
+    """Write `ov.conf` atomically with owner-only permissions (0600).
+
+    The file carries a `${...}` reference, never a credential; the mode still matters so a
+    future field cannot be read by another account by accident.
+    """
+    payload = json.dumps(config, indent=2) + "\n"
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    descriptor = os.open(temporary, os.O_CREAT | os.O_WRONLY | os.O_TRUNC, 0o600)
+    try:
+        os.write(descriptor, payload.encode("utf-8"))
+    finally:
+        os.close(descriptor)
+    os.chmod(temporary, 0o600)
+    os.replace(temporary, path)
+    os.chmod(path, 0o600)
+    return sha256_text(payload)
+
 
 
 def _free_port(start: int = 21500, stop: int = 21600) -> int:

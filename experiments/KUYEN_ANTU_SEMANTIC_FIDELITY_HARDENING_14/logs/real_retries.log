@@ -1,0 +1,27 @@
+[skip] K002-MOD already recorded
+[skip] K003-VAL already recorded
+[skip] K005-REL already recorded
+[skip] K008-MOD already recorded
+[skip] K008-VAL already recorded
+[skip] K010-SCH already recorded
+[skip] K001-VAL already recorded
+[skip] K004-VAL already recorded
+[skip] K006-MOD already recorded
+[skip] K007-REL already recorded
+[skip] K009-SAT already recorded
+[antu] KUYEN-002 K002-MOD2 · La afirmación que dice que la superficie quemada es 750 hectáreas es una estimac
+        COMMITTED · 4.07s · version=VER-36bafc9dcf2f · applied=1 · violations=0 · error=None
+[antu] KUYEN-003 K003-VAL2 · La afirmación que dice que Cantábrico Occidental tiene un 54,6 % de capacidad de
+        NO_CHANGES · 4.45s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-005 K005-REL2 · Retira las relaciones «AQUALICIOUS se ubica en España» y «AQUALICIOUS se ubica e
+        NO_CHANGES · 4.76s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-008 K008-VAL2 · Corrige la afirmación que dice que la temperatura media de septiembre de 2026 es
+        COMMITTED · 3.54s · version=VER-529b4688b446 · applied=1 · violations=0 · error=None
+[antu] KUYEN-010 K010-SCH2 · Añade el campo codigo_interno, de tipo texto, al tipo de entidad supplier de est
+        NO_CHANGES · 2.72s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-006 K006-MOD2 · La contribución de Thwaites al aumento del nivel del mar es una proyección, no u
+        COMMITTED · 7.4s · version=VER-71b8665042d5 · applied=1 · violations=0 · error=None
+[antu] KUYEN-007 K007-REL2 · Añade que Joel W. Sills trabaja en el Langley Research Center de la NASA.
+        CLARIFICATION_REQUIRED · 21.46s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-004 K004-VAL2 · La afirmación que dice que la potencia de bombeo es 363,99 MW debe pasar a 364 M
+        REJECTED · 3.87s · version=None · applied=0 · violations=0 · error=None

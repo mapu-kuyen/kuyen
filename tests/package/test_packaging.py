@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 import kuyen
 
 
@@ -58,7 +60,7 @@ class TestLicence:
         assert b"APPENDIX: How to apply the Apache License to your work." in data
 
     def test_declared_licence_is_the_spdx_identifier(self) -> None:
-        import tomllib
+        tomllib = pytest.importorskip("tomllib", reason="needs Python 3.11+ to read TOML")
 
         project = tomllib.loads((Path(__file__).resolve().parents[2] / "pyproject.toml").read_text()) ["project"]
         assert project["license"] == "Apache-2.0"

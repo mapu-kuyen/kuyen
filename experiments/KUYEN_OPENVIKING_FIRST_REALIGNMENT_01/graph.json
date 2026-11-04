@@ -1,0 +1,1097 @@
+{
+ "total_modules": 83,
+ "total_loc": 14000,
+ "orphans": [
+  {
+   "module": "kuyen.recovery",
+   "loc": 3,
+   "internal_importers": [],
+   "external_refs": []
+  }
+ ],
+ "rows": [
+  {
+   "module": "kuyen",
+   "loc": 33,
+   "internal_importers": [
+    "kuyen.storage.commit"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/luna_smoke.py",
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/smoke_vlm.py",
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/verify_openviking_schema.py",
+    "experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/after/verify_distribution.py",
+    "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/after/test_source_unit_disambiguation.py",
+    "scripts/verify_distribution.py",
+    "tests/api/test_a1_canonical_validation.py",
+    "tests/api/test_public_api.py",
+    "tests/contract/test_schemas.py",
+    "tests/helpers.py",
+    "tests/integration/test_openviking_real.py",
+    "tests/lifecycle/test_antu_contract.py",
+    "tests/lifecycle/test_antu_lifecycle.py",
+    "tests/lifecycle/test_b1_staging_classification.py",
+    "tests/lifecycle/test_m1_ledger_concurrency.py",
+    "tests/lifecycle/test_m1_ledger_multiprocess.py",
+    "tests/lifecycle/test_m1_m2_combined.py",
+    "tests/lifecycle/test_m2_ledger_recovery.py",
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/lifecycle/test_operation_boundary.py",
+    "tests/lifecycle/test_source_provenance.py",
+    "tests/package/test_packaging.py",
+    "tests/projection/test_combined_boundaries.py",
+    "tests/projection/test_projection_boundary.py",
+    "tests/recovery/test_backup_and_recovery.py",
+    "tests/security/test_fail_closed.py",
+    "tests/security/test_tamper_detection.py",
+    "tests/security/test_version_id_containment.py",
+    "tests/storage/test_a2_stale_base_commit.py",
+    "tests/storage/test_a3_backup_target.py",
+    "tests/storage/test_atomic_write_boundary.py",
+    "tests/storage/test_b2_restore_target.py",
+    "tests/storage/test_canonical_storage.py",
+    "tests/test_source_unit_disambiguation.py",
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_013_coverage.py",
+    "tests/unit/test_013_historical_import.py",
+    "tests/unit/test_013_ingestion.py",
+    "tests/unit/test_013_ontology_profiles.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_016_temporal.py",
+    "tests/unit/test_017_semantic.py",
+    "tests/unit/test_018_generalization.py",
+    "tests/unit/test_019_canonical_predicate_contract.py",
+    "tests/unit/test_020_version_provenance.py",
+    "tests/unit/test_adapter.py",
+    "tests/unit/test_engine.py",
+    "tests/unit/test_engine_flow.py",
+    "tests/unit/test_evidence_and_coverage.py",
+    "tests/unit/test_publication.py",
+    "tests/unit/test_vlm_configuration.py"
+   ]
+  },
+  {
+   "module": "kuyen._version",
+   "loc": 47,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_020_version_provenance.py"
+   ]
+  },
+  {
+   "module": "kuyen.adapters",
+   "loc": 14,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/integration/test_openviking_real.py",
+    "tests/unit/test_013_ingestion.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_adapter.py"
+   ]
+  },
+  {
+   "module": "kuyen.adapters.openviking",
+   "loc": 590,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/integration/test_openviking_real.py",
+    "tests/unit/test_013_ingestion.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_adapter.py"
+   ]
+  },
+  {
+   "module": "kuyen.adapters.openviking_publication",
+   "loc": 130,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.api",
+   "loc": 3,
+   "internal_importers": [
+    "kuyen"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/after/test_source_unit_disambiguation.py",
+    "tests/lifecycle/test_antu_contract.py",
+    "tests/lifecycle/test_operation_boundary.py",
+    "tests/projection/test_combined_boundaries.py",
+    "tests/test_source_unit_disambiguation.py"
+   ]
+  },
+  {
+   "module": "kuyen.api.memory",
+   "loc": 602,
+   "internal_importers": [
+    "kuyen.api"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/after/test_source_unit_disambiguation.py",
+    "tests/lifecycle/test_antu_contract.py",
+    "tests/lifecycle/test_operation_boundary.py",
+    "tests/projection/test_combined_boundaries.py",
+    "tests/test_source_unit_disambiguation.py"
+   ]
+  },
+  {
+   "module": "kuyen.backup",
+   "loc": 3,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/storage/test_b2_restore_target.py"
+   ]
+  },
+  {
+   "module": "kuyen.backup.archive",
+   "loc": 195,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup"
+   ],
+   "external_refs": [
+    "tests/storage/test_b2_restore_target.py"
+   ]
+  },
+  {
+   "module": "kuyen.canonical",
+   "loc": 213,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.engine",
+    "kuyen.importing.historical",
+    "kuyen.ingest",
+    "kuyen.lifecycle.antu",
+    "kuyen.lifecycle.ledger",
+    "kuyen.lifecycle.unit",
+    "kuyen.materialization.materializer",
+    "kuyen.models.domain",
+    "kuyen.normalization.normalizer",
+    "kuyen.projection.mapping",
+    "kuyen.projection.native",
+    "kuyen.projection.openviking",
+    "kuyen.projection.outbox",
+    "kuyen.projection.projector",
+    "kuyen.projection.reconciliation",
+    "kuyen.publication.planner",
+    "kuyen.query.graph",
+    "kuyen.recovery.rebuild",
+    "kuyen.semantics.identity",
+    "kuyen.semantics.predicates",
+    "kuyen.semantics.support",
+    "kuyen.serialization.serializer",
+    "kuyen.sidecar",
+    "kuyen.sidecar.exporter",
+    "kuyen.sidecar.reconstruction",
+    "kuyen.storage.commit",
+    "kuyen.storage.registry",
+    "kuyen.storage.store",
+    "kuyen.storage.versions",
+    "kuyen.versioning"
+   ],
+   "external_refs": [
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/security/test_tamper_detection.py",
+    "tests/storage/test_atomic_write_boundary.py",
+    "tests/unit/test_020_version_provenance.py"
+   ]
+  },
+  {
+   "module": "kuyen.config",
+   "loc": 124,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/contract/test_schemas.py",
+    "tests/integration/test_openviking_real.py",
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_013_coverage.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_019_canonical_predicate_contract.py",
+    "tests/unit/test_engine.py",
+    "tests/unit/test_engine_flow.py",
+    "tests/unit/test_evidence_and_coverage.py",
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.contracts",
+   "loc": 86,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.lifecycle.antu",
+    "kuyen.lifecycle.ledger",
+    "kuyen.projection.mapping",
+    "kuyen.projection.native",
+    "kuyen.projection.outbox",
+    "kuyen.projection.projector",
+    "kuyen.projection.reconciliation",
+    "kuyen.sidecar",
+    "kuyen.sidecar.exporter",
+    "kuyen.sidecar.reconstruction",
+    "kuyen.storage.commit",
+    "kuyen.storage.store"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.coverage",
+   "loc": 4,
+   "internal_importers": [
+    "kuyen.engine",
+    "kuyen.materialization.materializer"
+   ],
+   "external_refs": [
+    "tests/unit/test_013_coverage.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py"
+   ]
+  },
+  {
+   "module": "kuyen.coverage.metrics",
+   "loc": 54,
+   "internal_importers": [
+    "kuyen.coverage"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.coverage.sections",
+   "loc": 71,
+   "internal_importers": [
+    "kuyen.coverage",
+    "kuyen.coverage.metrics",
+    "kuyen.engine"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.credentials",
+   "loc": 21,
+   "internal_importers": [
+    "kuyen.adapters.openviking",
+    "kuyen.adapters.openviking_publication",
+    "kuyen.engine",
+    "kuyen.extraction.openai_provider"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.engine",
+   "loc": 694,
+   "internal_importers": [
+    "kuyen"
+   ],
+   "external_refs": [
+    "tests/contract/test_schemas.py",
+    "tests/integration/test_openviking_real.py",
+    "tests/package/test_packaging.py",
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_013_coverage.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_019_canonical_predicate_contract.py",
+    "tests/unit/test_020_version_provenance.py",
+    "tests/unit/test_engine.py",
+    "tests/unit/test_engine_flow.py",
+    "tests/unit/test_evidence_and_coverage.py",
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.errors",
+   "loc": 119,
+   "internal_importers": [
+    "kuyen.adapters.openviking",
+    "kuyen.adapters.openviking_publication",
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.credentials",
+    "kuyen.engine",
+    "kuyen.execution",
+    "kuyen.extraction.budget",
+    "kuyen.extraction.config",
+    "kuyen.extraction.conversion",
+    "kuyen.extraction.openai_provider",
+    "kuyen.ingest",
+    "kuyen.lifecycle.antu",
+    "kuyen.lifecycle.ledger",
+    "kuyen.materialization.contract",
+    "kuyen.materialization.materializer",
+    "kuyen.materialization.paths",
+    "kuyen.models.domain",
+    "kuyen.ontology",
+    "kuyen.projection.mapping",
+    "kuyen.projection.native",
+    "kuyen.projection.projector",
+    "kuyen.publication.coordinator",
+    "kuyen.publication.planner",
+    "kuyen.publication.registry",
+    "kuyen.security",
+    "kuyen.sidecar",
+    "kuyen.sidecar.exporter",
+    "kuyen.storage.commit",
+    "kuyen.storage.registry",
+    "kuyen.storage.store",
+    "kuyen.storage.versions",
+    "kuyen.versioning",
+    "kuyen.vlm"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/after/test_source_unit_disambiguation.py",
+    "tests/api/test_a1_canonical_validation.py",
+    "tests/api/test_public_api.py",
+    "tests/lifecycle/test_antu_contract.py",
+    "tests/lifecycle/test_antu_lifecycle.py",
+    "tests/lifecycle/test_b1_staging_classification.py",
+    "tests/lifecycle/test_m1_ledger_concurrency.py",
+    "tests/lifecycle/test_m2_ledger_recovery.py",
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/lifecycle/test_operation_boundary.py",
+    "tests/lifecycle/test_source_provenance.py",
+    "tests/recovery/test_backup_and_recovery.py",
+    "tests/security/test_fail_closed.py",
+    "tests/security/test_tamper_detection.py",
+    "tests/security/test_version_id_containment.py",
+    "tests/storage/test_a2_stale_base_commit.py",
+    "tests/storage/test_a3_backup_target.py",
+    "tests/storage/test_b2_restore_target.py",
+    "tests/storage/test_canonical_storage.py",
+    "tests/test_source_unit_disambiguation.py",
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_013_ingestion.py",
+    "tests/unit/test_013_ontology_profiles.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_adapter.py",
+    "tests/unit/test_engine.py"
+   ]
+  },
+  {
+   "module": "kuyen.execution",
+   "loc": 152,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_011_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.extraction",
+   "loc": 28,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_016_temporal.py",
+    "tests/unit/test_018_generalization.py",
+    "tests/unit/test_vlm_configuration.py"
+   ]
+  },
+  {
+   "module": "kuyen.extraction.budget",
+   "loc": 141,
+   "internal_importers": [
+    "kuyen.extraction",
+    "kuyen.extraction.config",
+    "kuyen.extraction.openai_provider"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.extraction.config",
+   "loc": 164,
+   "internal_importers": [
+    "kuyen.extraction"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.extraction.conversion",
+   "loc": 172,
+   "internal_importers": [
+    "kuyen.extraction"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.extraction.fact_coverage",
+   "loc": 168,
+   "internal_importers": [
+    "kuyen.extraction"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.extraction.openai_provider",
+   "loc": 423,
+   "internal_importers": [
+    "kuyen.extraction"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.extraction.schema",
+   "loc": 285,
+   "internal_importers": [
+    "kuyen.extraction",
+    "kuyen.extraction.openai_provider"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.importing",
+   "loc": 3,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/unit/test_013_historical_import.py"
+   ]
+  },
+  {
+   "module": "kuyen.importing.historical",
+   "loc": 253,
+   "internal_importers": [
+    "kuyen.importing"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.ingest",
+   "loc": 88,
+   "internal_importers": [
+    "kuyen"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.lifecycle",
+   "loc": 1,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/lifecycle/test_m1_ledger_concurrency.py",
+    "tests/lifecycle/test_m1_m2_combined.py",
+    "tests/lifecycle/test_m6_append_scaling.py"
+   ]
+  },
+  {
+   "module": "kuyen.lifecycle.antu",
+   "loc": 340,
+   "internal_importers": [
+    "kuyen.api.memory"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.lifecycle.ledger",
+   "loc": 297,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.lifecycle.antu",
+    "kuyen.lifecycle.unit",
+    "kuyen.projection.native",
+    "kuyen.recovery.rebuild",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": [
+    "tests/lifecycle/test_m1_ledger_concurrency.py",
+    "tests/lifecycle/test_m1_m2_combined.py",
+    "tests/lifecycle/test_m6_append_scaling.py"
+   ]
+  },
+  {
+   "module": "kuyen.lifecycle.unit",
+   "loc": 144,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.lifecycle.antu",
+    "kuyen.recovery.rebuild"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.materialization",
+   "loc": 9,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_019_canonical_predicate_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.materialization.contract",
+   "loc": 100,
+   "internal_importers": [
+    "kuyen.materialization",
+    "kuyen.materialization.materializer"
+   ],
+   "external_refs": [
+    "tests/unit/test_019_canonical_predicate_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.materialization.materializer",
+   "loc": 684,
+   "internal_importers": [
+    "kuyen.materialization"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.materialization.paths",
+   "loc": 77,
+   "internal_importers": [
+    "kuyen.adapters.openviking",
+    "kuyen.materialization",
+    "kuyen.materialization.materializer"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.models",
+   "loc": 33,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.adapters.openviking",
+    "kuyen.api.memory",
+    "kuyen.coverage.metrics",
+    "kuyen.engine",
+    "kuyen.extraction.conversion",
+    "kuyen.extraction.fact_coverage",
+    "kuyen.extraction.openai_provider",
+    "kuyen.extraction.schema",
+    "kuyen.materialization.materializer",
+    "kuyen.normalization.normalizer",
+    "kuyen.ports.openviking",
+    "kuyen.security",
+    "kuyen.serialization.serializer",
+    "kuyen.validation.validators",
+    "kuyen.versioning"
+   ],
+   "external_refs": [
+    "tests/helpers.py",
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_013_coverage.py",
+    "tests/unit/test_013_ingestion.py",
+    "tests/unit/test_014_materializer.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_016_temporal.py",
+    "tests/unit/test_018_generalization.py",
+    "tests/unit/test_019_canonical_predicate_contract.py",
+    "tests/unit/test_engine.py",
+    "tests/unit/test_evidence_and_coverage.py"
+   ]
+  },
+  {
+   "module": "kuyen.models.domain",
+   "loc": 736,
+   "internal_importers": [
+    "kuyen.models",
+    "kuyen.sidecar.reconstruction"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.normalization",
+   "loc": 2,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_011_contract.py",
+    "tests/unit/test_019_canonical_predicate_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.normalization.normalizer",
+   "loc": 272,
+   "internal_importers": [
+    "kuyen.normalization"
+   ],
+   "external_refs": [
+    "tests/unit/test_019_canonical_predicate_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.ontology",
+   "loc": 129,
+   "internal_importers": [
+    "kuyen.engine",
+    "kuyen.extraction.openai_provider",
+    "kuyen.extraction.schema",
+    "kuyen.importing.historical",
+    "kuyen.publication.planner",
+    "kuyen.validation.validators"
+   ],
+   "external_refs": [
+    "tests/unit/test_013_historical_import.py",
+    "tests/unit/test_013_ontology_profiles.py",
+    "tests/unit/test_015_extraction.py",
+    "tests/unit/test_016_temporal.py",
+    "tests/unit/test_018_generalization.py",
+    "tests/unit/test_019_canonical_predicate_contract.py",
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.ports",
+   "loc": 2,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/unit/test_engine_flow.py"
+   ]
+  },
+  {
+   "module": "kuyen.ports.openviking",
+   "loc": 20,
+   "internal_importers": [
+    "kuyen.adapters.openviking",
+    "kuyen.engine",
+    "kuyen.ports"
+   ],
+   "external_refs": [
+    "tests/unit/test_engine_flow.py"
+   ]
+  },
+  {
+   "module": "kuyen.ports.publication",
+   "loc": 15,
+   "internal_importers": [
+    "kuyen.adapters.openviking_publication",
+    "kuyen.publication.coordinator",
+    "kuyen.publication.verifier"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.projection",
+   "loc": 1,
+   "internal_importers": [
+    "kuyen.projection.native",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/verify_openviking_schema.py",
+    "tests/projection/test_combined_boundaries.py",
+    "tests/projection/test_projection_boundary.py",
+    "tests/unit/test_vlm_configuration.py"
+   ]
+  },
+  {
+   "module": "kuyen.projection.mapping",
+   "loc": 204,
+   "internal_importers": [
+    "kuyen.projection.native",
+    "kuyen.sidecar.reconstruction",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.projection.native",
+   "loc": 190,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.lifecycle.antu",
+    "kuyen.projection.reconciliation",
+    "kuyen.recovery.rebuild"
+   ],
+   "external_refs": [
+    "tests/projection/test_projection_boundary.py"
+   ]
+  },
+  {
+   "module": "kuyen.projection.openviking",
+   "loc": 359,
+   "internal_importers": [
+    "kuyen.projection.native",
+    "kuyen.sidecar.reconstruction",
+    "kuyen.vlm"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/verify_openviking_schema.py",
+    "tests/unit/test_vlm_configuration.py"
+   ]
+  },
+  {
+   "module": "kuyen.projection.outbox",
+   "loc": 108,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.projection.native",
+    "kuyen.projection.reconciliation",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": [
+    "tests/projection/test_combined_boundaries.py",
+    "tests/projection/test_projection_boundary.py"
+   ]
+  },
+  {
+   "module": "kuyen.projection.projector",
+   "loc": 206,
+   "internal_importers": [
+    "kuyen.projection.native",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.projection.reconciliation",
+   "loc": 116,
+   "internal_importers": [
+    "kuyen.api.memory"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.provenance",
+   "loc": 64,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.ingest"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.publication",
+   "loc": 13,
+   "internal_importers": [
+    "kuyen"
+   ],
+   "external_refs": [
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.publication.coordinator",
+   "loc": 221,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.publication.models",
+   "loc": 159,
+   "internal_importers": [
+    "kuyen.engine",
+    "kuyen.publication",
+    "kuyen.publication.coordinator",
+    "kuyen.publication.planner",
+    "kuyen.publication.registry",
+    "kuyen.publication.verifier"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.publication.planner",
+   "loc": 218,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.publication.registry",
+   "loc": 72,
+   "internal_importers": [
+    "kuyen.engine",
+    "kuyen.publication.coordinator"
+   ],
+   "external_refs": [
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.publication.verifier",
+   "loc": 127,
+   "internal_importers": [
+    "kuyen.engine",
+    "kuyen.publication.coordinator"
+   ],
+   "external_refs": [
+    "tests/unit/test_publication.py"
+   ]
+  },
+  {
+   "module": "kuyen.query",
+   "loc": 3,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/unit/test_017_semantic.py"
+   ]
+  },
+  {
+   "module": "kuyen.query.graph",
+   "loc": 364,
+   "internal_importers": [
+    "kuyen.query"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.recovery",
+   "loc": 3,
+   "internal_importers": [],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.recovery.rebuild",
+   "loc": 116,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.recovery"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.security",
+   "loc": 36,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.semantics",
+   "loc": 38,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_017_semantic.py",
+    "tests/unit/test_018_generalization.py",
+    "tests/unit/test_019_canonical_predicate_contract.py"
+   ]
+  },
+  {
+   "module": "kuyen.semantics.identity",
+   "loc": 246,
+   "internal_importers": [
+    "kuyen.semantics"
+   ],
+   "external_refs": [
+    "tests/unit/test_017_semantic.py"
+   ]
+  },
+  {
+   "module": "kuyen.semantics.predicates",
+   "loc": 287,
+   "internal_importers": [
+    "kuyen.semantics"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.semantics.support",
+   "loc": 174,
+   "internal_importers": [
+    "kuyen.semantics"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.serialization",
+   "loc": 7,
+   "internal_importers": [
+    "kuyen.publication.planner",
+    "kuyen.versioning"
+   ],
+   "external_refs": [
+    "tests/contract/test_schemas.py",
+    "tests/unit/test_engine.py",
+    "tests/unit/test_evidence_and_coverage.py"
+   ]
+  },
+  {
+   "module": "kuyen.serialization.serializer",
+   "loc": 171,
+   "internal_importers": [
+    "kuyen.adapters.openviking",
+    "kuyen.importing.historical",
+    "kuyen.materialization.materializer",
+    "kuyen.serialization"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.sidecar",
+   "loc": 189,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.recovery.rebuild",
+    "kuyen.sidecar.reconstruction",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.sidecar.exporter",
+   "loc": 300,
+   "internal_importers": [
+    "kuyen.storage.commit"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.sidecar.reconstruction",
+   "loc": 255,
+   "internal_importers": [
+    "kuyen.recovery.rebuild"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.storage",
+   "loc": 1,
+   "internal_importers": [],
+   "external_refs": [
+    "tests/lifecycle/test_b1_staging_classification.py",
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/security/test_fail_closed.py",
+    "tests/security/test_tamper_detection.py",
+    "tests/security/test_version_id_containment.py"
+   ]
+  },
+  {
+   "module": "kuyen.storage.commit",
+   "loc": 469,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.lifecycle.antu",
+    "kuyen.projection.reconciliation",
+    "kuyen.recovery.rebuild"
+   ],
+   "external_refs": [
+    "tests/lifecycle/test_b1_staging_classification.py",
+    "tests/security/test_tamper_detection.py"
+   ]
+  },
+  {
+   "module": "kuyen.storage.registry",
+   "loc": 99,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.lifecycle.antu",
+    "kuyen.recovery.rebuild",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": [
+    "tests/lifecycle/test_m6_append_scaling.py",
+    "tests/security/test_version_id_containment.py"
+   ]
+  },
+  {
+   "module": "kuyen.storage.store",
+   "loc": 259,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.backup.archive",
+    "kuyen.lifecycle.antu",
+    "kuyen.lifecycle.ledger",
+    "kuyen.projection.native",
+    "kuyen.projection.outbox",
+    "kuyen.projection.reconciliation",
+    "kuyen.recovery.rebuild",
+    "kuyen.storage.commit",
+    "kuyen.storage.registry",
+    "kuyen.storage.versions"
+   ],
+   "external_refs": [
+    "tests/security/test_fail_closed.py"
+   ]
+  },
+  {
+   "module": "kuyen.storage.versions",
+   "loc": 216,
+   "internal_importers": [
+    "kuyen.api.memory",
+    "kuyen.projection.native",
+    "kuyen.projection.reconciliation",
+    "kuyen.recovery.rebuild",
+    "kuyen.storage.commit",
+    "kuyen.storage.registry",
+    "kuyen.storage.store"
+   ],
+   "external_refs": [
+    "tests/security/test_tamper_detection.py",
+    "tests/security/test_version_id_containment.py"
+   ]
+  },
+  {
+   "module": "kuyen.validation",
+   "loc": 13,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": [
+    "tests/unit/test_016_temporal.py"
+   ]
+  },
+  {
+   "module": "kuyen.validation.canonical",
+   "loc": 104,
+   "internal_importers": [
+    "kuyen.lifecycle.antu",
+    "kuyen.storage.commit"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.validation.validators",
+   "loc": 462,
+   "internal_importers": [
+    "kuyen.validation"
+   ],
+   "external_refs": [
+    "tests/unit/test_016_temporal.py"
+   ]
+  },
+  {
+   "module": "kuyen.versioning",
+   "loc": 126,
+   "internal_importers": [
+    "kuyen.engine"
+   ],
+   "external_refs": []
+  },
+  {
+   "module": "kuyen.vlm",
+   "loc": 263,
+   "internal_importers": [
+    "kuyen",
+    "kuyen.projection.openviking"
+   ],
+   "external_refs": [
+    "experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/luna_smoke.py",
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/smoke_vlm.py",
+    "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/verify_openviking_schema.py",
+    "tests/unit/test_vlm_configuration.py"
+   ]
+  }
+ ]
+}

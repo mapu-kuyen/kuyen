@@ -1,5 +1,11 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+# The minimum is a guarantee, not a placeholder: `license` is a PEP 639 SPDX expression and
+# `license-files` lives in `[project]`, which setuptools only understands from 77.0.1 (the
+# first published version of that series). 76.1.0 and everything below reject the metadata
+# with "project.license must be valid exactly by one definition"; 68.0.0 is the value this
+# file used to declare. Verified by building with exactly this version
+# (KUYEN_RELEASE_CANDIDATE_05, B5).
+requires = ["setuptools>=77.0.1", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -26,8 +32,13 @@ classifiers = [
 dependencies = ["jsonschema>=4.0", "PyYAML>=6.0"]
 
 [project.optional-dependencies]
+# `httpx` is not part of the base install: it belongs to the OpenViking adapter, which the
+# suite imports at module level (tests/unit/test_adapter.py, test_013_ingestion.py). Without
+# it here `pip install -e ".[dev]"` produces an environment where pytest cannot even collect
+# the suite (KUYEN_RELEASE_CANDIDATE_05, M7). `pytest-cov` is what the documented coverage
+# command needs.
 openviking = ["httpx>=0.25"]
-dev = ["pytest>=7.0", "build>=1.0", "twine>=5.0"]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "build>=1.0", "twine>=5.0", "httpx>=0.25"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

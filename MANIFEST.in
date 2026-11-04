@@ -1,0 +1,9 @@
+# Every document the README links to must exist for anyone who only receives the sdist.
+# The wheel needs none of them: they are documentation, not runtime assets.
+include *.md
+
+# Never ship build noise or a development cache in a distributed source tree.
+global-exclude *.py[cod]
+global-exclude __pycache__/*
+prune docs
+prune tests

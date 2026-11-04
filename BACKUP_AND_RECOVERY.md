@@ -25,9 +25,51 @@ backup that does not verify is never restored.
 restored = KuyenMemory.restore("./backup-kuyen", "./memory-restored")
 ```
 
-The target must be empty. Restore re-verifies the backup, copies it, then re-checks the
-registry, ledger, unit history and every version, and returns a memory whose `verify()`
-is `ok`. Restored versions keep their exact identifiers and hashes.
+The destination is validated before anything is created or copied
+(`KUYEN_RELEASE_CANDIDATE_05`, B2):
+
+| destination | result |
+|---|---|
+| does not exist | created (missing parents included) |
+| exists and is empty | **used**: the backup is copied into it |
+| exists and is not empty | **refused**, contents left byte-for-byte intact |
+| is a file | **refused** |
+| is a symbolic link | **refused** (nothing is written through an indirection) |
+| is the backup itself, lives inside it, or contains it | **refused** |
+| already holds a restore | **refused** (it is not empty) |
+
+Restore re-verifies the backup first, copies it, then re-checks the registry, ledger, unit
+history and every version, and returns a memory whose `verify()` is `ok`. Restored versions
+keep their exact identifiers and hashes. If the copy fails, only what this operation created
+is removed: an existing empty destination is left empty again and the backup is never
+modified.
+
+Restore never overwrites another store: a destination that already contains a store is not
+empty, so it is refused. Replacing a store is an operator decision, never a side effect of
+recovery.
+
+## Interrupted commits
+
+```python
+report = memory.recover()   # also available as memory.pending() as a read-only report
+```
+
+A commit publishes its manifest and only then indexes it, records it in the ledger, queues
+its projection and moves `CURRENT`. `recover()` finishes those last stages and never
+invents a version. A leftover staging directory is classified **from the store**
+(`KUYEN_RELEASE_CANDIDATE_05`, B1):
+
+| state | meaning | what recovery does |
+|---|---|---|
+| `NOT_PUBLISHED` | `INTENT.json` names a version whose manifest does not exist | the commit died before the commit point: the staging is removed |
+| `PUBLISHED_COMPLETE` | the manifest exists and every later stage already happened | the staging is removed; `actions_completed` is empty |
+| `PUBLISHED_PARTIAL` | the manifest exists and some later stage is missing | the missing stages run, then the staging is removed |
+| `UNCLASSIFIED` | no readable `INTENT.json`, or a manifest that contradicts it | **kept** and reported in `staging_kept`: recovery never destroys what it cannot attribute |
+
+If a version is published and no `CURRENT` exists, `recover()` adopts it
+(`current_adopted`) and records a `RECONCILIATION` event; with more than one candidate it
+reports the fork (`current_ambiguous`) instead of guessing. Everything is conditional on the
+absence of its own evidence, so a second `recover()` changes nothing.
 
 ## Store-only recovery
 

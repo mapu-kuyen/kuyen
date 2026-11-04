@@ -1,0 +1,98 @@
+# HEAD 5fd8777a8305097792380fceb9ff861de208147a
+# branch HEAD
+# remote https://github.com/mapu-kuyen/kuyen.git
+# --- status --short ---
+ M ANTU_LIFECYCLE.md
+ M BACKUP_AND_RECOVERY.md
+ M CHANGELOG.md
+ M DATA_MODEL.md
+ M PUBLIC_API.md
+ M README.md
+ M SECURITY.md
+ M SIDECAR.md
+ M VERSION
+ M examples/quickstart.py
+ M pyproject.toml
+ M src/kuyen/__init__.py
+ M src/kuyen/api/memory.py
+ M src/kuyen/backup/archive.py
+ M src/kuyen/canonical.py
+ M src/kuyen/errors.py
+ M src/kuyen/extraction/__init__.py
+ M src/kuyen/extraction/openai_provider.py
+ M src/kuyen/extraction/schema.py
+ M src/kuyen/ingest.py
+ M src/kuyen/lifecycle/antu.py
+ M src/kuyen/lifecycle/ledger.py
+ M src/kuyen/lifecycle/unit.py
+ M src/kuyen/projection/native.py
+ M src/kuyen/projection/openviking.py
+ M src/kuyen/projection/outbox.py
+ M src/kuyen/storage/commit.py
+ M src/kuyen/storage/registry.py
+ M src/kuyen/storage/store.py
+ M src/kuyen/storage/versions.py
+ M tests/unit/test_015_extraction.py
+?? MANIFEST.in
+?? docs/
+?? experiments/
+?? scripts/
+?? src/kuyen/extraction/config.py
+?? src/kuyen/provenance.py
+?? src/kuyen/validation/canonical.py
+?? src/kuyen/vlm.py
+?? tests/api/test_a1_canonical_validation.py
+?? tests/examples/
+?? tests/lifecycle/test_antu_contract.py
+?? tests/lifecycle/test_b1_staging_classification.py
+?? tests/lifecycle/test_m1_ledger_concurrency.py
+?? tests/lifecycle/test_m1_ledger_multiprocess.py
+?? tests/lifecycle/test_m1_m2_combined.py
+?? tests/lifecycle/test_m2_ledger_recovery.py
+?? tests/lifecycle/test_m6_append_scaling.py
+?? tests/lifecycle/test_operation_boundary.py
+?? tests/lifecycle/test_reconciliation_metadata.py
+?? tests/lifecycle/test_source_provenance.py
+?? tests/projection/
+?? tests/projection_helpers.py
+?? tests/security/test_tamper_detection.py
+?? tests/security/test_version_id_containment.py
+?? tests/storage/test_a2_stale_base_commit.py
+?? tests/storage/test_a3_backup_target.py
+?? tests/storage/test_atomic_write_boundary.py
+?? tests/storage/test_b2_restore_target.py
+?? tests/test_source_unit_disambiguation.py
+?? tests/unit/test_vlm_configuration.py
+# --- diff --stat HEAD ---
+ ANTU_LIFECYCLE.md                       |  18 +-
+ BACKUP_AND_RECOVERY.md                  |  48 ++++-
+ CHANGELOG.md                            |  51 +++++
+ DATA_MODEL.md                           |  13 ++
+ PUBLIC_API.md                           |  29 +--
+ README.md                               |   2 +-
+ SECURITY.md                             |  63 +++++-
+ SIDECAR.md                              |   2 +-
+ VERSION                                 |   2 +-
+ examples/quickstart.py                  | 331 +++++++++++++++++++++++++-------
+ pyproject.toml                          |  15 +-
+ src/kuyen/__init__.py                   |   4 +
+ src/kuyen/api/memory.py                 | 300 ++++++++++++++++++++++++-----
+ src/kuyen/backup/archive.py             |  75 +++++++-
+ src/kuyen/canonical.py                  | 118 +++++++++++-
+ src/kuyen/errors.py                     |  22 +++
+ src/kuyen/extraction/__init__.py        |  22 ++-
+ src/kuyen/extraction/openai_provider.py | 141 ++++++++++++--
+ src/kuyen/extraction/schema.py          |  84 ++++++++
+ src/kuyen/ingest.py                     |  19 +-
+ src/kuyen/lifecycle/antu.py             | 117 +++++++++--
+ src/kuyen/lifecycle/ledger.py           | 317 ++++++++++++++++++++++++++----
+ src/kuyen/lifecycle/unit.py             |  82 +++++++-
+ src/kuyen/projection/native.py          |  59 ++++--
+ src/kuyen/projection/openviking.py      |  83 +++++++-
+ src/kuyen/projection/outbox.py          |  90 ++++++---
+ src/kuyen/storage/commit.py             | 237 ++++++++++++++++++-----
+ src/kuyen/storage/registry.py           |  15 +-
+ src/kuyen/storage/store.py              |  60 +++++-
+ src/kuyen/storage/versions.py           | 126 ++++++++++--
+ tests/unit/test_015_extraction.py       |   8 +-
+ 31 files changed, 2198 insertions(+), 355 deletions(-)

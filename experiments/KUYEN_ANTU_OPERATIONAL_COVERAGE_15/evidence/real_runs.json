@@ -1,0 +1,2759 @@
+{
+  "experiment": "KUYEN_ANTU_OPERATIONAL_COVERAGE_15",
+  "model": "deepseek-flash",
+  "endpoint": "https://api.deepseek.com/v1",
+  "runs": {
+    "K004-DRY-SHORT": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-DRY-SHORT",
+      "case": "long_vs_short_short",
+      "instruction": "El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación entre las dos entidades.",
+      "version_before": "VER-8732e4ef6f56",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:42:27.020593+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 4.35,
+      "status": "VALIDATED",
+      "outcome": "NOT_EVALUATED",
+      "version_after": "VER-8732e4ef6f56",
+      "committed": false,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "target": null,
+          "expected": {
+            "from": "ent_bc056f56aab09664ec33",
+            "to": "ent_0c69f0a6a8c528a584bd",
+            "predicate": "part_of",
+            "exists": false
+          },
+          "value": {
+            "from": "ent_bc056f56aab09664ec33",
+            "to": "ent_0c69f0a6a8c528a584bd",
+            "predicate": "part_of",
+            "label": "pertenece a",
+            "polarity": "POSITIVE",
+            "modality": "FACT",
+            "scope": "document"
+          },
+          "reason": "Se declara la pertenencia del IDAE al MITECO usando entidades ya existentes y el predicado part_of, admitido por el esquema vigente.",
+          "antu_ref": "El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación entre las dos entidades",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "VALIDATED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "object_kind": "relation",
+          "object_id": "rel_58cacec323fc77cc2330",
+          "effect": "ADDED",
+          "previous": null,
+          "reason": "Se declara la pertenencia del IDAE al MITECO usando entidades ya existentes y el predicado part_of, admitido por el esquema vigente.",
+          "status": "DISCARDED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "NOT_EVALUATED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide incorporar una relación de pertenencia (part_of) entre el IDAE (ent_bc056f56aab09664ec33) y el MITECO (ent_0c69f0a6a8c528a584bd); ambas entidades existen y esa relación directa no consta, así que se emite un único ADD_RELATION, sin crear entidades nuevas.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": null,
+            "expected": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "exists": false
+            },
+            "value": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "label": "pertenece a",
+              "polarity": "POSITIVE",
+              "modality": "FACT",
+              "scope": "document"
+            },
+            "reason": "Se declara la pertenencia del IDAE al MITECO usando entidades ya existentes y el predicado part_of, admitido por el esquema vigente.",
+            "antu_ref": "El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación entre las dos entidades",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide incorporar una relación de pertenencia (part_of) entre el IDAE (ent_bc056f56aab09664ec33) y el MITECO (ent_0c69f0a6a8c528a584bd); ambas entidades existen y esa relación directa no consta, así que se emite un único ADD_RELATION, sin crear entidades nuevas.\",\"operations\":[{\"op\":\"ADD_RELATION\",\"operation_id\":\"op-1\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"El Instituto para la Diversificación y Ahorro de la Energía pertenece al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación entre las dos entidades\",\"reason\":\"Se declara la pertenencia del IDAE al MITECO usando entidades ya existentes y el predicado part_of, admitido por el esquema vigente.\",\"expected\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"exists\":false},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"label\":\"pertenece a\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\",\"scope\":\"document\"}}]}",
+      "prompt_sha256": "c0b665a8b6ebf2e3ee8b0fc9af710e4c12f3b7695a9ff3c98e86e19a96c6efbc",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 40,
+        "included": {
+          "entities": 15,
+          "relations": 14,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "pertenece",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "incorpora",
+          "relacion",
+          "entidades"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 14,
+        "relations_after": 14,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56"
+      ],
+      "finished_at": "2026-11-03T23:42:31.390567+00:00",
+      "usage": {
+        "prompt_tokens": 20941,
+        "completion_tokens": 732,
+        "cost_usd": 0.007161
+      }
+    },
+    "K004-DRY-LONG": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-DRY-LONG",
+      "case": "long_vs_short_long",
+      "instruction": "Estoy revisando la ficha de la central hidráulica reversible de Los Guájares en este KÜYEN y hay varias cosas que deben quedar registradas en una sola petición. Primero, el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente. Segundo, la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias. Tercero, añade el alias «Los Guájares» a la misma central. Son tres cambios independientes sobre entidades que ya están en el KÜYEN: no inventes entidades nuevas, no omitas ninguno y no los resumas en uno solo.",
+      "version_before": "VER-8732e4ef6f56",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:42:31.400352+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 8.75,
+      "status": "REJECTED",
+      "outcome": "INVALID_PROPOSAL",
+      "version_after": "VER-8732e4ef6f56",
+      "committed": false,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "target": {
+            "from_entity": "ent_bc056f56aab09664ec33",
+            "to_entity": "ent_0c69f0a6a8c528a584bd"
+          },
+          "expected": {
+            "from_entity": "ent_bc056f56aab09664ec33",
+            "to_entity": "ent_0c69f0a6a8c528a584bd",
+            "predicate": "part_of",
+            "existing": false
+          },
+          "value": {
+            "from": "ent_bc056f56aab09664ec33",
+            "to": "ent_0c69f0a6a8c528a584bd",
+            "predicate": "part_of",
+            "label": "adscrito a",
+            "polarity": "POSITIVE",
+            "modality": "FACT"
+          },
+          "reason": "Ambas entidades existen en el grafo (IDAE y MITECO) y no consta entre ellas ninguna relación de pertenencia; se declara como hecho documentado por la propia instrucción ANTÜ.",
+          "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "VALIDATED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "name": "Central Hidráulica Reversible Los Guajares",
+            "aliases": [
+              "Los Guajares"
+            ]
+          },
+          "value": {
+            "name": "Central Hidráulica Reversible Los Guájares",
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares"
+            ]
+          },
+          "reason": "Corrección ortográfica de la denominación de la entidad existente; la identidad canónica no cambia y la forma anterior se conserva como alias junto con el alias ya vigente.",
+          "antu_ref": "la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "VALIDATED"
+        }
+      ],
+      "applied": [],
+      "declined": [],
+      "rejected": [
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "code": "EXPECTED_VALUE_MISMATCH",
+          "message": "aliases is ['Los Guajares'] in this version, not ['Los Guajares', 'Central Hidráulica Reversible Los Guajares']",
+          "target": "ent_7e7f581782f7f38e5d7e"
+        }
+      ],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "NOT_EVALUATED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "outcome": "NOT_EVALUATED"
+        },
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "outcome": "INVALID_PROPOSAL",
+          "detail": "EXPECTED_VALUE_MISMATCH: aliases is ['Los Guajares'] in this version, not ['Los Guajares', 'Central Hidráulica Reversible Los Guajares']"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 2
+      },
+      "schema_changes": [],
+      "reasons": [
+        "EXPECTED_VALUE_MISMATCH: aliases is ['Los Guajares'] in this version, not ['Los Guajares', 'Central Hidráulica Reversible Los Guajares']"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide tres cambios independientes sobre entidades existentes: (1) registrar que el IDAE es organismo adscrito al MITECO mediante una relación de pertenencia, (2) corregir la denominación de la central a «Central Hidráulica Reversible Los Guájares» conservando la forma anterior como alias, y (3) añadir el alias «Los Guájares» a esa misma central; no se crean entidades ni se modifican datos no solicitados.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": {
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_0c69f0a6a8c528a584bd"
+            },
+            "expected": {
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "existing": false
+            },
+            "value": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "label": "adscrito a",
+              "polarity": "POSITIVE",
+              "modality": "FACT"
+            },
+            "reason": "Ambas entidades existen en el grafo (IDAE y MITECO) y no consta entre ellas ninguna relación de pertenencia; se declara como hecho documentado por la propia instrucción ANTÜ.",
+            "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-2",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guajares",
+              "aliases": [
+                "Los Guajares"
+              ]
+            },
+            "value": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "reason": "Corrección ortográfica de la denominación de la entidad existente; la identidad canónica no cambia y la forma anterior se conserva como alias junto con el alias ya vigente.",
+            "antu_ref": "la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-3",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "value": {
+              "aliases": [
+                "Los Guájares"
+              ]
+            },
+            "reason": "Alta del alias adicional «Los Guájares» sobre la misma entidad, una vez aplicada la corrección de denominación de op-2.",
+            "antu_ref": "añade el alias «Los Guájares» a la misma central",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": [
+              "op-2"
+            ]
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide tres cambios independientes sobre entidades existentes: (1) registrar que el IDAE es organismo adscrito al MITECO mediante una relación de pertenencia, (2) corregir la denominación de la central a «Central Hidráulica Reversible Los Guájares» conservando la forma anterior como alias, y (3) añadir el alias «Los Guájares» a esa misma central; no se crean entidades ni se modifican datos no solicitados.\",\"operations\":[{\"op\":\"ADD_RELATION\",\"operation_id\":\"op-1\",\"antu_ref\":\"el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente\",\"applicability\":\"APPLICABLE\",\"target\":{\"from_entity\":\"ent_bc056f56aab09664ec33\",\"to_entity\":\"ent_0c69f0a6a8c528a584bd\"},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"label\":\"adscrito a\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\"},\"expected\":{\"from_entity\":\"ent_bc056f56aab09664ec33\",\"to_entity\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"existing\":false},\"reason\":\"Ambas entidades existen en el grafo (IDAE y MITECO) y no consta entre ellas ninguna relación de pertenencia; se declara como hecho documentado por la propia instrucción ANTÜ.\"},{\"op\":\"UPDATE_ENTITY\",\"operation_id\":\"op-2\",\"antu_ref\":\"la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias\",\"applicability\":\"APPLICABLE\",\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"value\":{\"name\":\"Central Hidráulica Reversible Los Guájares\",\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\"]},\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guajares\",\"aliases\":[\"Los Guajares\"]},\"reason\":\"Corrección ortográfica de la denominación de la entidad existente; la identidad canónica no cambia y la forma anterior se conserva como alias junto con el alias ya vigente.\"},{\"op\":\"UPDATE_ENTITY\",\"operation_id\":\"op-3\",\"antu_ref\":\"añade el alias «Los Guájares» a la misma central\",\"applicability\":\"APPLICABLE\",\"depends_on\":[\"op-2\"],\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"value\":{\"aliases\":[\"Los Guájares\"]},\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guájares\",\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\"]},\"reason\":\"Alta del alias adicional «Los Guájares» sobre la misma entidad, una vez aplicada la corrección de denominación de op-2.\"}]}",
+      "prompt_sha256": "be779d89a29077f32977d2b22e6c90afb33c1f745638c5523733182b1af88f60",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 40,
+        "included": {
+          "entities": 15,
+          "relations": 14,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "estoy",
+          "revisando",
+          "ficha",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "kuyen",
+          "varias",
+          "cosas",
+          "quedar",
+          "registradas",
+          "sola",
+          "peticion",
+          "primero",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "organismo",
+          "adscrito",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "modo",
+          "entidades",
+          "existen",
+          "figurar",
+          "relacion",
+          "pertenencia",
+          "correspondiente",
+          "segundo",
+          "denominacion",
+          "aparece",
+          "tilde",
+          "nombre",
+          "correcto",
+          "entidad",
+          "existente",
+          "conservando",
+          "forma",
+          "anterior",
+          "alias",
+          "tercero",
+          "misma",
+          "tres",
+          "cambios",
+          "independientes",
+          "estan",
+          "inventes",
+          "nuevas",
+          "omitas",
+          "ninguno",
+          "resumas",
+          "solo"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 14,
+        "relations_after": 14,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56"
+      ],
+      "finished_at": "2026-11-03T23:42:40.163254+00:00",
+      "usage": {
+        "prompt_tokens": 21251,
+        "completion_tokens": 1857,
+        "cost_usd": 0.008604
+      }
+    },
+    "K004-REL": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-REL",
+      "case": "relation_addition",
+      "instruction": "El Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación de pertenencia entre ambas entidades.",
+      "version_before": "VER-8732e4ef6f56",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:43:21.589387+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 3.41,
+      "status": "COMMITTED",
+      "outcome": "COMMITTED",
+      "version_after": "VER-5baf121c2f66",
+      "committed": true,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "target": {
+            "from": "ent_bc056f56aab09664ec33",
+            "to": "ent_0c69f0a6a8c528a584bd"
+          },
+          "expected": null,
+          "value": {
+            "from": "ent_bc056f56aab09664ec33",
+            "to": "ent_0c69f0a6a8c528a584bd",
+            "predicate": "part_of",
+            "label": "forma parte de",
+            "polarity": "POSITIVE",
+            "modality": "FACT"
+          },
+          "reason": "No existe relación de pertenencia entre IDAE y MITECO en el grafo vigente; se declara part_of desde el Instituto hacia el Ministerio, en el sentido que indica la instrucción (organismo adscrito a).",
+          "antu_ref": "El Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación de pertenencia entre ambas entidades.",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "object_kind": "relation",
+          "object_id": "rel_58cacec323fc77cc2330",
+          "effect": "ADDED",
+          "previous": null,
+          "reason": "No existe relación de pertenencia entre IDAE y MITECO en el grafo vigente; se declara part_of desde el Instituto hacia el Ministerio, en el sentido que indica la instrucción (organismo adscrito a).",
+          "status": "COMMITTED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "COMMITTED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide incorporar una única relación de pertenencia: IDAE (ent_bc056f56aab09664ec33) forma parte del MITECO (ent_0c69f0a6a8c528a584bd). Esa relación no existe en el grafo visible, por lo que se agrega con predicado canónico part_of, polaridad positiva y modalidad FACT.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_0c69f0a6a8c528a584bd"
+            },
+            "expected": null,
+            "value": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "label": "forma parte de",
+              "polarity": "POSITIVE",
+              "modality": "FACT"
+            },
+            "reason": "No existe relación de pertenencia entre IDAE y MITECO en el grafo vigente; se declara part_of desde el Instituto hacia el Ministerio, en el sentido que indica la instrucción (organismo adscrito a).",
+            "antu_ref": "El Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación de pertenencia entre ambas entidades.",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide incorporar una única relación de pertenencia: IDAE (ent_bc056f56aab09664ec33) forma parte del MITECO (ent_0c69f0a6a8c528a584bd). Esa relación no existe en el grafo visible, por lo que se agrega con predicado canónico part_of, polaridad positiva y modalidad FACT.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_RELATION\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"El Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación de pertenencia entre ambas entidades.\",\"reason\":\"No existe relación de pertenencia entre IDAE y MITECO en el grafo vigente; se declara part_of desde el Instituto hacia el Ministerio, en el sentido que indica la instrucción (organismo adscrito a).\",\"target\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\"},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_0c69f0a6a8c528a584bd\",\"predicate\":\"part_of\",\"label\":\"forma parte de\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\"}}]}",
+      "prompt_sha256": "b4e34e1fe09c7d3ea120667949ebe8e5d65df2f53f491d3fa760427be6785e8b",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 40,
+        "included": {
+          "entities": 15,
+          "relations": 14,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "organismo",
+          "adscrito",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "incorpora",
+          "relacion",
+          "pertenencia",
+          "ambas",
+          "entidades"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 14,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66"
+      ],
+      "finished_at": "2026-11-03T23:43:25.019523+00:00",
+      "usage": {
+        "prompt_tokens": 21040,
+        "completion_tokens": 419,
+        "cost_usd": 0.006815
+      }
+    },
+    "K004-ENT": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-ENT",
+      "case": "entity_rename",
+      "instruction": "La denominación de la central figura sin tilde en este KÜYEN: su nombre correcto es «Central Hidráulica Reversible Los Guájares». Actualiza la denominación de la entidad que ya existe y conserva la forma anterior como alias.",
+      "version_before": "VER-5baf121c2f66",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:43:25.033766+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 4.26,
+      "status": "COMMITTED",
+      "outcome": "COMMITTED",
+      "version_after": "VER-883de544771d",
+      "committed": true,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ENTITY",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "name": "Central Hidráulica Reversible Los Guajares",
+            "aliases": [
+              "Los Guajares"
+            ]
+          },
+          "value": {
+            "name": "Central Hidráulica Reversible Los Guájares",
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares"
+            ]
+          },
+          "reason": "La identidad canónica no cambia: sólo se corrige la tilde del nombre y se conserva la denominación anterior como alias, junto con el alias ya existente «Los Guajares».",
+          "antu_ref": "su nombre correcto es «Central Hidráulica Reversible Los Guájares». Actualiza la denominación de la entidad que ya existe y conserva la forma anterior como alias",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ENTITY",
+          "object_kind": "entity",
+          "object_id": "ent_7e7f581782f7f38e5d7e",
+          "effect": "UPDATED",
+          "previous": {
+            "name": "Central Hidráulica Reversible Los Guajares",
+            "entity_type": "product",
+            "description": "Central hidráulica reversible cuya construcción autoriza la resolución recogida en el BOE, en la provincia de Granada.",
+            "aliases": [
+              "Los Guajares"
+            ],
+            "origin": null
+          },
+          "reason": "La identidad canónica no cambia: sólo se corrige la tilde del nombre y se conserva la denominación anterior como alias, junto con el alias ya existente «Los Guajares».",
+          "status": "COMMITTED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ENTITY",
+          "outcome": "COMMITTED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción corrige la denominación de la entidad existente ent_7e7f581782f7f38e5d7e («Central Hidráulica Reversible Los Guajares») a «Central Hidráulica Reversible Los Guájares» y pide conservar la forma anterior como alias; se emite un único UPDATE_ENTITY con nombre y alias, sin crear una entidad nueva.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guajares",
+              "aliases": [
+                "Los Guajares"
+              ]
+            },
+            "value": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "reason": "La identidad canónica no cambia: sólo se corrige la tilde del nombre y se conserva la denominación anterior como alias, junto con el alias ya existente «Los Guajares».",
+            "antu_ref": "su nombre correcto es «Central Hidráulica Reversible Los Guájares». Actualiza la denominación de la entidad que ya existe y conserva la forma anterior como alias",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción corrige la denominación de la entidad existente ent_7e7f581782f7f38e5d7e («Central Hidráulica Reversible Los Guajares») a «Central Hidráulica Reversible Los Guájares» y pide conservar la forma anterior como alias; se emite un único UPDATE_ENTITY con nombre y alias, sin crear una entidad nueva.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"UPDATE_ENTITY\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"su nombre correcto es «Central Hidráulica Reversible Los Guájares». Actualiza la denominación de la entidad que ya existe y conserva la forma anterior como alias\",\"reason\":\"La identidad canónica no cambia: sólo se corrige la tilde del nombre y se conserva la denominación anterior como alias, junto con el alias ya existente «Los Guajares».\",\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guajares\",\"aliases\":[\"Los Guajares\"]},\"value\":{\"name\":\"Central Hidráulica Reversible Los Guájares\",\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\"]}}]}",
+      "prompt_sha256": "cb061cdf52d6cf44462035ce0fbfff9d1ca9b134ef25d098269158b0726a765f",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "denominacion",
+          "central",
+          "figura",
+          "tilde",
+          "kuyen",
+          "nombre",
+          "correcto",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "entidad",
+          "existe",
+          "conserva",
+          "forma",
+          "anterior",
+          "alias"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [
+          "entity ent_7e7f581782f7f38e5d7e: 'Central Hidráulica Reversible Los Guajares' -> 'Central Hidráulica Reversible Los Guájares'"
+        ],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d"
+      ],
+      "finished_at": "2026-11-03T23:43:29.325304+00:00",
+      "usage": {
+        "prompt_tokens": 21604,
+        "completion_tokens": 656,
+        "cost_usd": 0.007268
+      }
+    },
+    "K004-ATTR-DECL": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-ATTR-DECL",
+      "case": "attribute_declared_and_set",
+      "instruction": "Declara en las entidades de tipo product el atributo estado_operativo, de tipo texto, y ponlo en «operativa» para la Central Hidráulica Reversible Los Guájares.",
+      "version_before": "VER-883de544771d",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:43:54.621630+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 3.97,
+      "status": "COMMITTED",
+      "outcome": "COMMITTED",
+      "version_after": "VER-b178df431e88",
+      "committed": true,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "target": null,
+          "expected": {
+            "entity_type": "product",
+            "field": {
+              "name": "estado_operativo",
+              "value_type": "text"
+            }
+          },
+          "value": {
+            "entity_type": "product",
+            "field": {
+              "name": "estado_operativo",
+              "label": "estado_operativo",
+              "value_type": "text",
+              "required": false
+            }
+          },
+          "reason": "La instrucción declara un atributo nuevo sobre el tipo de entidad product, que existe en el esquema visible (profile proyecto-v1) y aún no declara ese campo.",
+          "antu_ref": "Declara en las entidades de tipo product el atributo estado_operativo, de tipo texto",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "attribute": "estado_operativo",
+            "value": null
+          },
+          "value": {
+            "attribute": "estado_operativo",
+            "value": "operativa"
+          },
+          "reason": "La entidad product ent_7e7f581782f7f38e5d7e es la Central Hidráulica Reversible Los Guájares; se fija el valor del atributo recién declarado, que todavía no tiene valor en la ficha.",
+          "antu_ref": "ponlo en «operativa» para la Central Hidráulica Reversible Los Guájares",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [
+            "op-1"
+          ],
+          "status": "COMMITTED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "object_kind": "field",
+          "object_id": "product.estado_operativo",
+          "effect": "ADDED",
+          "previous": null,
+          "reason": "La instrucción declara un atributo nuevo sobre el tipo de entidad product, que existe en el esquema visible (profile proyecto-v1) y aún no declara ese campo.",
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "object_kind": "entity",
+          "object_id": "ent_7e7f581782f7f38e5d7e",
+          "effect": "ATTRIBUTE_UPDATED",
+          "previous": {
+            "attribute": "estado_operativo",
+            "value": null,
+            "origin": null
+          },
+          "reason": "La entidad product ent_7e7f581782f7f38e5d7e es la Central Hidráulica Reversible Los Guájares; se fija el valor del atributo recién declarado, que todavía no tiene valor en la ficha.",
+          "status": "COMMITTED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "outcome": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "outcome": "COMMITTED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 2
+      },
+      "schema_changes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "entity_type": "product",
+          "field": "estado_operativo",
+          "previous": null,
+          "current": {
+            "name": "estado_operativo",
+            "value_type": "text",
+            "required": false,
+            "label": "estado_operativo",
+            "description": null,
+            "declared_by": "ANTU_INSTRUCTION"
+          },
+          "antu_id": "K004-ATTR-DECL"
+        }
+      ],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide dos cambios de estructura y datos: declarar el atributo estado_operativo (tipo texto) en el tipo de entidad product, y asignarle el valor «operativa» a la entidad product Central Hidráulica Reversible Los Guájares (ent_7e7f581782f7f38e5d7e); ambos son aplicables con los permisos concedidos (SCHEMA_WRITE y DATA_WRITE).",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_FIELD",
+            "target": null,
+            "expected": {
+              "entity_type": "product",
+              "field": {
+                "name": "estado_operativo",
+                "value_type": "text"
+              }
+            },
+            "value": {
+              "entity_type": "product",
+              "field": {
+                "name": "estado_operativo",
+                "label": "estado_operativo",
+                "value_type": "text",
+                "required": false
+              }
+            },
+            "reason": "La instrucción declara un atributo nuevo sobre el tipo de entidad product, que existe en el esquema visible (profile proyecto-v1) y aún no declara ese campo.",
+            "antu_ref": "Declara en las entidades de tipo product el atributo estado_operativo, de tipo texto",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-2",
+            "op": "UPDATE_ATTRIBUTE",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "attribute": "estado_operativo",
+              "value": null
+            },
+            "value": {
+              "attribute": "estado_operativo",
+              "value": "operativa"
+            },
+            "reason": "La entidad product ent_7e7f581782f7f38e5d7e es la Central Hidráulica Reversible Los Guájares; se fija el valor del atributo recién declarado, que todavía no tiene valor en la ficha.",
+            "antu_ref": "ponlo en «operativa» para la Central Hidráulica Reversible Los Guájares",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": [
+              "op-1"
+            ]
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide dos cambios de estructura y datos: declarar el atributo estado_operativo (tipo texto) en el tipo de entidad product, y asignarle el valor «operativa» a la entidad product Central Hidráulica Reversible Los Guájares (ent_7e7f581782f7f38e5d7e); ambos son aplicables con los permisos concedidos (SCHEMA_WRITE y DATA_WRITE).\",\"operations\":[{\"op\":\"ADD_FIELD\",\"operation_id\":\"op-1\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"Declara en las entidades de tipo product el atributo estado_operativo, de tipo texto\",\"reason\":\"La instrucción declara un atributo nuevo sobre el tipo de entidad product, que existe en el esquema visible (profile proyecto-v1) y aún no declara ese campo.\",\"expected\":{\"entity_type\":\"product\",\"field\":{\"name\":\"estado_operativo\",\"value_type\":\"text\"}},\"value\":{\"entity_type\":\"product\",\"field\":{\"name\":\"estado_operativo\",\"label\":\"estado_operativo\",\"value_type\":\"text\",\"required\":false}}},{\"op\":\"UPDATE_ATTRIBUTE\",\"operation_id\":\"op-2\",\"applicability\":\"APPLICABLE\",\"depends_on\":[\"op-1\"],\"antu_ref\":\"ponlo en «operativa» para la Central Hidráulica Reversible Los Guájares\",\"reason\":\"La entidad product ent_7e7f581782f7f38e5d7e es la Central Hidráulica Reversible Los Guájares; se fija el valor del atributo recién declarado, que todavía no tiene valor en la ficha.\",\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"expected\":{\"attribute\":\"estado_operativo\",\"value\":null},\"value\":{\"attribute\":\"estado_operativo\",\"value\":\"operativa\"}}]}",
+      "prompt_sha256": "8c6cb8a74d5365b9b499ceb0b26d906a61866c21ef151453431c46ab510289a5",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "declara",
+          "entidades",
+          "tipo",
+          "product",
+          "atributo",
+          "estado_operativo",
+          "texto",
+          "ponlo",
+          "operativa",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88"
+      ],
+      "finished_at": "2026-11-03T23:43:58.630624+00:00",
+      "usage": {
+        "prompt_tokens": 21905,
+        "completion_tokens": 774,
+        "cost_usd": 0.0075
+      }
+    },
+    "K004-ATTR": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-ATTR",
+      "case": "attribute_correction",
+      "instruction": "El estado operativo de la Central Hidráulica Reversible Los Guájares no es «operativa» sino «en mantenimiento»: corrige ese atributo de la ficha.",
+      "version_before": "VER-b178df431e88",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:43:58.650917+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 2.73,
+      "status": "COMMITTED",
+      "outcome": "COMMITTED",
+      "version_after": "VER-05288440f2d2",
+      "committed": true,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ATTRIBUTE",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "attribute": "estado_operativo",
+            "value": "operativa"
+          },
+          "value": {
+            "attribute": "estado_operativo",
+            "value": "en mantenimiento"
+          },
+          "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) tiene hoy metadata.estado_operativo = «operativa»; el campo estado_operativo ya existe en el esquema del tipo product, por lo que no hace falta ADD_FIELD. La identidad canónica no cambia.",
+          "antu_ref": "El estado operativo de la Central Hidráulica Reversible Los Guájares no es «operativa» sino «en mantenimiento»: corrige ese atributo de la ficha.",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ATTRIBUTE",
+          "object_kind": "entity",
+          "object_id": "ent_7e7f581782f7f38e5d7e",
+          "effect": "ATTRIBUTE_UPDATED",
+          "previous": {
+            "attribute": "estado_operativo",
+            "value": "operativa",
+            "origin": null
+          },
+          "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) tiene hoy metadata.estado_operativo = «operativa»; el campo estado_operativo ya existe en el esquema del tipo product, por lo que no hace falta ADD_FIELD. La identidad canónica no cambia.",
+          "status": "COMMITTED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ATTRIBUTE",
+          "outcome": "COMMITTED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción corrige un atributo de ficha (no un hecho): el estado_operativo de la Central Hidráulica Reversible Los Guájares pasa de «operativa» a «en mantenimiento»; el campo ya está declarado en el tipo product, así que sólo emito un UPDATE_ATTRIBUTE.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "UPDATE_ATTRIBUTE",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "attribute": "estado_operativo",
+              "value": "operativa"
+            },
+            "value": {
+              "attribute": "estado_operativo",
+              "value": "en mantenimiento"
+            },
+            "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) tiene hoy metadata.estado_operativo = «operativa»; el campo estado_operativo ya existe en el esquema del tipo product, por lo que no hace falta ADD_FIELD. La identidad canónica no cambia.",
+            "antu_ref": "El estado operativo de la Central Hidráulica Reversible Los Guájares no es «operativa» sino «en mantenimiento»: corrige ese atributo de la ficha.",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción corrige un atributo de ficha (no un hecho): el estado_operativo de la Central Hidráulica Reversible Los Guájares pasa de «operativa» a «en mantenimiento»; el campo ya está declarado en el tipo product, así que sólo emito un UPDATE_ATTRIBUTE.\",\"operations\":[{\"op\":\"UPDATE_ATTRIBUTE\",\"operation_id\":\"op-1\",\"antu_ref\":\"El estado operativo de la Central Hidráulica Reversible Los Guájares no es «operativa» sino «en mantenimiento»: corrige ese atributo de la ficha.\",\"applicability\":\"APPLICABLE\",\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"expected\":{\"attribute\":\"estado_operativo\",\"value\":\"operativa\"},\"value\":{\"attribute\":\"estado_operativo\",\"value\":\"en mantenimiento\"},\"reason\":\"La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) tiene hoy metadata.estado_operativo = «operativa»; el campo estado_operativo ya existe en el esquema del tipo product, por lo que no hace falta ADD_FIELD. La identidad canónica no cambia.\"}]}",
+      "prompt_sha256": "a227fb8387fec074a1d93ddc1ae3e7d7a4397d37a7a77169f0030e162cc57c04",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "estado",
+          "operativo",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "operativa",
+          "sino",
+          "mantenimiento",
+          "atributo",
+          "ficha"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [
+          "attribute ent_7e7f581782f7f38e5d7e.estado_operativo: 'operativa' -> 'en mantenimiento'"
+        ],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:44:01.419311+00:00",
+      "usage": {
+        "prompt_tokens": 22185,
+        "completion_tokens": 406,
+        "cost_usd": 0.007143
+      }
+    },
+    "K004-SAT": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-SAT",
+      "case": "already_satisfied",
+      "instruction": "Confirma que el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares.",
+      "version_before": "VER-05288440f2d2",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:44:01.441615+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 4.31,
+      "status": "REJECTED",
+      "outcome": "INVALID_PROPOSAL",
+      "version_after": "VER-05288440f2d2",
+      "committed": false,
+      "operations": [],
+      "applied": [],
+      "declined": [],
+      "rejected": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "code": "APPLICABILITY_CLAIM_UNSUPPORTED",
+          "message": "this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied",
+          "target": null
+        }
+      ],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "INVALID_PROPOSAL",
+          "detail": "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied"
+        }
+      ],
+      "applicability": {},
+      "schema_changes": [],
+      "reasons": [
+        "PROPOSAL_STATUS_CONTRADICTED: the proposal says NO_CHANGES and declares operations; the operations were validated instead of being discarded",
+        "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide confirmar que el IDAE financia la Central Hidráulica Reversible Los Guájares; esa relación ya existe en el grafo vigente con polaridad positiva, por lo que no hay nada que modificar y la operación se declara ALREADY_SATISFIED.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": null,
+            "expected": {
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_7e7f581782f7f38e5d7e",
+              "predicate": "funds",
+              "polarity": "POSITIVE"
+            },
+            "value": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_7e7f581782f7f38e5d7e",
+              "predicate": "funds",
+              "label": "financia",
+              "polarity": "POSITIVE",
+              "modality": "FACT"
+            },
+            "reason": "",
+            "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "La relación funds (financia) desde ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) hacia ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) ya existe en rel_a71fc2916e299c91200e, con predicate funds y polaridad POSITIVE.",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": [
+          "status NO_CHANGES contradicts the operations the proposal declares"
+        ]
+      },
+      "raw_response": "{\"status\":\"NO_CHANGES\",\"interpretation\":\"La instrucción pide confirmar que el IDAE financia la Central Hidráulica Reversible Los Guájares; esa relación ya existe en el grafo vigente con polaridad positiva, por lo que no hay nada que modificar y la operación se declara ALREADY_SATISFIED.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_RELATION\",\"applicability\":\"ALREADY_SATISFIED\",\"antu_ref\":\"el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares\",\"explanation\":\"La relación funds (financia) desde ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) hacia ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) ya existe en rel_a71fc2916e299c91200e, con predicate funds y polaridad POSITIVE.\",\"expected\":{\"from_entity\":\"ent_bc056f56aab09664ec33\",\"to_entity\":\"ent_7e7f581782f7f38e5d7e\",\"predicate\":\"funds\",\"polarity\":\"POSITIVE\"},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_7e7f581782f7f38e5d7e\",\"predicate\":\"funds\",\"label\":\"financia\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\"}}]}",
+      "prompt_sha256": "99b731b9c66b85000f9707d9ba2d0c68c8e9a9ac598f899f741b1078c5085f79",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "confirma",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "financia",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:44:05.796086+00:00",
+      "usage": {
+        "prompt_tokens": 22450,
+        "completion_tokens": 786,
+        "cost_usd": 0.007678
+      }
+    },
+    "K004-CLAR": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-CLAR",
+      "case": "ambiguous_target",
+      "instruction": "Corrige la denominación de la estación de este KÜYEN.",
+      "version_before": "VER-05288440f2d2",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:44:05.818769+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 4.68,
+      "status": "CLARIFICATION_REQUIRED",
+      "outcome": "NEEDS_CLARIFICATION",
+      "version_after": "VER-05288440f2d2",
+      "committed": false,
+      "operations": [],
+      "applied": [],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": null,
+          "op": null,
+          "outcome": "NEEDS_CLARIFICATION"
+        }
+      ],
+      "applicability": {},
+      "schema_changes": [],
+      "reasons": [
+        "the instruction is ambiguous"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "CLARIFICATION_REQUIRED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide «corregir la denominación de la estación», pero no indica qué entidad es «la estación» ni cuál es la denominación correcta: en este KÜYEN hay al menos tres candidatas con nombre de estación/central (ent_4bc5e39a7373e27e1ca3 «subestación de Los Guájares», ent_df41e40361d0bee40b16 «subestación Mizán» y ent_7e7f581782f7f38e5d7e «Central Hidráulica Reversible Los Guájares»), y no hay ningún valor nuevo que aplicar, por lo que no emito cambios sobre entidades.",
+        "clarification": {
+          "question": "the instruction is ambiguous",
+          "reason": "no detail provided"
+        },
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guájares"
+            },
+            "value": {
+              "name": "Central Hidráulica Reversible Los Guájares"
+            },
+            "reason": "",
+            "antu_ref": "Corrige la denominación de la estación de este KÜYEN.",
+            "affected": [],
+            "applicability": "NEEDS_CLARIFICATION",
+            "explanation": "No se puede determinar el objetivo ni el valor: «la estación» puede referirse a ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares), a ent_4bc5e39a7373e27e1ca3 («subestación de Los Guájares») o a ent_df41e40361d0bee40b16 («subestación Mizán»), y la instrucción no proporciona la denominación corregida. ¿A cuál de esas entidades se refiere y cuál es la denominación exacta que debe figurar como nombre canónico?",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"CLARIFICATION_REQUIRED\",\"interpretation\":\"La instrucción pide «corregir la denominación de la estación», pero no indica qué entidad es «la estación» ni cuál es la denominación correcta: en este KÜYEN hay al menos tres candidatas con nombre de estación/central (ent_4bc5e39a7373e27e1ca3 «subestación de Los Guájares», ent_df41e40361d0bee40b16 «subestación Mizán» y ent_7e7f581782f7f38e5d7e «Central Hidráulica Reversible Los Guájares»), y no hay ningún valor nuevo que aplicar, por lo que no emito cambios sobre entidades.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"UPDATE_ENTITY\",\"applicability\":\"NEEDS_CLARIFICATION\",\"antu_ref\":\"Corrige la denominación de la estación de este KÜYEN.\",\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guájares\"},\"value\":{\"name\":\"Central Hidráulica Reversible Los Guájares\"},\"explanation\":\"No se puede determinar el objetivo ni el valor: «la estación» puede referirse a ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares), a ent_4bc5e39a7373e27e1ca3 («subestación de Los Guájares») o a ent_df41e40361d0bee40b16 («subestación Mizán»), y la instrucción no proporciona la denominación corregida. ¿A cuál de esas entidades se refiere y cuál es la denominación exacta que debe figurar como nombre canónico?\"}]}",
+      "prompt_sha256": "02d35df2d5ded2c7fd964832d8a1d022494d3f93b41abbbb49a085271de12e5b",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "denominacion",
+          "estacion",
+          "kuyen"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:44:10.537328+00:00",
+      "usage": {
+        "prompt_tokens": 22413,
+        "completion_tokens": 680,
+        "cost_usd": 0.00754
+      }
+    },
+    "K004-SAT2": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-SAT2",
+      "case": "already_satisfied_after_fix",
+      "instruction": "Confirma que el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares.",
+      "version_before": "VER-05288440f2d2",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:45:02.256875+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 8.18,
+      "status": "NO_CHANGES",
+      "outcome": "ALREADY_SATISFIED",
+      "version_after": "VER-05288440f2d2",
+      "committed": false,
+      "operations": [],
+      "applied": [],
+      "declined": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "applicability": "ALREADY_SATISFIED",
+          "explanation": "La relación ya está declarada en el grafo: rel_a71fc2916e299c91200e une ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) con ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) mediante el predicado funds, etiqueta «financia» y polaridad POSITIVE.",
+          "verified": true,
+          "target": null,
+          "detail": "relation rel_a71fc2916e299c91200e already states it between those entities"
+        }
+      ],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "ALREADY_SATISFIED",
+          "verified": true,
+          "detail": "La relación ya está declarada en el grafo: rel_a71fc2916e299c91200e une ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) con ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) mediante el predicado funds, etiqueta «financia» y polaridad POSITIVE."
+        }
+      ],
+      "applicability": {
+        "ALREADY_SATISFIED": 1
+      },
+      "schema_changes": [],
+      "reasons": [
+        "PROPOSAL_STATUS_CONTRADICTED: the proposal says NO_CHANGES and declares operations; the operations were validated instead of being discarded",
+        "every operation was declined with a verifiable reason",
+        "ALREADY_SATISFIED: La relación ya está declarada en el grafo: rel_a71fc2916e299c91200e une ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) con ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) mediante el predicado funds, etiqueta «financia» y polaridad POSITIVE."
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "Se pide confirmar que el IDAE financia la Central Hidráulica Reversible Los Guájares; esa relación ya existe en el grafo vigente (rel_a71fc2916e299c91200e, predicado funds, de ent_bc056f56aab09664ec33 a ent_7e7f581782f7f38e5d7e, polaridad POSITIVE, con evidencia ev_15467959d3dc32ddd15e), por lo que no se declara ninguna relación nueva ni se modifica dato alguno.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": null,
+            "expected": {
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_7e7f581782f7f38e5d7e",
+              "predicate": "funds",
+              "polarity": "POSITIVE",
+              "relation_id": "rel_a71fc2916e299c91200e"
+            },
+            "value": {
+              "from": "ent_bc056f56aab09664ec33",
+              "to": "ent_7e7f581782f7f38e5d7e",
+              "predicate": "funds",
+              "label": "financia",
+              "polarity": "POSITIVE",
+              "modality": "UNKNOWN"
+            },
+            "reason": "",
+            "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "La relación ya está declarada en el grafo: rel_a71fc2916e299c91200e une ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) con ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) mediante el predicado funds, etiqueta «financia» y polaridad POSITIVE.",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": [
+          "status NO_CHANGES contradicts the operations the proposal declares"
+        ]
+      },
+      "raw_response": "{\"status\":\"NO_CHANGES\",\"interpretation\":\"Se pide confirmar que el IDAE financia la Central Hidráulica Reversible Los Guájares; esa relación ya existe en el grafo vigente (rel_a71fc2916e299c91200e, predicado funds, de ent_bc056f56aab09664ec33 a ent_7e7f581782f7f38e5d7e, polaridad POSITIVE, con evidencia ev_15467959d3dc32ddd15e), por lo que no se declara ninguna relación nueva ni se modifica dato alguno.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_RELATION\",\"applicability\":\"ALREADY_SATISFIED\",\"antu_ref\":\"el Instituto para la Diversificación y Ahorro de la Energía financia la Central Hidráulica Reversible Los Guájares\",\"explanation\":\"La relación ya está declarada en el grafo: rel_a71fc2916e299c91200e une ent_bc056f56aab09664ec33 (Instituto para la Diversificación y Ahorro de la Energía) con ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) mediante el predicado funds, etiqueta «financia» y polaridad POSITIVE.\",\"expected\":{\"from_entity\":\"ent_bc056f56aab09664ec33\",\"to_entity\":\"ent_7e7f581782f7f38e5d7e\",\"predicate\":\"funds\",\"polarity\":\"POSITIVE\",\"relation_id\":\"rel_a71fc2916e299c91200e\"},\"value\":{\"from\":\"ent_bc056f56aab09664ec33\",\"to\":\"ent_7e7f581782f7f38e5d7e\",\"predicate\":\"funds\",\"label\":\"financia\",\"polarity\":\"POSITIVE\",\"modality\":\"UNKNOWN\"}}]}",
+      "prompt_sha256": "73dfc1318dbc2bf8a2fddf5aa3a289daa546a9e44fece3a027a9905e72839e17",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "confirma",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "financia",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:45:10.480344+00:00",
+      "usage": {
+        "prompt_tokens": 22451,
+        "completion_tokens": 1479,
+        "cost_usd": 0.00851
+      }
+    },
+    "K004-LONG2": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-LONG2",
+      "case": "long_instruction_after_fix",
+      "instruction": "Estoy revisando la ficha de la central hidráulica reversible de Los Guájares en este KÜYEN y hay varias cosas que deben quedar registradas en una sola petición. Primero, el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente. Segundo, la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias. Tercero, añade el alias «Los Guájares» a la misma central. Son tres cambios independientes sobre entidades que ya están en el KÜYEN: no inventes entidades nuevas, no omitas ninguno y no los resumas en uno solo.",
+      "version_before": "VER-05288440f2d2",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:45:10.502477+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 12.23,
+      "status": "REJECTED",
+      "outcome": "INVALID_PROPOSAL",
+      "version_after": "VER-05288440f2d2",
+      "committed": false,
+      "operations": [
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares"
+            ]
+          },
+          "value": {
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares",
+              "Los Guájares"
+            ]
+          },
+          "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) no contiene todavía el alias con tilde «Los Guájares»; se agrega conservando los alias existentes y sin crear ninguna entidad nueva.",
+          "antu_ref": "añade el alias «Los Guájares» a la misma central",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "VALIDATED"
+        }
+      ],
+      "applied": [],
+      "declined": [
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "applicability": "ALREADY_SATISFIED",
+          "explanation": "La entidad ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» (con tilde) y la forma anterior «Central Hidráulica Reversible Los Guajares» ya consta en sus aliases; no procede ningún cambio de denominación.",
+          "verified": true,
+          "target": "ent_7e7f581782f7f38e5d7e",
+          "detail": "ent_7e7f581782f7f38e5d7e already matches the request"
+        }
+      ],
+      "rejected": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "code": "APPLICABILITY_CLAIM_UNSUPPORTED",
+          "message": "this KÜYEN cannot confirm that the request is already satisfied: rel_58cacec323fc77cc2330.retracted is None, not False",
+          "target": "rel_58cacec323fc77cc2330"
+        }
+      ],
+      "outcomes": [
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "outcome": "NOT_EVALUATED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "outcome": "ALREADY_SATISFIED",
+          "verified": true,
+          "detail": "La entidad ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» (con tilde) y la forma anterior «Central Hidráulica Reversible Los Guajares» ya consta en sus aliases; no procede ningún cambio de denominación."
+        },
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "INVALID_PROPOSAL",
+          "detail": "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: rel_58cacec323fc77cc2330.retracted is None, not False"
+        }
+      ],
+      "applicability": {
+        "ALREADY_SATISFIED": 1,
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [
+        "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: rel_58cacec323fc77cc2330.retracted is None, not False"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide tres cambios independientes: (1) la relación de pertenencia IDAE → MITECO, que ya existe en el grafo como part_of (rel_58cacec323fc77cc2330), por lo que se declara ALREADY_SATISFIED; (2) la corrección de la denominación de la central, cuyo nombre ya es «Central Hidráulica Reversible Los Guájares» y cuya forma anterior ya figura como alias, por lo que también está ALREADY_SATISFIED; y (3) la adición del alias «Los Guájares» a la misma entidad product, único cambio efectivo, emitido como UPDATE_ENTITY sobre ent_7e7f581782f7f38e5d7e.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": {
+              "relation_id": "rel_58cacec323fc77cc2330"
+            },
+            "expected": {
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_0c69f0a6a8c528a584bd",
+              "predicate": "part_of",
+              "polarity": "POSITIVE",
+              "retracted": false
+            },
+            "value": {},
+            "reason": "",
+            "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "La relación de pertenencia ya existe en el grafo vigente: rel_58cacec323fc77cc2330 va de ent_bc056f56aab09664ec33 (IDAE) a ent_0c69f0a6a8c528a584bd (MITECO) con predicate part_of, polarity POSITIVE y retracted=false.",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-2",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "value": {},
+            "reason": "",
+            "antu_ref": "la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "La entidad ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» (con tilde) y la forma anterior «Central Hidráulica Reversible Los Guajares» ya consta en sus aliases; no procede ningún cambio de denominación.",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-3",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "value": {
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares",
+                "Los Guájares"
+              ]
+            },
+            "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) no contiene todavía el alias con tilde «Los Guájares»; se agrega conservando los alias existentes y sin crear ninguna entidad nueva.",
+            "antu_ref": "añade el alias «Los Guájares» a la misma central",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\n  \"status\": \"PROPOSED\",\n  \"interpretation\": \"La instrucción pide tres cambios independientes: (1) la relación de pertenencia IDAE → MITECO, que ya existe en el grafo como part_of (rel_58cacec323fc77cc2330), por lo que se declara ALREADY_SATISFIED; (2) la corrección de la denominación de la central, cuyo nombre ya es «Central Hidráulica Reversible Los Guájares» y cuya forma anterior ya figura como alias, por lo que también está ALREADY_SATISFIED; y (3) la adición del alias «Los Guájares» a la misma entidad product, único cambio efectivo, emitido como UPDATE_ENTITY sobre ent_7e7f581782f7f38e5d7e.\",\n  \"operations\": [\n    {\n      \"operation_id\": \"op-1\",\n      \"op\": \"ADD_RELATION\",\n      \"applicability\": \"ALREADY_SATISFIED\",\n      \"antu_ref\": \"el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente\",\n      \"explanation\": \"La relación de pertenencia ya existe en el grafo vigente: rel_58cacec323fc77cc2330 va de ent_bc056f56aab09664ec33 (IDAE) a ent_0c69f0a6a8c528a584bd (MITECO) con predicate part_of, polarity POSITIVE y retracted=false.\",\n      \"target\": {\n        \"relation_id\": \"rel_58cacec323fc77cc2330\"\n      },\n      \"expected\": {\n        \"from_entity\": \"ent_bc056f56aab09664ec33\",\n        \"to_entity\": \"ent_0c69f0a6a8c528a584bd\",\n        \"predicate\": \"part_of\",\n        \"polarity\": \"POSITIVE\",\n        \"retracted\": false\n      }\n    },\n    {\n      \"operation_id\": \"op-2\",\n      \"op\": \"UPDATE_ENTITY\",\n      \"applicability\": \"ALREADY_SATISFIED\",\n      \"antu_ref\": \"la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias\",\n      \"explanation\": \"La entidad ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» (con tilde) y la forma anterior «Central Hidráulica Reversible Los Guajares» ya consta en sus aliases; no procede ningún cambio de denominación.\",\n      \"target\": {\n        \"entity_id\": \"ent_7e7f581782f7f38e5d7e\"\n      },\n      \"expected\": {\n        \"name\": \"Central Hidráulica Reversible Los Guájares\",\n        \"aliases\": [\"Los Guajares\", \"Central Hidráulica Reversible Los Guajares\"]\n      }\n    },\n    {\n      \"operation_id\": \"op-3\",\n      \"op\": \"UPDATE_ENTITY\",\n      \"applicability\": \"APPLICABLE\",\n      \"antu_ref\": \"añade el alias «Los Guájares» a la misma central\",\n      \"reason\": \"La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) no contiene todavía el alias con tilde «Los Guájares»; se agrega conservando los alias existentes y sin crear ninguna entidad nueva.\",\n      \"target\": {\n        \"entity_id\": \"ent_7e7f581782f7f38e5d7e\"\n      },\n      \"expected\": {\n        \"aliases\": [\"Los Guajares\", \"Central Hidráulica Reversible Los Guajares\"]\n      },\n      \"value\": {\n        \"aliases\": [\"Los Guajares\", \"Central Hidráulica Reversible Los Guajares\", \"Los Guájares\"]\n      }\n    }\n  ]\n}",
+      "prompt_sha256": "dc44465fa3b65cdbb9002ebc264226fda73a2b569600d63930e254162a3a254b",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "estoy",
+          "revisando",
+          "ficha",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "kuyen",
+          "varias",
+          "cosas",
+          "quedar",
+          "registradas",
+          "sola",
+          "peticion",
+          "primero",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "organismo",
+          "adscrito",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "modo",
+          "entidades",
+          "existen",
+          "figurar",
+          "relacion",
+          "pertenencia",
+          "correspondiente",
+          "segundo",
+          "denominacion",
+          "aparece",
+          "tilde",
+          "nombre",
+          "correcto",
+          "entidad",
+          "existente",
+          "conservando",
+          "forma",
+          "anterior",
+          "alias",
+          "tercero",
+          "misma",
+          "tres",
+          "cambios",
+          "independientes",
+          "estan",
+          "inventes",
+          "nuevas",
+          "omitas",
+          "ninguno",
+          "resumas",
+          "solo"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:45:22.782181+00:00",
+      "usage": {
+        "prompt_tokens": 22782,
+        "completion_tokens": 2742,
+        "cost_usd": 0.010125
+      }
+    },
+    "K004-LONG3": {
+      "kuyen": "KUYEN-004",
+      "antu_id": "K004-LONG3",
+      "case": "long_instruction_after_claim_fix",
+      "instruction": "Estoy revisando la ficha de la central hidráulica reversible de Los Guájares en este KÜYEN y hay varias cosas que deben quedar registradas en una sola petición. Primero, el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente. Segundo, la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias. Tercero, añade el alias «Los Guájares» a la misma central. Son tres cambios independientes sobre entidades que ya están en el KÜYEN: no inventes entidades nuevas, no omitas ninguno y no los resumas en uno solo.",
+      "version_before": "VER-05288440f2d2",
+      "dry_run": true,
+      "started_at": "2026-11-03T23:47:40.681823+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 9.54,
+      "status": "REJECTED",
+      "outcome": "INVALID_PROPOSAL",
+      "version_after": "VER-05288440f2d2",
+      "committed": false,
+      "operations": [
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "target": {
+            "entity_id": "ent_7e7f581782f7f38e5d7e"
+          },
+          "expected": {
+            "name": "Central Hidráulica Reversible Los Guájares",
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares"
+            ]
+          },
+          "value": {
+            "aliases": [
+              "Los Guajares",
+              "Central Hidráulica Reversible Los Guajares",
+              "Los Guájares"
+            ]
+          },
+          "reason": "El alias «Los Guájares» (con tilde) no figura entre los alias vigentes de la central; se añade sin alterar la identidad canónica ni el nombre.",
+          "antu_ref": "añade el alias «Los Guájares» a la misma central",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "VALIDATED"
+        }
+      ],
+      "applied": [],
+      "declined": [],
+      "rejected": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "code": "APPLICABILITY_CLAIM_UNSUPPORTED",
+          "message": "this KÜYEN cannot confirm that the request is already satisfied: no relation in this version states what it claims is already there",
+          "target": null
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "code": "APPLICABILITY_CLAIM_UNSUPPORTED",
+          "message": "this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied",
+          "target": null
+        }
+      ],
+      "outcomes": [
+        {
+          "operation_id": "op-3",
+          "op": "UPDATE_ENTITY",
+          "outcome": "NOT_EVALUATED"
+        },
+        {
+          "operation_id": "op-1",
+          "op": "ADD_RELATION",
+          "outcome": "INVALID_PROPOSAL",
+          "detail": "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: no relation in this version states what it claims is already there"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ENTITY",
+          "outcome": "INVALID_PROPOSAL",
+          "detail": "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 1
+      },
+      "schema_changes": [],
+      "reasons": [
+        "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: no relation in this version states what it claims is already there",
+        "APPLICABILITY_CLAIM_UNSUPPORTED: this KÜYEN cannot confirm that the request is already satisfied: the operation does not identify what is already satisfied"
+      ],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide tres cambios independientes: (1) la relación de pertenencia IDAE → MITECO, que ya existe en el grafo (rel_58cacec323fc77cc2330, part_of, INSTRUCTED por ANTÜ K004-REL); (2) la corrección de la denominación de la central, cuyo nombre vigente ya es «Central Hidráulica Reversible Los Guájares» y que ya conserva la forma anterior «Central Hidráulica Reversible Los Guajares» como alias; (3) añadir el alias «Los Guájares» (con tilde), que no figura todavía. Sólo el tercero requiere escritura, así que emito una única operación de actualización de la entidad existente ent_7e7f581782f7f38e5d7e, sin crear entidades nuevas, y declaro satisfechos los otros dos con su referencia verificable.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_RELATION",
+            "target": null,
+            "expected": {
+              "predicate": "part_of",
+              "from_entity": "ent_bc056f56aab09664ec33",
+              "to_entity": "ent_0c69f0a6a8c528a584bd",
+              "retracted": false
+            },
+            "value": {},
+            "reason": "Registrar la relación de pertenencia solicitada; ya está presente, por lo que no se duplica.",
+            "antu_ref": "el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "La relación de pertenencia ya existe en el grafo vigente: rel_58cacec323fc77cc2330, predicate part_of, polarity POSITIVE, de ent_bc056f56aab09664ec33 (IDAE) a ent_0c69f0a6a8c528a584bd (MITECO), no retirada y originada por la ANTÜ K004-REL.",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-2",
+            "op": "UPDATE_ENTITY",
+            "target": null,
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "value": {},
+            "reason": "La corrección de denominación ya está aplicada y la forma anterior se conserva como alias.",
+            "antu_ref": "la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias",
+            "affected": [],
+            "applicability": "ALREADY_SATISFIED",
+            "explanation": "ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» y conserva «Central Hidráulica Reversible Los Guajares» en aliases, según la revisión de la ANTÜ K004-ENT; la identidad canónica no cambia.",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-3",
+            "op": "UPDATE_ENTITY",
+            "target": {
+              "entity_id": "ent_7e7f581782f7f38e5d7e"
+            },
+            "expected": {
+              "name": "Central Hidráulica Reversible Los Guájares",
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares"
+              ]
+            },
+            "value": {
+              "aliases": [
+                "Los Guajares",
+                "Central Hidráulica Reversible Los Guajares",
+                "Los Guájares"
+              ]
+            },
+            "reason": "El alias «Los Guájares» (con tilde) no figura entre los alias vigentes de la central; se añade sin alterar la identidad canónica ni el nombre.",
+            "antu_ref": "añade el alias «Los Guájares» a la misma central",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide tres cambios independientes: (1) la relación de pertenencia IDAE → MITECO, que ya existe en el grafo (rel_58cacec323fc77cc2330, part_of, INSTRUCTED por ANTÜ K004-REL); (2) la corrección de la denominación de la central, cuyo nombre vigente ya es «Central Hidráulica Reversible Los Guájares» y que ya conserva la forma anterior «Central Hidráulica Reversible Los Guajares» como alias; (3) añadir el alias «Los Guájares» (con tilde), que no figura todavía. Sólo el tercero requiere escritura, así que emito una única operación de actualización de la entidad existente ent_7e7f581782f7f38e5d7e, sin crear entidades nuevas, y declaro satisfechos los otros dos con su referencia verificable.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_RELATION\",\"applicability\":\"ALREADY_SATISFIED\",\"antu_ref\":\"el Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico, de modo que entre esas dos entidades que ya existen debe figurar la relación de pertenencia correspondiente\",\"explanation\":\"La relación de pertenencia ya existe en el grafo vigente: rel_58cacec323fc77cc2330, predicate part_of, polarity POSITIVE, de ent_bc056f56aab09664ec33 (IDAE) a ent_0c69f0a6a8c528a584bd (MITECO), no retirada y originada por la ANTÜ K004-REL.\",\"expected\":{\"predicate\":\"part_of\",\"from_entity\":\"ent_bc056f56aab09664ec33\",\"to_entity\":\"ent_0c69f0a6a8c528a584bd\",\"retracted\":false},\"reason\":\"Registrar la relación de pertenencia solicitada; ya está presente, por lo que no se duplica.\"},{\"operation_id\":\"op-2\",\"op\":\"UPDATE_ENTITY\",\"applicability\":\"ALREADY_SATISFIED\",\"antu_ref\":\"la denominación de la central aparece sin tilde y su nombre correcto es «Central Hidráulica Reversible Los Guájares», así que actualiza la denominación de la entidad existente conservando la forma anterior como alias\",\"explanation\":\"ent_7e7f581782f7f38e5d7e ya tiene name «Central Hidráulica Reversible Los Guájares» y conserva «Central Hidráulica Reversible Los Guajares» en aliases, según la revisión de la ANTÜ K004-ENT; la identidad canónica no cambia.\",\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guájares\",\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\"]},\"reason\":\"La corrección de denominación ya está aplicada y la forma anterior se conserva como alias.\"},{\"operation_id\":\"op-3\",\"op\":\"UPDATE_ENTITY\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"añade el alias «Los Guájares» a la misma central\",\"explanation\":null,\"target\":{\"entity_id\":\"ent_7e7f581782f7f38e5d7e\"},\"expected\":{\"name\":\"Central Hidráulica Reversible Los Guájares\",\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\"]},\"value\":{\"aliases\":[\"Los Guajares\",\"Central Hidráulica Reversible Los Guajares\",\"Los Guájares\"]},\"reason\":\"El alias «Los Guájares» (con tilde) no figura entre los alias vigentes de la central; se añade sin alterar la identidad canónica ni el nombre.\"}]}",
+      "prompt_sha256": "0051b891b7fb0b66dcde884d902ca64a3ebf0d6a82d8cc5a06f016ceb7e841a6",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 41,
+        "included": {
+          "entities": 15,
+          "relations": 15,
+          "assertions": 11,
+          "evidence": 22
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "estoy",
+          "revisando",
+          "ficha",
+          "central",
+          "hidraulica",
+          "reversible",
+          "guajares",
+          "kuyen",
+          "varias",
+          "cosas",
+          "quedar",
+          "registradas",
+          "sola",
+          "peticion",
+          "primero",
+          "instituto",
+          "diversificacion",
+          "ahorro",
+          "energia",
+          "organismo",
+          "adscrito",
+          "ministerio",
+          "transicion",
+          "ecologica",
+          "reto",
+          "demografico",
+          "modo",
+          "entidades",
+          "existen",
+          "figurar",
+          "relacion",
+          "pertenencia",
+          "correspondiente",
+          "segundo",
+          "denominacion",
+          "aparece",
+          "tilde",
+          "nombre",
+          "correcto",
+          "entidad",
+          "existente",
+          "conservando",
+          "forma",
+          "anterior",
+          "alias",
+          "tercero",
+          "misma",
+          "tres",
+          "cambios",
+          "independientes",
+          "estan",
+          "inventes",
+          "nuevas",
+          "omitas",
+          "ninguno",
+          "resumas",
+          "solo"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 15,
+        "entities_after": 15,
+        "relations_before": 15,
+        "relations_after": 15,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-8732e4ef6f56",
+        "VER-5baf121c2f66",
+        "VER-883de544771d",
+        "VER-b178df431e88",
+        "VER-05288440f2d2"
+      ],
+      "finished_at": "2026-11-03T23:47:50.272613+00:00",
+      "usage": {
+        "prompt_tokens": 22782,
+        "completion_tokens": 1908,
+        "cost_usd": 0.009124
+      }
+    },
+    "K005-LONG": {
+      "kuyen": "KUYEN-005",
+      "antu_id": "K005-LONG",
+      "case": "long_multi_operation",
+      "instruction": "Necesito dejar la ficha de Óscar Monroig completa en este KÜYEN. En primer lugar, las personas de esta memoria deben poder llevar un atributo «rol» de tipo texto, que todavía no está declarado en el esquema: decláralo. En segundo lugar, el rol de Óscar Monroig es «investigador del CSIC», así que registra ese valor en su ficha. Por último, aunque ya consta para qué instituciones trabaja, falta la relación que lo vincula con el proyecto: Óscar Monroig participa en AQUALICIOUS, e incorpora esa relación entre las dos entidades que ya existen. Son tres cambios distintos sobre objetos distintos; no omitas ninguno.",
+      "version_before": "VER-924d732d0d70",
+      "dry_run": false,
+      "started_at": "2026-11-03T23:48:13.965238+00:00",
+      "model": {
+        "model": "deepseek-flash",
+        "endpoint": "https://api.deepseek.com/v1",
+        "api_key_env": "DEEPSEEK_API_KEY",
+        "temperature": 0.0,
+        "max_tokens": 8192
+      },
+      "seconds": 7.01,
+      "status": "COMMITTED",
+      "outcome": "COMMITTED",
+      "version_after": "VER-23dfee10a0ae",
+      "committed": true,
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "target": null,
+          "expected": {
+            "entity_type": "person",
+            "field": {
+              "name": "rol"
+            }
+          },
+          "value": {
+            "entity_type": "person",
+            "field": {
+              "name": "rol",
+              "value_type": "text",
+              "label": "rol",
+              "required": false
+            }
+          },
+          "reason": "El tipo de entidad person existe en el esquema visible y no declara ningún campo, por lo que «rol» no está declarado todavía y puede añadirse como estructura (sin validadores ni comportamiento).",
+          "antu_ref": "las personas de esta memoria deben poder llevar un atributo «rol» de tipo texto, que todavía no está declarado en el esquema: decláralo",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "target": {
+            "entity_id": "ent_edb7323678f603bcf263"
+          },
+          "expected": {
+            "attribute": "rol",
+            "value": null
+          },
+          "value": {
+            "attribute": "rol",
+            "value": "investigador del CSIC"
+          },
+          "reason": "Óscar Monroig existe en el grafo (ent_edb7323678f603bcf263) y el atributo «rol» queda declarado por op-1; se fija su valor en la ficha, no se crea ninguna afirmación nueva.",
+          "antu_ref": "el rol de Óscar Monroig es «investigador del CSIC», así que registra ese valor en su ficha",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [
+            "op-1"
+          ],
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-3",
+          "op": "ADD_RELATION",
+          "target": null,
+          "expected": {
+            "from": "ent_edb7323678f603bcf263",
+            "to": "ent_943696dbe901a67bb3df",
+            "predicate": "participates_in"
+          },
+          "value": {
+            "from": "ent_edb7323678f603bcf263",
+            "to": "ent_943696dbe901a67bb3df",
+            "predicate": "participates_in",
+            "label": "participa en",
+            "polarity": "POSITIVE",
+            "modality": "FACT"
+          },
+          "reason": "No existe en el grafo ninguna relación participates_in entre Óscar Monroig (ent_edb7323678f603bcf263) y AQUALICIOUS (ent_943696dbe901a67bb3df); las relaciones vigentes de Monroig son works_for hacia el CSIC y hacia el IATS, que no se contradicen ni cubren este vínculo. participates_in está admitido por el esquema de relaciones.",
+          "antu_ref": "Óscar Monroig participa en AQUALICIOUS, e incorpora esa relación entre las dos entidades que ya existen",
+          "affected": [],
+          "applicability": "APPLICABLE",
+          "explanation": "",
+          "requires": [],
+          "depends_on": [],
+          "status": "COMMITTED"
+        }
+      ],
+      "applied": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "object_kind": "field",
+          "object_id": "person.rol",
+          "effect": "ADDED",
+          "previous": null,
+          "reason": "El tipo de entidad person existe en el esquema visible y no declara ningún campo, por lo que «rol» no está declarado todavía y puede añadirse como estructura (sin validadores ni comportamiento).",
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "object_kind": "entity",
+          "object_id": "ent_edb7323678f603bcf263",
+          "effect": "ATTRIBUTE_UPDATED",
+          "previous": {
+            "attribute": "rol",
+            "value": null,
+            "origin": null
+          },
+          "reason": "Óscar Monroig existe en el grafo (ent_edb7323678f603bcf263) y el atributo «rol» queda declarado por op-1; se fija su valor en la ficha, no se crea ninguna afirmación nueva.",
+          "status": "COMMITTED"
+        },
+        {
+          "operation_id": "op-3",
+          "op": "ADD_RELATION",
+          "object_kind": "relation",
+          "object_id": "rel_7b32853f77549f7d4586",
+          "effect": "ADDED",
+          "previous": null,
+          "reason": "No existe en el grafo ninguna relación participates_in entre Óscar Monroig (ent_edb7323678f603bcf263) y AQUALICIOUS (ent_943696dbe901a67bb3df); las relaciones vigentes de Monroig son works_for hacia el CSIC y hacia el IATS, que no se contradicen ni cubren este vínculo. participates_in está admitido por el esquema de relaciones.",
+          "status": "COMMITTED"
+        }
+      ],
+      "declined": [],
+      "rejected": [],
+      "outcomes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "outcome": "COMMITTED"
+        },
+        {
+          "operation_id": "op-2",
+          "op": "UPDATE_ATTRIBUTE",
+          "outcome": "COMMITTED"
+        },
+        {
+          "operation_id": "op-3",
+          "op": "ADD_RELATION",
+          "outcome": "COMMITTED"
+        }
+      ],
+      "applicability": {
+        "APPLICABLE": 3
+      },
+      "schema_changes": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_FIELD",
+          "entity_type": "person",
+          "field": "rol",
+          "previous": null,
+          "current": {
+            "name": "rol",
+            "value_type": "text",
+            "required": false,
+            "label": "rol",
+            "description": null,
+            "declared_by": "ANTU_INSTRUCTION"
+          },
+          "antu_id": "K005-LONG"
+        }
+      ],
+      "reasons": [],
+      "proposal": {
+        "schema_version": "kuyen-graph-edit-v2",
+        "status": "PROPOSED",
+        "antu_id": null,
+        "base_version_id": null,
+        "interpretation": "La instrucción pide tres cambios independientes: declarar el campo «rol» (texto) en el tipo de entidad person, registrar el valor «investigador del CSIC» para ese atributo en la ficha de Óscar Monroig, y añadir la relación Óscar Monroig —participa en→ AQUALICIOUS; el atributo depende de la declaración previa del campo y la relación usa entidades ya existentes.",
+        "clarification": null,
+        "conflict": null,
+        "operations": [
+          {
+            "operation_id": "op-1",
+            "op": "ADD_FIELD",
+            "target": null,
+            "expected": {
+              "entity_type": "person",
+              "field": {
+                "name": "rol"
+              }
+            },
+            "value": {
+              "entity_type": "person",
+              "field": {
+                "name": "rol",
+                "value_type": "text",
+                "label": "rol",
+                "required": false
+              }
+            },
+            "reason": "El tipo de entidad person existe en el esquema visible y no declara ningún campo, por lo que «rol» no está declarado todavía y puede añadirse como estructura (sin validadores ni comportamiento).",
+            "antu_ref": "las personas de esta memoria deben poder llevar un atributo «rol» de tipo texto, que todavía no está declarado en el esquema: decláralo",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          },
+          {
+            "operation_id": "op-2",
+            "op": "UPDATE_ATTRIBUTE",
+            "target": {
+              "entity_id": "ent_edb7323678f603bcf263"
+            },
+            "expected": {
+              "attribute": "rol",
+              "value": null
+            },
+            "value": {
+              "attribute": "rol",
+              "value": "investigador del CSIC"
+            },
+            "reason": "Óscar Monroig existe en el grafo (ent_edb7323678f603bcf263) y el atributo «rol» queda declarado por op-1; se fija su valor en la ficha, no se crea ninguna afirmación nueva.",
+            "antu_ref": "el rol de Óscar Monroig es «investigador del CSIC», así que registra ese valor en su ficha",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": [
+              "op-1"
+            ]
+          },
+          {
+            "operation_id": "op-3",
+            "op": "ADD_RELATION",
+            "target": null,
+            "expected": {
+              "from": "ent_edb7323678f603bcf263",
+              "to": "ent_943696dbe901a67bb3df",
+              "predicate": "participates_in"
+            },
+            "value": {
+              "from": "ent_edb7323678f603bcf263",
+              "to": "ent_943696dbe901a67bb3df",
+              "predicate": "participates_in",
+              "label": "participa en",
+              "polarity": "POSITIVE",
+              "modality": "FACT"
+            },
+            "reason": "No existe en el grafo ninguna relación participates_in entre Óscar Monroig (ent_edb7323678f603bcf263) y AQUALICIOUS (ent_943696dbe901a67bb3df); las relaciones vigentes de Monroig son works_for hacia el CSIC y hacia el IATS, que no se contradicen ni cubren este vínculo. participates_in está admitido por el esquema de relaciones.",
+            "antu_ref": "Óscar Monroig participa en AQUALICIOUS, e incorpora esa relación entre las dos entidades que ya existen",
+            "affected": [],
+            "applicability": "APPLICABLE",
+            "explanation": "",
+            "requires": [],
+            "depends_on": []
+          }
+        ],
+        "warnings": []
+      },
+      "raw_response": "{\"status\":\"PROPOSED\",\"interpretation\":\"La instrucción pide tres cambios independientes: declarar el campo «rol» (texto) en el tipo de entidad person, registrar el valor «investigador del CSIC» para ese atributo en la ficha de Óscar Monroig, y añadir la relación Óscar Monroig —participa en→ AQUALICIOUS; el atributo depende de la declaración previa del campo y la relación usa entidades ya existentes.\",\"operations\":[{\"operation_id\":\"op-1\",\"op\":\"ADD_FIELD\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"las personas de esta memoria deben poder llevar un atributo «rol» de tipo texto, que todavía no está declarado en el esquema: decláralo\",\"reason\":\"El tipo de entidad person existe en el esquema visible y no declara ningún campo, por lo que «rol» no está declarado todavía y puede añadirse como estructura (sin validadores ni comportamiento).\",\"value\":{\"entity_type\":\"person\",\"field\":{\"name\":\"rol\",\"value_type\":\"text\",\"label\":\"rol\",\"required\":false}},\"expected\":{\"entity_type\":\"person\",\"field\":{\"name\":\"rol\"}}},{\"operation_id\":\"op-2\",\"op\":\"UPDATE_ATTRIBUTE\",\"applicability\":\"APPLICABLE\",\"depends_on\":[\"op-1\"],\"antu_ref\":\"el rol de Óscar Monroig es «investigador del CSIC», así que registra ese valor en su ficha\",\"reason\":\"Óscar Monroig existe en el grafo (ent_edb7323678f603bcf263) y el atributo «rol» queda declarado por op-1; se fija su valor en la ficha, no se crea ninguna afirmación nueva.\",\"target\":{\"entity_id\":\"ent_edb7323678f603bcf263\"},\"value\":{\"attribute\":\"rol\",\"value\":\"investigador del CSIC\"},\"expected\":{\"attribute\":\"rol\",\"value\":null}},{\"operation_id\":\"op-3\",\"op\":\"ADD_RELATION\",\"applicability\":\"APPLICABLE\",\"antu_ref\":\"Óscar Monroig participa en AQUALICIOUS, e incorpora esa relación entre las dos entidades que ya existen\",\"reason\":\"No existe en el grafo ninguna relación participates_in entre Óscar Monroig (ent_edb7323678f603bcf263) y AQUALICIOUS (ent_943696dbe901a67bb3df); las relaciones vigentes de Monroig son works_for hacia el CSIC y hacia el IATS, que no se contradicen ni cubren este vínculo. participates_in está admitido por el esquema de relaciones.\",\"value\":{\"from\":\"ent_edb7323678f603bcf263\",\"to\":\"ent_943696dbe901a67bb3df\",\"predicate\":\"participates_in\",\"label\":\"participa en\",\"polarity\":\"POSITIVE\",\"modality\":\"FACT\"},\"expected\":{\"from\":\"ent_edb7323678f603bcf263\",\"to\":\"ent_943696dbe901a67bb3df\",\"predicate\":\"participates_in\"}}]}",
+      "prompt_sha256": "3a0d8f282beba9c242ad97799a9de610c6cff2f6960f2ea3cf245c0313bddd2e",
+      "context": {
+        "mode": "FULL_INDEX",
+        "object_limit": 200,
+        "total_objects": 45,
+        "included": {
+          "entities": 19,
+          "relations": 17,
+          "assertions": 9,
+          "evidence": 26
+        },
+        "excluded": {
+          "entities": 0,
+          "relations": 0,
+          "assertions": 0
+        },
+        "truncated": false,
+        "keywords": [
+          "dejar",
+          "ficha",
+          "oscar",
+          "monroig",
+          "completa",
+          "kuyen",
+          "primer",
+          "lugar",
+          "personas",
+          "memoria",
+          "poder",
+          "llevar",
+          "atributo",
+          "tipo",
+          "texto",
+          "todavia",
+          "declarado",
+          "esquema",
+          "declaralo",
+          "segundo",
+          "investigador",
+          "csic",
+          "registra",
+          "valor",
+          "ultimo",
+          "consta",
+          "instituciones",
+          "trabaja",
+          "falta",
+          "relacion",
+          "vincula",
+          "proyecto",
+          "participa",
+          "aqualicious",
+          "incorpora",
+          "entidades",
+          "existen",
+          "tres",
+          "cambios",
+          "distintos",
+          "objetos",
+          "omitas",
+          "ninguno"
+        ],
+        "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+        "scope": {
+          "schema_read": true,
+          "schema_write": true,
+          "data_read": true,
+          "data_write": true,
+          "granted": [
+            "SCHEMA_READ",
+            "SCHEMA_WRITE",
+            "DATA_READ",
+            "DATA_WRITE"
+          ],
+          "denied": [],
+          "source": "default"
+        }
+      },
+      "verify": true,
+      "preservation": {
+        "entities_before": 19,
+        "entities_after": 19,
+        "relations_before": 17,
+        "relations_after": 18,
+        "changed": [],
+        "lost": []
+      },
+      "versions": [
+        "VER-4284067d2401",
+        "VER-8d97dca38a1e",
+        "VER-f966478eb575",
+        "VER-924d732d0d70",
+        "VER-23dfee10a0ae"
+      ],
+      "finished_at": "2026-11-03T23:48:21.023284+00:00",
+      "usage": {
+        "prompt_tokens": 24791,
+        "completion_tokens": 1262,
+        "cost_usd": 0.008952
+      }
+    }
+  },
+  "cash": {
+    "cost_usd": 0.09642,
+    "prompt_tokens": 266595,
+    "completion_tokens": 13701
+  }
+}

@@ -1,0 +1,2236 @@
+{
+  "versions": [
+    {
+      "version_id": "VER-3b63dcc70cbf",
+      "kuyen_version": "1.0.0",
+      "graph": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.0.0",
+        "antu_id": "ANTU-FIXTURE-01",
+        "mapu_ids": [
+          "MAPU-EDIT-01"
+        ],
+        "schema_version": "kuyen-native-v1",
+        "status": "ACCEPTED",
+        "entities": [
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_e246afa57dbd850b9140",
+            "description": "Cooperativa que ejecuta la instalación",
+            "entity_id": "ent_e246afa57dbd850b9140",
+            "entity_type": "organization",
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Cooperativa Faro Sur",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          },
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_9e49a2105aae6e956b84",
+            "description": "Inspectora municipal",
+            "entity_id": "ent_9e49a2105aae6e956b84",
+            "entity_type": "person",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Camila Soto",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          }
+        ],
+        "relations": [
+          {
+            "canonical_predicate": "supervises",
+            "display_label": "supervisa",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "from_entity": "ent_9e49a2105aae6e956b84",
+            "label": "supervisa",
+            "mapping_rule_id": "fixture-v1",
+            "mapping_status": "EXACT",
+            "mapping_version": "1.0.0",
+            "normalization_reason": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "supervises",
+            "provider_label": "supervisa",
+            "provider_predicate": "supervises",
+            "provider_projection_status": "EXACT",
+            "relation_id": "rel_fefbe024f0c525ce4e7d",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "source_label": "supervisa",
+            "source_predicate": "supervises",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "temporal": null,
+            "temporal_scope": null,
+            "to_entity": "ent_e246afa57dbd850b9140"
+          }
+        ],
+        "assertions": [
+          {
+            "assertion_id": "asrt_0677645136247624437d",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 12,
+              "value_type": "integer"
+            }
+          },
+          {
+            "assertion_id": "asrt_1a5cdb8506d830309508",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_9df11ed58730628e5b82"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_9df11ed58730628e5b82"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "started_at",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "temporal": null,
+            "temporal_scope": "2025-03",
+            "value": {
+              "context": null,
+              "unit": null,
+              "value": "2025-03",
+              "value_type": "string"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "char_end": 81,
+            "char_start": 11,
+            "evidence_id": "ev_46ccd25b94e1b498aff8",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La Cooperativa Faro Sur instaló 12 luminarias en el pasaje Los Aromos.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 152,
+            "char_start": 97,
+            "evidence_id": "ev_58669f8120a01e7e6363",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "Camila Soto supervisa la instalación de las luminarias.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 202,
+            "char_start": 162,
+            "evidence_id": "ev_9df11ed58730628e5b82",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La instalación comenzó en marzo de 2025.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          }
+        ],
+        "coverage": [
+          {
+            "content_sha256": null,
+            "entity_ids": [],
+            "mapu_id": "MAPU-EDIT-01",
+            "reason": null,
+            "relation_ids": [],
+            "section": "document",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "state": "PROCESSED_WITH_OUTPUT",
+            "unit_id": "u00"
+          }
+        ],
+        "provenance": {
+          "coverage_inventory": {},
+          "implementation": "fixture"
+        },
+        "content_digest": "2b0651992ab2137dafbf",
+        "provenance_digest": "3a9200c97f3181300278"
+      }
+    },
+    {
+      "version_id": "VER-1cc1d50fc685",
+      "kuyen_version": "1.1.0",
+      "antu_id": "ANTU-472f4b419473bba3",
+      "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "UPDATE_ASSERTION",
+          "target": {
+            "assertion_id": "asrt_0677645136247624437d"
+          },
+          "expected": {
+            "value": {
+              "value_type": "integer",
+              "value": 12,
+              "unit": "luminarias",
+              "context": null
+            }
+          },
+          "value": {
+            "value": {
+              "value_type": "integer",
+              "value": 18,
+              "unit": "luminarias"
+            },
+            "_canonical_id": "asrt_bd07b298b8d031f95d62",
+            "_polarity": "POSITIVE",
+            "_modality": "UNKNOWN",
+            "_value_payload": {
+              "value_type": "integer",
+              "value": 18,
+              "unit": "luminarias",
+              "context": null
+            },
+            "_object_entity": null,
+            "_target_id": "asrt_0677645136247624437d"
+          },
+          "reason": "la instrucción corrige la cantidad instalada",
+          "antu_ref": "de 12 a 18",
+          "affected": []
+        }
+      ],
+      "provenance": {
+        "kind": "ANTU_INSTRUCTION",
+        "documentary_verification": false,
+        "antu_id": "ANTU-472f4b419473bba3",
+        "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+        "base_version_id": "VER-3b63dcc70cbf",
+        "actor": null,
+        "model": "unit-test",
+        "canonical_graph_hash": "71b3343f655f0109c93e3876fdb752f10e445f1d5753a8cf6260a9465d83fdd3",
+        "commit_id": "3d97ffe4bedd4a78da66"
+      },
+      "affected": {
+        "assertions": [
+          "asrt_bd07b298b8d031f95d62"
+        ]
+      },
+      "graph": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.1.0",
+        "antu_id": "ANTU-472f4b419473bba3",
+        "mapu_ids": [
+          "MAPU-EDIT-01"
+        ],
+        "schema_version": "kuyen-native-v1",
+        "status": "ACCEPTED",
+        "entities": [
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_e246afa57dbd850b9140",
+            "description": "Cooperativa que ejecuta la instalación",
+            "entity_id": "ent_e246afa57dbd850b9140",
+            "entity_type": "organization",
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Cooperativa Faro Sur",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          },
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_9e49a2105aae6e956b84",
+            "description": "Inspectora municipal",
+            "entity_id": "ent_9e49a2105aae6e956b84",
+            "entity_type": "person",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Camila Soto",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          }
+        ],
+        "relations": [
+          {
+            "canonical_predicate": "supervises",
+            "display_label": "supervisa",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "from_entity": "ent_9e49a2105aae6e956b84",
+            "label": "supervisa",
+            "mapping_rule_id": "fixture-v1",
+            "mapping_status": "EXACT",
+            "mapping_version": "1.0.0",
+            "normalization_reason": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "supervises",
+            "provider_label": "supervisa",
+            "provider_predicate": "supervises",
+            "provider_projection_status": "EXACT",
+            "relation_id": "rel_fefbe024f0c525ce4e7d",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "source_label": "supervisa",
+            "source_predicate": "supervises",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "temporal": null,
+            "temporal_scope": null,
+            "to_entity": "ent_e246afa57dbd850b9140"
+          }
+        ],
+        "assertions": [
+          {
+            "assertion_id": "asrt_0677645136247624437d",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SUPERSEDED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "superseded_by": "asrt_bd07b298b8d031f95d62",
+            "supersession": {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null
+            },
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 12,
+              "value_type": "integer"
+            }
+          },
+          {
+            "assertion_id": "asrt_1a5cdb8506d830309508",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_9df11ed58730628e5b82"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_9df11ed58730628e5b82"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "started_at",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "temporal": null,
+            "temporal_scope": "2025-03",
+            "value": {
+              "context": null,
+              "unit": null,
+              "value": "2025-03",
+              "value_type": "string"
+            }
+          },
+          {
+            "assertion_id": "asrt_bd07b298b8d031f95d62",
+            "attribution": null,
+            "evidence_ids": [],
+            "evidence_status": "NOT_EVALUATED",
+            "modality": "UNKNOWN",
+            "object_entity": null,
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "proposed_status": null,
+            "proposed_status_raw": null,
+            "scope": "instruction",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [],
+            "status": "INSTRUCTED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "supersedes": "asrt_0677645136247624437d",
+            "support_method": "antu_instruction",
+            "support_rationale": "la instrucción corrige la cantidad instalada",
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 18,
+              "value_type": "integer"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "char_end": 81,
+            "char_start": 11,
+            "evidence_id": "ev_46ccd25b94e1b498aff8",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La Cooperativa Faro Sur instaló 12 luminarias en el pasaje Los Aromos.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 152,
+            "char_start": 97,
+            "evidence_id": "ev_58669f8120a01e7e6363",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "Camila Soto supervisa la instalación de las luminarias.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 202,
+            "char_start": 162,
+            "evidence_id": "ev_9df11ed58730628e5b82",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La instalación comenzó en marzo de 2025.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          }
+        ],
+        "coverage": [
+          {
+            "content_sha256": null,
+            "entity_ids": [],
+            "mapu_id": "MAPU-EDIT-01",
+            "reason": null,
+            "relation_ids": [],
+            "section": "document",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "state": "PROCESSED_WITH_OUTPUT",
+            "unit_id": "u00"
+          }
+        ],
+        "provenance": {
+          "coverage_inventory": {},
+          "edits": [
+            {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 2,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "cantidad",
+                  "luminarias"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 5,
+                "truncated": false
+              },
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "de 12 a 18",
+                  "expected": {
+                    "value": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 12,
+                      "value_type": "integer"
+                    }
+                  },
+                  "op": "UPDATE_ASSERTION",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción corrige la cantidad instalada",
+                  "target": {
+                    "assertion_id": "asrt_0677645136247624437d"
+                  },
+                  "value": {
+                    "_canonical_id": "asrt_bd07b298b8d031f95d62",
+                    "_modality": "UNKNOWN",
+                    "_object_entity": null,
+                    "_polarity": "POSITIVE",
+                    "_target_id": "asrt_0677645136247624437d",
+                    "_value_payload": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    },
+                    "value": {
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    }
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-472f4b419473bba3",
+                "base_version_id": "VER-3b63dcc70cbf",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+                "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.1.0"
+            }
+          ],
+          "implementation": "fixture"
+        },
+        "content_digest": "e34105caef84f5f8a760",
+        "provenance_digest": "a61bbf89d7fe1521bc51"
+      }
+    },
+    {
+      "version_id": "VER-3732d2925d8b",
+      "kuyen_version": "1.2.0",
+      "antu_id": "ANTU-34d6f65e382668ce",
+      "instruction": "Retira la afirmación sobre la fecha de inicio",
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "RETRACT_ASSERTION",
+          "target": {
+            "assertion_id": "asrt_1a5cdb8506d830309508"
+          },
+          "expected": {
+            "status": "UNRESOLVED"
+          },
+          "value": {
+            "retracted": true,
+            "_target_id": "asrt_1a5cdb8506d830309508"
+          },
+          "reason": "la instrucción retira una afirmación incorrecta",
+          "antu_ref": "retira la afirmación sobre la fecha de inicio",
+          "affected": []
+        }
+      ],
+      "provenance": {
+        "kind": "ANTU_INSTRUCTION",
+        "documentary_verification": false,
+        "antu_id": "ANTU-34d6f65e382668ce",
+        "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+        "base_version_id": "VER-1cc1d50fc685",
+        "actor": null,
+        "model": "unit-test",
+        "canonical_graph_hash": "f8f4bf0c694027c71d557e92953af6fc0c77c159b6b5b82d9f14e468cd574125",
+        "commit_id": "ba35f33f79081caf7c99"
+      },
+      "affected": {
+        "assertions": [
+          "asrt_1a5cdb8506d830309508"
+        ]
+      },
+      "graph": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.2.0",
+        "antu_id": "ANTU-34d6f65e382668ce",
+        "mapu_ids": [
+          "MAPU-EDIT-01"
+        ],
+        "schema_version": "kuyen-native-v1",
+        "status": "ACCEPTED",
+        "entities": [
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_e246afa57dbd850b9140",
+            "description": "Cooperativa que ejecuta la instalación",
+            "entity_id": "ent_e246afa57dbd850b9140",
+            "entity_type": "organization",
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Cooperativa Faro Sur",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          },
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_9e49a2105aae6e956b84",
+            "description": "Inspectora municipal",
+            "entity_id": "ent_9e49a2105aae6e956b84",
+            "entity_type": "person",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Camila Soto",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          }
+        ],
+        "relations": [
+          {
+            "canonical_predicate": "supervises",
+            "display_label": "supervisa",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "from_entity": "ent_9e49a2105aae6e956b84",
+            "label": "supervisa",
+            "mapping_rule_id": "fixture-v1",
+            "mapping_status": "EXACT",
+            "mapping_version": "1.0.0",
+            "normalization_reason": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "supervises",
+            "provider_label": "supervisa",
+            "provider_predicate": "supervises",
+            "provider_projection_status": "EXACT",
+            "relation_id": "rel_fefbe024f0c525ce4e7d",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "source_label": "supervisa",
+            "source_predicate": "supervises",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "temporal": null,
+            "temporal_scope": null,
+            "to_entity": "ent_e246afa57dbd850b9140"
+          }
+        ],
+        "assertions": [
+          {
+            "assertion_id": "asrt_0677645136247624437d",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SUPERSEDED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "superseded_by": "asrt_bd07b298b8d031f95d62",
+            "supersession": {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null
+            },
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 12,
+              "value_type": "integer"
+            }
+          },
+          {
+            "assertion_id": "asrt_1a5cdb8506d830309508",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_9df11ed58730628e5b82"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "base_version_id": "VER-1cc1d50fc685",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Retira la afirmación sobre la fecha de inicio",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "b0d633a239efab7390ec979057c32829da3b1e77605a320f8379169cb61ffd89",
+                "proposal_sha256": "f5a71fc1e6305ee16ab608b2ac98be6aa25931403e4fdad607e573d361bb0e64",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción retira una afirmación incorrecta",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "polarity": "POSITIVE",
+            "predicate": "started_at",
+            "retracted": true,
+            "retraction": {
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "reason": "la instrucción retira una afirmación incorrecta",
+              "recorded_at": null
+            },
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "RETRACTED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "temporal": null,
+            "temporal_scope": "2025-03",
+            "value": {
+              "context": null,
+              "unit": null,
+              "value": "2025-03",
+              "value_type": "string"
+            }
+          },
+          {
+            "assertion_id": "asrt_bd07b298b8d031f95d62",
+            "attribution": null,
+            "evidence_ids": [],
+            "evidence_status": "NOT_EVALUATED",
+            "modality": "UNKNOWN",
+            "object_entity": null,
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "proposed_status": null,
+            "proposed_status_raw": null,
+            "scope": "instruction",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [],
+            "status": "INSTRUCTED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "supersedes": "asrt_0677645136247624437d",
+            "support_method": "antu_instruction",
+            "support_rationale": "la instrucción corrige la cantidad instalada",
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 18,
+              "value_type": "integer"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "char_end": 81,
+            "char_start": 11,
+            "evidence_id": "ev_46ccd25b94e1b498aff8",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La Cooperativa Faro Sur instaló 12 luminarias en el pasaje Los Aromos.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 152,
+            "char_start": 97,
+            "evidence_id": "ev_58669f8120a01e7e6363",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "Camila Soto supervisa la instalación de las luminarias.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 202,
+            "char_start": 162,
+            "evidence_id": "ev_9df11ed58730628e5b82",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La instalación comenzó en marzo de 2025.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          }
+        ],
+        "coverage": [
+          {
+            "content_sha256": null,
+            "entity_ids": [],
+            "mapu_id": "MAPU-EDIT-01",
+            "reason": null,
+            "relation_ids": [],
+            "section": "document",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "state": "PROCESSED_WITH_OUTPUT",
+            "unit_id": "u00"
+          }
+        ],
+        "provenance": {
+          "coverage_inventory": {},
+          "edits": [
+            {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 2,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "cantidad",
+                  "luminarias"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 5,
+                "truncated": false
+              },
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "de 12 a 18",
+                  "expected": {
+                    "value": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 12,
+                      "value_type": "integer"
+                    }
+                  },
+                  "op": "UPDATE_ASSERTION",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción corrige la cantidad instalada",
+                  "target": {
+                    "assertion_id": "asrt_0677645136247624437d"
+                  },
+                  "value": {
+                    "_canonical_id": "asrt_bd07b298b8d031f95d62",
+                    "_modality": "UNKNOWN",
+                    "_object_entity": null,
+                    "_polarity": "POSITIVE",
+                    "_target_id": "asrt_0677645136247624437d",
+                    "_value_payload": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    },
+                    "value": {
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    }
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-472f4b419473bba3",
+                "base_version_id": "VER-3b63dcc70cbf",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+                "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.1.0"
+            },
+            {
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "base_version_id": "VER-1cc1d50fc685",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 3,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "afirmacion",
+                  "fecha",
+                  "inicio"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 6,
+                "truncated": false
+              },
+              "instruction": "Retira la afirmación sobre la fecha de inicio",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "b0d633a239efab7390ec979057c32829da3b1e77605a320f8379169cb61ffd89",
+                "proposal_sha256": "f5a71fc1e6305ee16ab608b2ac98be6aa25931403e4fdad607e573d361bb0e64",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "retira la afirmación sobre la fecha de inicio",
+                  "expected": {
+                    "status": "UNRESOLVED"
+                  },
+                  "op": "RETRACT_ASSERTION",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción retira una afirmación incorrecta",
+                  "target": {
+                    "assertion_id": "asrt_1a5cdb8506d830309508"
+                  },
+                  "value": {
+                    "_target_id": "asrt_1a5cdb8506d830309508",
+                    "retracted": true
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-34d6f65e382668ce",
+                "base_version_id": "VER-1cc1d50fc685",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Retira la afirmación sobre la fecha de inicio",
+                "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.2.0"
+            }
+          ],
+          "implementation": "fixture"
+        },
+        "content_digest": "88b73173a8c958a8c327",
+        "provenance_digest": "012ff038ac5db95447c8"
+      }
+    },
+    {
+      "version_id": "VER-4926159676d2",
+      "kuyen_version": "1.3.0",
+      "antu_id": "ANTU-03f87ada5bfc9883",
+      "instruction": "Agrega que la Junta de Vecinos Los Aromos es una organización",
+      "operations": [
+        {
+          "operation_id": "op-1",
+          "op": "ADD_ENTITY",
+          "target": null,
+          "expected": null,
+          "value": {
+            "ref": "junta",
+            "name": "Junta de Vecinos Los Aromos",
+            "entity_type": "organization",
+            "description": "Organización vecinal"
+          },
+          "reason": "la instrucción declara la organización",
+          "antu_ref": "la Junta de Vecinos Los Aromos es una organización",
+          "affected": []
+        }
+      ],
+      "provenance": {
+        "kind": "ANTU_INSTRUCTION",
+        "documentary_verification": false,
+        "antu_id": "ANTU-03f87ada5bfc9883",
+        "instruction_sha256": "03f87ada5bfc9883d8ba8704495008b8c0ea67d22e5a7064addffdf5acd6b002",
+        "base_version_id": "VER-3732d2925d8b",
+        "actor": null,
+        "model": "unit-test",
+        "canonical_graph_hash": "ddc8bc73c0af73bd37c89ee021d5dcfb4fa2758499031b347d6ed1a6d14dc330",
+        "commit_id": "f8fbbc4dd1d0ea313aa8"
+      },
+      "affected": {
+        "entitys": [
+          "ent_abe60aed8697f9d6fbd3"
+        ]
+      },
+      "graph": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.3.0",
+        "antu_id": "ANTU-03f87ada5bfc9883",
+        "mapu_ids": [
+          "MAPU-EDIT-01"
+        ],
+        "schema_version": "kuyen-native-v1",
+        "status": "ACCEPTED",
+        "entities": [
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_e246afa57dbd850b9140",
+            "description": "Cooperativa que ejecuta la instalación",
+            "entity_id": "ent_e246afa57dbd850b9140",
+            "entity_type": "organization",
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Cooperativa Faro Sur",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          },
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_9e49a2105aae6e956b84",
+            "description": "Inspectora municipal",
+            "entity_id": "ent_9e49a2105aae6e956b84",
+            "entity_type": "person",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "identity_basis": "content",
+            "identity_group_id": null,
+            "identity_status": "NOT_ASSESSED",
+            "metadata": {},
+            "name": "Camila Soto",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "origin_entity_id": null,
+            "source_entity_id": null,
+            "source_namespace": "fixture",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SOURCE_VERIFIED"
+          },
+          {
+            "aliases": [],
+            "canonical_entity_id": "ent_abe60aed8697f9d6fbd3",
+            "description": "Organización vecinal",
+            "entity_id": "ent_abe60aed8697f9d6fbd3",
+            "entity_type": "organization",
+            "evidence_ids": [],
+            "identity_basis": "antu_instruction",
+            "identity_group_id": null,
+            "identity_status": "INSTRUCTED",
+            "metadata": {
+              "antu_id": "ANTU-03f87ada5bfc9883",
+              "declared_by": "antu_instruction",
+              "operation_id": "op-1"
+            },
+            "name": "Junta de Vecinos Los Aromos",
+            "normalization_reason": null,
+            "normalization_status": "RESOLVED",
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-03f87ada5bfc9883",
+              "base_version_id": "VER-3732d2925d8b",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Agrega que la Junta de Vecinos Los Aromos es una organización",
+              "instruction_sha256": "03f87ada5bfc9883d8ba8704495008b8c0ea67d22e5a7064addffdf5acd6b002",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "d8effdb516f38e1ea63de2f221a7683fc8c350e27b5686690a0527df9601d8a8",
+                "proposal_sha256": "4b1cb951800cb679fbe05a8fcf9594f1a5640e042cec69e5abac54344ec3eaad",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción declara la organización",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "origin_entity_id": "ANTU-03f87ada5bfc9883:junta",
+            "source_entity_id": "ANTU-03f87ada5bfc9883:junta",
+            "source_namespace": "antu-instruction",
+            "sources": [],
+            "status": "INSTRUCTED"
+          }
+        ],
+        "relations": [
+          {
+            "canonical_predicate": "supervises",
+            "display_label": "supervisa",
+            "evidence_ids": [
+              "ev_58669f8120a01e7e6363"
+            ],
+            "from_entity": "ent_9e49a2105aae6e956b84",
+            "label": "supervisa",
+            "mapping_rule_id": "fixture-v1",
+            "mapping_status": "EXACT",
+            "mapping_version": "1.0.0",
+            "normalization_reason": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_58669f8120a01e7e6363"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "supervises",
+            "provider_label": "supervisa",
+            "provider_predicate": "supervises",
+            "provider_projection_status": "EXACT",
+            "relation_id": "rel_fefbe024f0c525ce4e7d",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "source_label": "supervisa",
+            "source_predicate": "supervises",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "UNRESOLVED",
+            "temporal": null,
+            "temporal_scope": null,
+            "to_entity": "ent_e246afa57dbd850b9140"
+          }
+        ],
+        "assertions": [
+          {
+            "assertion_id": "asrt_0677645136247624437d",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_46ccd25b94e1b498aff8"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "evidence_ids": [
+                "ev_46ccd25b94e1b498aff8"
+              ],
+              "kind": "DOCUMENT_EVIDENCE",
+              "mapu_ids": [
+                "MAPU-EDIT-01"
+              ]
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "SUPERSEDED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "superseded_by": "asrt_bd07b298b8d031f95d62",
+            "supersession": {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null
+            },
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 12,
+              "value_type": "integer"
+            }
+          },
+          {
+            "assertion_id": "asrt_1a5cdb8506d830309508",
+            "attribution": null,
+            "evidence_ids": [
+              "ev_9df11ed58730628e5b82"
+            ],
+            "modality": "FACT",
+            "object_entity": null,
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "base_version_id": "VER-1cc1d50fc685",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Retira la afirmación sobre la fecha de inicio",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "b0d633a239efab7390ec979057c32829da3b1e77605a320f8379169cb61ffd89",
+                "proposal_sha256": "f5a71fc1e6305ee16ab608b2ac98be6aa25931403e4fdad607e573d361bb0e64",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción retira una afirmación incorrecta",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "polarity": "POSITIVE",
+            "predicate": "started_at",
+            "retracted": true,
+            "retraction": {
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "reason": "la instrucción retira una afirmación incorrecta",
+              "recorded_at": null
+            },
+            "scope": "document",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [
+              "viking://resources/tests/MAPU-EDIT-01.md"
+            ],
+            "status": "RETRACTED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "temporal": null,
+            "temporal_scope": "2025-03",
+            "value": {
+              "context": null,
+              "unit": null,
+              "value": "2025-03",
+              "value_type": "string"
+            }
+          },
+          {
+            "assertion_id": "asrt_bd07b298b8d031f95d62",
+            "attribution": null,
+            "evidence_ids": [],
+            "evidence_status": "NOT_EVALUATED",
+            "modality": "UNKNOWN",
+            "object_entity": null,
+            "origin": {
+              "actor": {
+                "authenticated_account": "ana@example",
+                "authenticated_user": "ana",
+                "leftraru_id": "LR-EDIT",
+                "service_identity": "svc-kuyen"
+              },
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "documentary_verification": false,
+              "evidence_ids": [],
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "ANTU_INSTRUCTION",
+              "mapu_ids": [],
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operation_id": "op-1",
+              "reason": "la instrucción corrige la cantidad instalada",
+              "recorded_at": null,
+              "schema_name": "KUYEN_STATEMENT_ORIGIN",
+              "schema_version": "1.0.0"
+            },
+            "polarity": "POSITIVE",
+            "predicate": "installed_lights",
+            "proposed_status": null,
+            "proposed_status_raw": null,
+            "scope": "instruction",
+            "semantic_status": "NOT_ASSESSED",
+            "sources": [],
+            "status": "INSTRUCTED",
+            "subject_entity": "ent_e246afa57dbd850b9140",
+            "supersedes": "asrt_0677645136247624437d",
+            "support_method": "antu_instruction",
+            "support_rationale": "la instrucción corrige la cantidad instalada",
+            "temporal": null,
+            "temporal_scope": null,
+            "value": {
+              "context": null,
+              "unit": "luminarias",
+              "value": 18,
+              "value_type": "integer"
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "char_end": 81,
+            "char_start": 11,
+            "evidence_id": "ev_46ccd25b94e1b498aff8",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La Cooperativa Faro Sur instaló 12 luminarias en el pasaje Los Aromos.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 152,
+            "char_start": 97,
+            "evidence_id": "ev_58669f8120a01e7e6363",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "Camila Soto supervisa la instalación de las luminarias.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          },
+          {
+            "char_end": 202,
+            "char_start": 162,
+            "evidence_id": "ev_9df11ed58730628e5b82",
+            "extraction_method": "fixture",
+            "mapu_id": "MAPU-EDIT-01",
+            "offset_unit": "unicode_codepoint",
+            "quote": "La instalación comenzó en marzo de 2025.",
+            "source_sha256": "fbc568d7d32cb081d5050b32e947560c9f50306d3a7636c4e7fe548ffc6183d8",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "validation_status": "SOURCE_VERIFIED"
+          }
+        ],
+        "coverage": [
+          {
+            "content_sha256": null,
+            "entity_ids": [],
+            "mapu_id": "MAPU-EDIT-01",
+            "reason": null,
+            "relation_ids": [],
+            "section": "document",
+            "source_uri": "viking://resources/tests/MAPU-EDIT-01.md",
+            "state": "PROCESSED_WITH_OUTPUT",
+            "unit_id": "u00"
+          }
+        ],
+        "provenance": {
+          "coverage_inventory": {},
+          "edits": [
+            {
+              "antu_id": "ANTU-472f4b419473bba3",
+              "base_version_id": "VER-3b63dcc70cbf",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 2,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "cantidad",
+                  "luminarias"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 5,
+                "truncated": false
+              },
+              "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+              "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "32c87a7ffa8e8b0383e76416def7a746e2a37f256e0d9c15d42b6ecc970a7d57",
+                "proposal_sha256": "25f59b4c038518f05ff0fad4d98db4446e2ceb2792e00b82400afb826ba9e953",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "de 12 a 18",
+                  "expected": {
+                    "value": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 12,
+                      "value_type": "integer"
+                    }
+                  },
+                  "op": "UPDATE_ASSERTION",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción corrige la cantidad instalada",
+                  "target": {
+                    "assertion_id": "asrt_0677645136247624437d"
+                  },
+                  "value": {
+                    "_canonical_id": "asrt_bd07b298b8d031f95d62",
+                    "_modality": "UNKNOWN",
+                    "_object_entity": null,
+                    "_polarity": "POSITIVE",
+                    "_target_id": "asrt_0677645136247624437d",
+                    "_value_payload": {
+                      "context": null,
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    },
+                    "value": {
+                      "unit": "luminarias",
+                      "value": 18,
+                      "value_type": "integer"
+                    }
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-472f4b419473bba3",
+                "base_version_id": "VER-3b63dcc70cbf",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Cambia la cantidad de luminarias de 12 a 18",
+                "instruction_sha256": "472f4b419473bba37e4063c5c275156414b4bfe10316c6e3f67c7035b6f7d0b7",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.1.0"
+            },
+            {
+              "antu_id": "ANTU-34d6f65e382668ce",
+              "base_version_id": "VER-1cc1d50fc685",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 3,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "afirmacion",
+                  "fecha",
+                  "inicio"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 6,
+                "truncated": false
+              },
+              "instruction": "Retira la afirmación sobre la fecha de inicio",
+              "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "b0d633a239efab7390ec979057c32829da3b1e77605a320f8379169cb61ffd89",
+                "proposal_sha256": "f5a71fc1e6305ee16ab608b2ac98be6aa25931403e4fdad607e573d361bb0e64",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "retira la afirmación sobre la fecha de inicio",
+                  "expected": {
+                    "status": "UNRESOLVED"
+                  },
+                  "op": "RETRACT_ASSERTION",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción retira una afirmación incorrecta",
+                  "target": {
+                    "assertion_id": "asrt_1a5cdb8506d830309508"
+                  },
+                  "value": {
+                    "_target_id": "asrt_1a5cdb8506d830309508",
+                    "retracted": true
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-34d6f65e382668ce",
+                "base_version_id": "VER-1cc1d50fc685",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Retira la afirmación sobre la fecha de inicio",
+                "instruction_sha256": "34d6f65e382668ce11901577310f155973728b2ae86a9bc3591fd7c832647ed5",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.2.0"
+            },
+            {
+              "antu_id": "ANTU-03f87ada5bfc9883",
+              "base_version_id": "VER-3732d2925d8b",
+              "context": {
+                "excluded": {
+                  "assertions": 0,
+                  "entities": 0,
+                  "relations": 0
+                },
+                "included": {
+                  "assertions": 3,
+                  "entities": 2,
+                  "evidence": 3,
+                  "relations": 1
+                },
+                "keywords": [
+                  "junta",
+                  "vecinos",
+                  "aromos",
+                  "organizacion"
+                ],
+                "mode": "FULL_INDEX",
+                "note": "objects outside `authorized_ids` are not part of this edit and an operation targeting them is refused",
+                "object_limit": 200,
+                "total_objects": 6,
+                "truncated": false
+              },
+              "instruction": "Agrega que la Junta de Vecinos Los Aromos es una organización",
+              "instruction_sha256": "03f87ada5bfc9883d8ba8704495008b8c0ea67d22e5a7064addffdf5acd6b002",
+              "kind": "GRAPH_EDIT",
+              "model": {
+                "model": "unit-test",
+                "payload_sha256": "d8effdb516f38e1ea63de2f221a7683fc8c350e27b5686690a0527df9601d8a8",
+                "proposal_sha256": "4b1cb951800cb679fbe05a8fcf9594f1a5640e042cec69e5abac54344ec3eaad",
+                "provider": "scripted"
+              },
+              "operations": [
+                {
+                  "affected": [],
+                  "antu_ref": "la Junta de Vecinos Los Aromos es una organización",
+                  "expected": null,
+                  "op": "ADD_ENTITY",
+                  "operation_id": "op-1",
+                  "reason": "la instrucción declara la organización",
+                  "target": null,
+                  "value": {
+                    "description": "Organización vecinal",
+                    "entity_type": "organization",
+                    "name": "Junta de Vecinos Los Aromos",
+                    "ref": "junta"
+                  }
+                }
+              ],
+              "origin": {
+                "actor": null,
+                "antu_id": "ANTU-03f87ada5bfc9883",
+                "base_version_id": "VER-3732d2925d8b",
+                "documentary_verification": false,
+                "evidence_ids": [],
+                "instruction": "Agrega que la Junta de Vecinos Los Aromos es una organización",
+                "instruction_sha256": "03f87ada5bfc9883d8ba8704495008b8c0ea67d22e5a7064addffdf5acd6b002",
+                "kind": "ANTU_INSTRUCTION",
+                "mapu_ids": [],
+                "model": null,
+                "operation_id": null,
+                "reason": null,
+                "recorded_at": null,
+                "schema_name": "KUYEN_STATEMENT_ORIGIN",
+                "schema_version": "1.0.0"
+              },
+              "rejected": [],
+              "status": "VALIDATED",
+              "version": "1.3.0"
+            }
+          ],
+          "implementation": "fixture"
+        },
+        "content_digest": "7e8e0312bea1b25b8942",
+        "provenance_digest": "2a71456d6fffa11df2c1"
+      }
+    }
+  ],
+  "diff_v1_v2": {
+    "collections": {
+      "entities": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 2
+      },
+      "relations": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "assertions": {
+        "added": [
+          "asrt_bd07b298b8d031f95d62"
+        ],
+        "modified": {
+          "asrt_0677645136247624437d": [
+            "status",
+            "superseded_by"
+          ]
+        },
+        "removed_from_current_view": [
+          "asrt_0677645136247624437d"
+        ],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "evidence": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 3
+      }
+    },
+    "counts": {
+      "entities": {
+        "before": 2,
+        "after": 2,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "relations": {
+        "before": 1,
+        "after": 1,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "assertions": {
+        "before": 2,
+        "after": 3,
+        "added": 1,
+        "modified": 1,
+        "retracted": 1,
+        "deleted": 0
+      },
+      "evidence": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      }
+    },
+    "versions": {
+      "before": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.0.0",
+        "canonical_graph_hash": "227ab0c13c993df656b3c8ae75e8ecea834c628fe867d6275a6de29e16df79bf"
+      },
+      "after": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.1.0",
+        "canonical_graph_hash": "71b3343f655f0109c93e3876fdb752f10e445f1d5753a8cf6260a9465d83fdd3"
+      }
+    },
+    "empty": false,
+    "summary": {
+      "assertions": {
+        "added": [
+          "asrt_bd07b298b8d031f95d62"
+        ],
+        "modified": [
+          "asrt_0677645136247624437d"
+        ],
+        "retracted": [
+          "asrt_0677645136247624437d"
+        ]
+      }
+    }
+  },
+  "diff_v2_v3": {
+    "collections": {
+      "entities": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 2
+      },
+      "relations": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "assertions": {
+        "added": [],
+        "modified": {
+          "asrt_1a5cdb8506d830309508": [
+            "retracted",
+            "status"
+          ]
+        },
+        "removed_from_current_view": [
+          "asrt_1a5cdb8506d830309508"
+        ],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 2
+      },
+      "evidence": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 3
+      }
+    },
+    "counts": {
+      "entities": {
+        "before": 2,
+        "after": 2,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "relations": {
+        "before": 1,
+        "after": 1,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "assertions": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 1,
+        "retracted": 1,
+        "deleted": 0
+      },
+      "evidence": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      }
+    },
+    "versions": {
+      "before": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.1.0",
+        "canonical_graph_hash": "71b3343f655f0109c93e3876fdb752f10e445f1d5753a8cf6260a9465d83fdd3"
+      },
+      "after": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.2.0",
+        "canonical_graph_hash": "f8f4bf0c694027c71d557e92953af6fc0c77c159b6b5b82d9f14e468cd574125"
+      }
+    },
+    "empty": false,
+    "summary": {
+      "assertions": {
+        "added": [],
+        "modified": [
+          "asrt_1a5cdb8506d830309508"
+        ],
+        "retracted": [
+          "asrt_1a5cdb8506d830309508"
+        ]
+      }
+    }
+  },
+  "diff_v3_v4": {
+    "collections": {
+      "entities": {
+        "added": [
+          "ent_abe60aed8697f9d6fbd3"
+        ],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 2
+      },
+      "relations": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 1
+      },
+      "assertions": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 3
+      },
+      "evidence": {
+        "added": [],
+        "modified": {},
+        "removed_from_current_view": [],
+        "restored": [],
+        "deleted": [],
+        "unchanged": 3
+      }
+    },
+    "counts": {
+      "entities": {
+        "before": 2,
+        "after": 3,
+        "added": 1,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "relations": {
+        "before": 1,
+        "after": 1,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "assertions": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      },
+      "evidence": {
+        "before": 3,
+        "after": 3,
+        "added": 0,
+        "modified": 0,
+        "retracted": 0,
+        "deleted": 0
+      }
+    },
+    "versions": {
+      "before": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.2.0",
+        "canonical_graph_hash": "f8f4bf0c694027c71d557e92953af6fc0c77c159b6b5b82d9f14e468cd574125"
+      },
+      "after": {
+        "kuyen_id": "KUY-0123456789ab",
+        "version": "1.3.0",
+        "canonical_graph_hash": "ddc8bc73c0af73bd37c89ee021d5dcfb4fa2758499031b347d6ed1a6d14dc330"
+      }
+    },
+    "empty": false,
+    "summary": {
+      "entities": {
+        "added": [
+          "ent_abe60aed8697f9d6fbd3"
+        ],
+        "modified": [],
+        "retracted": []
+      }
+    }
+  }
+}

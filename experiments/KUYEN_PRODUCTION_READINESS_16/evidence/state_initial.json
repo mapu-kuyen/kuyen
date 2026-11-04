@@ -1,0 +1,419 @@
+{
+  "root": "/private/tmp/kuyen_hardening_01/kuyen",
+  "branch": "work/kuyen-free-text-graph",
+  "head": "f763f79c91903e6d48ab2a31187c1426ef514941",
+  "head_short": "f763f79",
+  "head_subject": "docs(experiment): exact counts and final Git state of coverage 15",
+  "origin_url": "https://github.com/mapu-kuyen/kuyen.git",
+  "upstream": null,
+  "origin_main": "5fd8777a8305097792380fceb9ff861de208147a",
+  "ahead_of_origin_main": 27,
+  "behind_origin_main": 0,
+  "tags": {
+    "v0.2.0": "5fd8777a8305097792380fceb9ff861de208147a"
+  },
+  "version_worktree": "0.2.1rc1",
+  "version_head": "0.2.0",
+  "version_origin_main": "0.2.0",
+  "counts": {
+    "preexisting_total": 69,
+    "preexisting_modified": 27,
+    "preexisting_untracked": 42,
+    "this_audit": 1,
+    "total_now": 70
+  },
+  "preexisting_entries": [
+    {
+      "state": "M",
+      "path": "ACKUP_AND_RECOVERY.md"
+    },
+    {
+      "state": "M",
+      "path": "SECURITY.md"
+    },
+    {
+      "state": "M",
+      "path": "SIDECAR.md"
+    },
+    {
+      "state": "M",
+      "path": "VERSION"
+    },
+    {
+      "state": "M",
+      "path": "examples/quickstart.py"
+    },
+    {
+      "state": "M",
+      "path": "pyproject.toml"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/adapters/openviking.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/backup/archive.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/canonical.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/editing/context.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/engine.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/errors.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/ingest.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/lifecycle/antu.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/lifecycle/unit.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/product.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/projection/native.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/projection/openviking.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/projection/outbox.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/sidecar/__init__.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/storage/commit.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/storage/registry.py"
+    },
+    {
+      "state": "M",
+      "path": "src/kuyen/storage/store.py"
+    },
+    {
+      "state": "M",
+      "path": "tests/editing/helpers.py"
+    },
+    {
+      "state": "M",
+      "path": "tests/editing/test_022_graph_edit.py"
+    },
+    {
+      "state": "M",
+      "path": "tests/integration/test_document_path_artifacts.py"
+    },
+    {
+      "state": "M",
+      "path": "tests/unit/test_013_ingestion.py"
+    },
+    {
+      "state": "??",
+      "path": "MANIFEST.in"
+    },
+    {
+      "state": "??",
+      "path": "docs/KUYEN_OPENVIKING_VLM_CONFIGURATION_05.md"
+    },
+    {
+      "state": "??",
+      "path": "docs/KUYEN_RELEASE_QUICKSTART_REPAIR_02.md"
+    },
+    {
+      "state": "??",
+      "path": "docs/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03.md"
+    },
+    {
+      "state": "??",
+      "path": "docs/reports/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_DISTRIBUTED_ANTU_APPLICABILITY_12/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_EXPLICIT_POLARITY_FIXTURES_10/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_NATIVE_GRAPH_CANDIDATE_09/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_OPENVIKING_LUNA_SMOKE_07/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_OPENVIKING_VLM_CONFIGURATION_05/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_RELEASE_QUICKSTART_REPAIR_02/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_SOURCE_UNIT_DISAMBIGUATION_03/"
+    },
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_TEN_REAL_MAPU_AND_ANTU_OPERATIONS_13/"
+    },
+    {
+      "state": "??",
+      "path": "scripts/"
+    },
+    {
+      "state": "??",
+      "path": "src/kuyen/provenance.py"
+    },
+    {
+      "state": "??",
+      "path": "src/kuyen/semantics/schema.py"
+    },
+    {
+      "state": "??",
+      "path": "src/kuyen/semantics/scope.py"
+    },
+    {
+      "state": "??",
+      "path": "src/kuyen/vlm.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/api/test_a1_canonical_validation.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/editing/test_024_distributed_applicability.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/examples/"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_antu_contract.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_b1_staging_classification.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_m1_ledger_concurrency.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_m1_ledger_multiprocess.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_m1_m2_combined.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_m2_ledger_recovery.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_m6_append_scaling.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_operation_boundary.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_reconciliation_metadata.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/lifecycle/test_source_provenance.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/projection/"
+    },
+    {
+      "state": "??",
+      "path": "tests/projection_helpers.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/security/test_tamper_detection.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/security/test_version_id_containment.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/storage/test_a2_stale_base_commit.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/storage/test_a3_backup_target.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/storage/test_atomic_write_boundary.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/storage/test_b2_restore_target.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/test_source_unit_disambiguation.py"
+    },
+    {
+      "state": "??",
+      "path": "tests/unit/test_vlm_configuration.py"
+    }
+  ],
+  "this_audit_entries": [
+    {
+      "state": "??",
+      "path": "experiments/KUYEN_PRODUCTION_READINESS_16/"
+    }
+  ],
+  "commits": [
+    [
+      "f763f79",
+      "docs(experiment): exact counts and final Git state of coverage 15"
+    ],
+    [
+      "54ce6e7",
+      "docs(experiment): manifest of the operational coverage 15"
+    ],
+    [
+      "e85d95b",
+      "docs(experiment): operational coverage of Antu operations 15"
+    ],
+    [
+      "951b1ba",
+      "test(editing): operational coverage of relations, entities, attributes and long instructions"
+    ],
+    [
+      "a6bc996",
+      "feat(editing): checked entity, attribute and relation operations"
+    ],
+    [
+      "d565f00",
+      "fix(editing): read nested proposals and never infer NO_CHANGES"
+    ],
+    [
+      "b6a00d0",
+      "docs(experiment): semantic fidelity hardening 14"
+    ],
+    [
+      "8bd4c05",
+      "feat(editing): contract for relation sweeps and schema fields"
+    ],
+    [
+      "2ffaa89",
+      "fix(storage): list versions in creation order"
+    ],
+    [
+      "e20a6cd",
+      "fix(editing): partial Antu updates preserve statement semantics"
+    ],
+    [
+      "dfab165",
+      "docs(experiment): estado final exacto del arbol de trabajo y manifiesto"
+    ],
+    [
+      "2c87742",
+      "docs(experiment): la comprobacion de secretos ya no se auto-menciona"
+    ],
+    [
+      "fe9ca8a",
+      "docs(experiment): make the commit list self-consistent and rehash"
+    ],
+    [
+      "cfe8884",
+      "docs(experiment): recuentos finales y manifiesto rehasheado"
+    ],
+    [
+      "152cbc7",
+      "experimento 11: inferencias reales y compilacion real de OpenViking"
+    ],
+    [
+      "866ea0f",
+      "documento: arbol nativo, predicado declarado preservado, origen de referencia"
+    ],
+    [
+      "8240d97",
+      "editing: expected parcial, identidad sin consumo, registro limpio"
+    ],
+    [
+      "32654f9",
+      "docs(experiment): exact final counts of the preserved pre-existing work"
+    ],
+    [
+      "606f8c5",
+      "docs(experiment): point the report at the authoritative commit list and refresh hashes"
+    ],
+    [
+      "1e7319d",
+      "docs(experiment): correct the usage example and refresh the manifest"
+    ],
+    [
+      "f542db1",
+      "docs(experiment): final git state and artifact hashes"
+    ],
+    [
+      "5f586fd",
+      "docs(experiment): contracts in Spanish and English, report and evidence"
+    ],
+    [
+      "92ca99f",
+      "feat(editing): edit the graph through an Antü, validate and version it"
+    ],
+    [
+      "ea5c87d",
+      "feat(semantics): record where every statement comes from"
+    ],
+    [
+      "c6c398c",
+      "fix(evidence): make MAPU identity, quotes and polarity authoritative"
+    ],
+    [
+      "9a5e512",
+      "test(semantics): make fixture polarity explicit"
+    ],
+    [
+      "b6ad5fc",
+      "refactor(architecture): align KÜYEN with OpenViking-first design"
+    ]
+  ]
+}

@@ -1,0 +1,620 @@
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77.0.1
+  - wheel
+* Getting build dependencies for wheel...
+running egg_info
+creating src/kuyen.egg-info
+writing src/kuyen.egg-info/PKG-INFO
+writing dependency_links to src/kuyen.egg-info/dependency_links.txt
+writing requirements to src/kuyen.egg-info/requires.txt
+writing top-level names to src/kuyen.egg-info/top_level.txt
+writing manifest file 'src/kuyen.egg-info/SOURCES.txt'
+reading manifest file 'src/kuyen.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '__pycache__/*' found anywhere in distribution
+no previously-included directories found matching 'docs'
+adding license file 'LICENSE'
+writing manifest file 'src/kuyen.egg-info/SOURCES.txt'
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build/lib/kuyen
+copying src/kuyen/ingest.py -> build/lib/kuyen
+copying src/kuyen/execution.py -> build/lib/kuyen
+copying src/kuyen/config.py -> build/lib/kuyen
+copying src/kuyen/_version.py -> build/lib/kuyen
+copying src/kuyen/credentials.py -> build/lib/kuyen
+copying src/kuyen/security.py -> build/lib/kuyen
+copying src/kuyen/__init__.py -> build/lib/kuyen
+copying src/kuyen/vlm.py -> build/lib/kuyen
+copying src/kuyen/engine.py -> build/lib/kuyen
+copying src/kuyen/canonical.py -> build/lib/kuyen
+copying src/kuyen/versioning.py -> build/lib/kuyen
+copying src/kuyen/ontology.py -> build/lib/kuyen
+copying src/kuyen/contracts.py -> build/lib/kuyen
+copying src/kuyen/product.py -> build/lib/kuyen
+copying src/kuyen/errors.py -> build/lib/kuyen
+copying src/kuyen/provenance.py -> build/lib/kuyen
+creating build/lib/kuyen/publication
+copying src/kuyen/publication/planner.py -> build/lib/kuyen/publication
+copying src/kuyen/publication/coordinator.py -> build/lib/kuyen/publication
+copying src/kuyen/publication/models.py -> build/lib/kuyen/publication
+copying src/kuyen/publication/registry.py -> build/lib/kuyen/publication
+copying src/kuyen/publication/__init__.py -> build/lib/kuyen/publication
+copying src/kuyen/publication/verifier.py -> build/lib/kuyen/publication
+creating build/lib/kuyen/normalization
+copying src/kuyen/normalization/__init__.py -> build/lib/kuyen/normalization
+copying src/kuyen/normalization/normalizer.py -> build/lib/kuyen/normalization
+creating build/lib/kuyen/recovery
+copying src/kuyen/recovery/__init__.py -> build/lib/kuyen/recovery
+copying src/kuyen/recovery/rebuild.py -> build/lib/kuyen/recovery
+creating build/lib/kuyen/serialization
+copying src/kuyen/serialization/__init__.py -> build/lib/kuyen/serialization
+copying src/kuyen/serialization/serializer.py -> build/lib/kuyen/serialization
+creating build/lib/kuyen/lifecycle
+copying src/kuyen/lifecycle/ledger.py -> build/lib/kuyen/lifecycle
+copying src/kuyen/lifecycle/__init__.py -> build/lib/kuyen/lifecycle
+copying src/kuyen/lifecycle/unit.py -> build/lib/kuyen/lifecycle
+copying src/kuyen/lifecycle/antu.py -> build/lib/kuyen/lifecycle
+creating build/lib/kuyen/models
+copying src/kuyen/models/domain.py -> build/lib/kuyen/models
+copying src/kuyen/models/__init__.py -> build/lib/kuyen/models
+creating build/lib/kuyen/semantics
+copying src/kuyen/semantics/predicates.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/support.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/__init__.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/origin.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/identity.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/scope.py -> build/lib/kuyen/semantics
+copying src/kuyen/semantics/schema.py -> build/lib/kuyen/semantics
+creating build/lib/kuyen/storage
+copying src/kuyen/storage/store.py -> build/lib/kuyen/storage
+copying src/kuyen/storage/registry.py -> build/lib/kuyen/storage
+copying src/kuyen/storage/commit.py -> build/lib/kuyen/storage
+copying src/kuyen/storage/__init__.py -> build/lib/kuyen/storage
+copying src/kuyen/storage/versions.py -> build/lib/kuyen/storage
+creating build/lib/kuyen/adapters
+copying src/kuyen/adapters/openviking.py -> build/lib/kuyen/adapters
+copying src/kuyen/adapters/__init__.py -> build/lib/kuyen/adapters
+copying src/kuyen/adapters/openviking_publication.py -> build/lib/kuyen/adapters
+creating build/lib/kuyen/materialization
+copying src/kuyen/materialization/paths.py -> build/lib/kuyen/materialization
+copying src/kuyen/materialization/__init__.py -> build/lib/kuyen/materialization
+copying src/kuyen/materialization/materializer.py -> build/lib/kuyen/materialization
+copying src/kuyen/materialization/contract.py -> build/lib/kuyen/materialization
+creating build/lib/kuyen/editing
+copying src/kuyen/editing/validator.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/service.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/editors.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/outcome.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/__init__.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/applier.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/operations.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/context.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/diff.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/prompt.py -> build/lib/kuyen/editing
+copying src/kuyen/editing/identity.py -> build/lib/kuyen/editing
+creating build/lib/kuyen/api
+copying src/kuyen/api/memory.py -> build/lib/kuyen/api
+copying src/kuyen/api/__init__.py -> build/lib/kuyen/api
+creating build/lib/kuyen/sidecar
+copying src/kuyen/sidecar/reconstruction.py -> build/lib/kuyen/sidecar
+copying src/kuyen/sidecar/exporter.py -> build/lib/kuyen/sidecar
+copying src/kuyen/sidecar/__init__.py -> build/lib/kuyen/sidecar
+creating build/lib/kuyen/query
+copying src/kuyen/query/graph.py -> build/lib/kuyen/query
+copying src/kuyen/query/__init__.py -> build/lib/kuyen/query
+creating build/lib/kuyen/backup
+copying src/kuyen/backup/__init__.py -> build/lib/kuyen/backup
+copying src/kuyen/backup/archive.py -> build/lib/kuyen/backup
+creating build/lib/kuyen/ports
+copying src/kuyen/ports/openviking.py -> build/lib/kuyen/ports
+copying src/kuyen/ports/__init__.py -> build/lib/kuyen/ports
+copying src/kuyen/ports/publication.py -> build/lib/kuyen/ports
+creating build/lib/kuyen/coverage
+copying src/kuyen/coverage/metrics.py -> build/lib/kuyen/coverage
+copying src/kuyen/coverage/sections.py -> build/lib/kuyen/coverage
+copying src/kuyen/coverage/__init__.py -> build/lib/kuyen/coverage
+creating build/lib/kuyen/validation
+copying src/kuyen/validation/validators.py -> build/lib/kuyen/validation
+copying src/kuyen/validation/__init__.py -> build/lib/kuyen/validation
+copying src/kuyen/validation/canonical.py -> build/lib/kuyen/validation
+creating build/lib/kuyen/importing
+copying src/kuyen/importing/__init__.py -> build/lib/kuyen/importing
+copying src/kuyen/importing/historical.py -> build/lib/kuyen/importing
+creating build/lib/kuyen/projection
+copying src/kuyen/projection/reconciliation.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/openviking.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/__init__.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/native.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/projector.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/mapping.py -> build/lib/kuyen/projection
+copying src/kuyen/projection/outbox.py -> build/lib/kuyen/projection
+running egg_info
+writing src/kuyen.egg-info/PKG-INFO
+writing dependency_links to src/kuyen.egg-info/dependency_links.txt
+writing requirements to src/kuyen.egg-info/requires.txt
+writing top-level names to src/kuyen.egg-info/top_level.txt
+reading manifest file 'src/kuyen.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '__pycache__/*' found anywhere in distribution
+no previously-included directories found matching 'docs'
+adding license file 'LICENSE'
+writing manifest file 'src/kuyen.egg-info/SOURCES.txt'
+copying src/kuyen/py.typed -> build/lib/kuyen
+creating build/lib/kuyen/schemas
+copying src/kuyen/schemas/mapu.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/antu.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/coverage.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/publication_manifest.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/execution.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/result.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/evidence.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/publication.schema.json -> build/lib/kuyen/schemas
+copying src/kuyen/schemas/kuyen.schema.json -> build/lib/kuyen/schemas
+creating build/lib/kuyen/config/ontologies
+copying src/kuyen/config/ontologies/generic-v1.yaml -> build/lib/kuyen/config/ontologies
+creating build/lib/kuyen/config/ontologies/profiles
+copying src/kuyen/config/ontologies/profiles/wine-tourism-v1.yaml -> build/lib/kuyen/config/ontologies/profiles
+copying src/kuyen/config/ontologies/profiles/historical-native-v1.yaml -> build/lib/kuyen/config/ontologies/profiles
+creating build/lib/kuyen/skills/knowledge-graph
+copying src/kuyen/skills/knowledge-graph/VERSION -> build/lib/kuyen/skills/knowledge-graph
+copying src/kuyen/skills/knowledge-graph/SKILL.md -> build/lib/kuyen/skills/knowledge-graph
+installing to build/bdist.macosx-10.13-universal2/wheel
+running install
+running install_lib
+creating build/bdist.macosx-10.13-universal2/wheel
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen
+copying build/lib/kuyen/ingest.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/execution.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/config.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/publication
+copying build/lib/kuyen/publication/planner.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+copying build/lib/kuyen/publication/coordinator.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+copying build/lib/kuyen/publication/models.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+copying build/lib/kuyen/publication/registry.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+copying build/lib/kuyen/publication/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+copying build/lib/kuyen/publication/verifier.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/publication
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/normalization
+copying build/lib/kuyen/normalization/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/normalization
+copying build/lib/kuyen/normalization/normalizer.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/normalization
+copying build/lib/kuyen/_version.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/credentials.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/config
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/config/ontologies
+copying build/lib/kuyen/config/ontologies/generic-v1.yaml -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/config/ontologies
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/config/ontologies/profiles
+copying build/lib/kuyen/config/ontologies/profiles/wine-tourism-v1.yaml -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/config/ontologies/profiles
+copying build/lib/kuyen/config/ontologies/profiles/historical-native-v1.yaml -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/config/ontologies/profiles
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/recovery
+copying build/lib/kuyen/recovery/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/recovery
+copying build/lib/kuyen/recovery/rebuild.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/recovery
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/serialization
+copying build/lib/kuyen/serialization/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/serialization
+copying build/lib/kuyen/serialization/serializer.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/serialization
+copying build/lib/kuyen/security.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/lifecycle
+copying build/lib/kuyen/lifecycle/ledger.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/lifecycle
+copying build/lib/kuyen/lifecycle/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/lifecycle
+copying build/lib/kuyen/lifecycle/unit.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/lifecycle
+copying build/lib/kuyen/lifecycle/antu.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/lifecycle
+copying build/lib/kuyen/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/models
+copying build/lib/kuyen/models/domain.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/models
+copying build/lib/kuyen/models/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/models
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/semantics
+copying build/lib/kuyen/semantics/predicates.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/support.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/origin.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/identity.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/scope.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+copying build/lib/kuyen/semantics/schema.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/semantics
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/schemas
+copying build/lib/kuyen/schemas/mapu.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/antu.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/coverage.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/publication_manifest.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/execution.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/result.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/evidence.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/publication.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+copying build/lib/kuyen/schemas/kuyen.schema.json -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/schemas
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/storage
+copying build/lib/kuyen/storage/store.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/storage
+copying build/lib/kuyen/storage/registry.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/storage
+copying build/lib/kuyen/storage/commit.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/storage
+copying build/lib/kuyen/storage/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/storage
+copying build/lib/kuyen/storage/versions.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/storage
+copying build/lib/kuyen/vlm.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/adapters
+copying build/lib/kuyen/adapters/openviking.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/adapters
+copying build/lib/kuyen/adapters/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/adapters
+copying build/lib/kuyen/adapters/openviking_publication.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/adapters
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/materialization
+copying build/lib/kuyen/materialization/paths.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/materialization
+copying build/lib/kuyen/materialization/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/materialization
+copying build/lib/kuyen/materialization/materializer.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/materialization
+copying build/lib/kuyen/materialization/contract.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/materialization
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/editing
+copying build/lib/kuyen/editing/validator.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/service.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/editors.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/outcome.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/applier.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/operations.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/context.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/diff.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/prompt.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/editing/identity.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/editing
+copying build/lib/kuyen/engine.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/canonical.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/versioning.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/ontology.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/contracts.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+copying build/lib/kuyen/py.typed -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/api
+copying build/lib/kuyen/api/memory.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/api
+copying build/lib/kuyen/api/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/api
+copying build/lib/kuyen/product.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/sidecar
+copying build/lib/kuyen/sidecar/reconstruction.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/sidecar
+copying build/lib/kuyen/sidecar/exporter.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/sidecar
+copying build/lib/kuyen/sidecar/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/sidecar
+copying build/lib/kuyen/errors.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/skills
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/skills/knowledge-graph
+copying build/lib/kuyen/skills/knowledge-graph/VERSION -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/skills/knowledge-graph
+copying build/lib/kuyen/skills/knowledge-graph/SKILL.md -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/skills/knowledge-graph
+copying build/lib/kuyen/provenance.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/query
+copying build/lib/kuyen/query/graph.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/query
+copying build/lib/kuyen/query/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/query
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/backup
+copying build/lib/kuyen/backup/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/backup
+copying build/lib/kuyen/backup/archive.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/backup
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/ports
+copying build/lib/kuyen/ports/openviking.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/ports
+copying build/lib/kuyen/ports/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/ports
+copying build/lib/kuyen/ports/publication.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/ports
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/coverage
+copying build/lib/kuyen/coverage/metrics.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/coverage
+copying build/lib/kuyen/coverage/sections.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/coverage
+copying build/lib/kuyen/coverage/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/coverage
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/validation
+copying build/lib/kuyen/validation/validators.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/validation
+copying build/lib/kuyen/validation/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/validation
+copying build/lib/kuyen/validation/canonical.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/validation
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/importing
+copying build/lib/kuyen/importing/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/importing
+copying build/lib/kuyen/importing/historical.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/importing
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen/projection
+copying build/lib/kuyen/projection/reconciliation.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/openviking.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/__init__.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/native.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/projector.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/mapping.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+copying build/lib/kuyen/projection/outbox.py -> build/bdist.macosx-10.13-universal2/wheel/./kuyen/projection
+running install_egg_info
+Copying src/kuyen.egg-info to build/bdist.macosx-10.13-universal2/wheel/./kuyen-0.3.0-py3.13.egg-info
+running install_scripts
+creating build/bdist.macosx-10.13-universal2/wheel/kuyen-0.3.0.dist-info/WHEEL
+creating '/private/tmp/kuyen17_clone/dist/.tmp-7zf313kf/kuyen-0.3.0-py3-none-any.whl' and adding 'build/bdist.macosx-10.13-universal2/wheel' to it
+adding 'kuyen/__init__.py'
+adding 'kuyen/_version.py'
+adding 'kuyen/canonical.py'
+adding 'kuyen/config.py'
+adding 'kuyen/contracts.py'
+adding 'kuyen/credentials.py'
+adding 'kuyen/engine.py'
+adding 'kuyen/errors.py'
+adding 'kuyen/execution.py'
+adding 'kuyen/ingest.py'
+adding 'kuyen/ontology.py'
+adding 'kuyen/product.py'
+adding 'kuyen/provenance.py'
+adding 'kuyen/py.typed'
+adding 'kuyen/security.py'
+adding 'kuyen/versioning.py'
+adding 'kuyen/vlm.py'
+adding 'kuyen/adapters/__init__.py'
+adding 'kuyen/adapters/openviking.py'
+adding 'kuyen/adapters/openviking_publication.py'
+adding 'kuyen/api/__init__.py'
+adding 'kuyen/api/memory.py'
+adding 'kuyen/backup/__init__.py'
+adding 'kuyen/backup/archive.py'
+adding 'kuyen/config/ontologies/generic-v1.yaml'
+adding 'kuyen/config/ontologies/profiles/historical-native-v1.yaml'
+adding 'kuyen/config/ontologies/profiles/wine-tourism-v1.yaml'
+adding 'kuyen/coverage/__init__.py'
+adding 'kuyen/coverage/metrics.py'
+adding 'kuyen/coverage/sections.py'
+adding 'kuyen/editing/__init__.py'
+adding 'kuyen/editing/applier.py'
+adding 'kuyen/editing/context.py'
+adding 'kuyen/editing/diff.py'
+adding 'kuyen/editing/editors.py'
+adding 'kuyen/editing/identity.py'
+adding 'kuyen/editing/operations.py'
+adding 'kuyen/editing/outcome.py'
+adding 'kuyen/editing/prompt.py'
+adding 'kuyen/editing/service.py'
+adding 'kuyen/editing/validator.py'
+adding 'kuyen/importing/__init__.py'
+adding 'kuyen/importing/historical.py'
+adding 'kuyen/lifecycle/__init__.py'
+adding 'kuyen/lifecycle/antu.py'
+adding 'kuyen/lifecycle/ledger.py'
+adding 'kuyen/lifecycle/unit.py'
+adding 'kuyen/materialization/__init__.py'
+adding 'kuyen/materialization/contract.py'
+adding 'kuyen/materialization/materializer.py'
+adding 'kuyen/materialization/paths.py'
+adding 'kuyen/models/__init__.py'
+adding 'kuyen/models/domain.py'
+adding 'kuyen/normalization/__init__.py'
+adding 'kuyen/normalization/normalizer.py'
+adding 'kuyen/ports/__init__.py'
+adding 'kuyen/ports/openviking.py'
+adding 'kuyen/ports/publication.py'
+adding 'kuyen/projection/__init__.py'
+adding 'kuyen/projection/mapping.py'
+adding 'kuyen/projection/native.py'
+adding 'kuyen/projection/openviking.py'
+adding 'kuyen/projection/outbox.py'
+adding 'kuyen/projection/projector.py'
+adding 'kuyen/projection/reconciliation.py'
+adding 'kuyen/publication/__init__.py'
+adding 'kuyen/publication/coordinator.py'
+adding 'kuyen/publication/models.py'
+adding 'kuyen/publication/planner.py'
+adding 'kuyen/publication/registry.py'
+adding 'kuyen/publication/verifier.py'
+adding 'kuyen/query/__init__.py'
+adding 'kuyen/query/graph.py'
+adding 'kuyen/recovery/__init__.py'
+adding 'kuyen/recovery/rebuild.py'
+adding 'kuyen/schemas/antu.schema.json'
+adding 'kuyen/schemas/coverage.schema.json'
+adding 'kuyen/schemas/evidence.schema.json'
+adding 'kuyen/schemas/execution.schema.json'
+adding 'kuyen/schemas/kuyen.schema.json'
+adding 'kuyen/schemas/mapu.schema.json'
+adding 'kuyen/schemas/publication.schema.json'
+adding 'kuyen/schemas/publication_manifest.schema.json'
+adding 'kuyen/schemas/result.schema.json'
+adding 'kuyen/semantics/__init__.py'
+adding 'kuyen/semantics/identity.py'
+adding 'kuyen/semantics/origin.py'
+adding 'kuyen/semantics/predicates.py'
+adding 'kuyen/semantics/schema.py'
+adding 'kuyen/semantics/scope.py'
+adding 'kuyen/semantics/support.py'
+adding 'kuyen/serialization/__init__.py'
+adding 'kuyen/serialization/serializer.py'
+adding 'kuyen/sidecar/__init__.py'
+adding 'kuyen/sidecar/exporter.py'
+adding 'kuyen/sidecar/reconstruction.py'
+adding 'kuyen/skills/knowledge-graph/SKILL.md'
+adding 'kuyen/skills/knowledge-graph/VERSION'
+adding 'kuyen/storage/__init__.py'
+adding 'kuyen/storage/commit.py'
+adding 'kuyen/storage/registry.py'
+adding 'kuyen/storage/store.py'
+adding 'kuyen/storage/versions.py'
+adding 'kuyen/validation/__init__.py'
+adding 'kuyen/validation/canonical.py'
+adding 'kuyen/validation/validators.py'
+adding 'kuyen-0.3.0.dist-info/licenses/LICENSE'
+adding 'kuyen-0.3.0.dist-info/METADATA'
+adding 'kuyen-0.3.0.dist-info/WHEEL'
+adding 'kuyen-0.3.0.dist-info/top_level.txt'
+adding 'kuyen-0.3.0.dist-info/RECORD'
+removing build/bdist.macosx-10.13-universal2/wheel
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=77.0.1
+  - wheel
+* Getting build dependencies for sdist...
+running egg_info
+writing src/kuyen.egg-info/PKG-INFO
+writing dependency_links to src/kuyen.egg-info/dependency_links.txt
+writing requirements to src/kuyen.egg-info/requires.txt
+writing top-level names to src/kuyen.egg-info/top_level.txt
+reading manifest file 'src/kuyen.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '__pycache__/*' found anywhere in distribution
+no previously-included directories found matching 'docs'
+adding license file 'LICENSE'
+writing manifest file 'src/kuyen.egg-info/SOURCES.txt'
+* Installed build dependency versions:
+  - setuptools==84.2.1
+  - wheel==0.48.0
+* Building sdist...
+running sdist
+running egg_info
+writing src/kuyen.egg-info/PKG-INFO
+writing dependency_links to src/kuyen.egg-info/dependency_links.txt
+writing requirements to src/kuyen.egg-info/requires.txt
+writing top-level names to src/kuyen.egg-info/top_level.txt
+reading manifest file 'src/kuyen.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '__pycache__/*' found anywhere in distribution
+no previously-included directories found matching 'docs'
+adding license file 'LICENSE'
+writing manifest file 'src/kuyen.egg-info/SOURCES.txt'
+running check
+creating kuyen-0.3.0
+creating kuyen-0.3.0/src/kuyen
+creating kuyen-0.3.0/src/kuyen.egg-info
+creating kuyen-0.3.0/src/kuyen/adapters
+creating kuyen-0.3.0/src/kuyen/api
+creating kuyen-0.3.0/src/kuyen/backup
+creating kuyen-0.3.0/src/kuyen/config/ontologies
+creating kuyen-0.3.0/src/kuyen/config/ontologies/profiles
+creating kuyen-0.3.0/src/kuyen/coverage
+creating kuyen-0.3.0/src/kuyen/editing
+creating kuyen-0.3.0/src/kuyen/importing
+creating kuyen-0.3.0/src/kuyen/lifecycle
+creating kuyen-0.3.0/src/kuyen/materialization
+creating kuyen-0.3.0/src/kuyen/models
+creating kuyen-0.3.0/src/kuyen/normalization
+creating kuyen-0.3.0/src/kuyen/ports
+creating kuyen-0.3.0/src/kuyen/projection
+creating kuyen-0.3.0/src/kuyen/publication
+creating kuyen-0.3.0/src/kuyen/query
+creating kuyen-0.3.0/src/kuyen/recovery
+creating kuyen-0.3.0/src/kuyen/schemas
+creating kuyen-0.3.0/src/kuyen/semantics
+creating kuyen-0.3.0/src/kuyen/serialization
+creating kuyen-0.3.0/src/kuyen/sidecar
+creating kuyen-0.3.0/src/kuyen/skills/knowledge-graph
+creating kuyen-0.3.0/src/kuyen/storage
+creating kuyen-0.3.0/src/kuyen/validation
+copying files to kuyen-0.3.0...
+copying ADAPTERS.md -> kuyen-0.3.0
+copying ANTU_LIFECYCLE.md -> kuyen-0.3.0
+copying ARCHITECTURE.md -> kuyen-0.3.0
+copying BACKUP_AND_RECOVERY.md -> kuyen-0.3.0
+copying CANONICAL_STORAGE.md -> kuyen-0.3.0
+copying CHANGELOG.md -> kuyen-0.3.0
+copying CONTRIBUTING.md -> kuyen-0.3.0
+copying DATA_MODEL.md -> kuyen-0.3.0
+copying LICENSE -> kuyen-0.3.0
+copying MANIFEST.in -> kuyen-0.3.0
+copying PLATFORM_COMPATIBILITY.md -> kuyen-0.3.0
+copying PUBLIC_API.md -> kuyen-0.3.0
+copying QUICKSTART.md -> kuyen-0.3.0
+copying README.md -> kuyen-0.3.0
+copying SECURITY.md -> kuyen-0.3.0
+copying SIDECAR.md -> kuyen-0.3.0
+copying VERSION -> kuyen-0.3.0
+copying VERSIONING.md -> kuyen-0.3.0
+copying pyproject.toml -> kuyen-0.3.0
+copying src/kuyen/__init__.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/_version.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/canonical.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/config.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/contracts.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/credentials.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/engine.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/errors.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/execution.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/ingest.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/ontology.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/product.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/provenance.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/py.typed -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/security.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/versioning.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen/vlm.py -> kuyen-0.3.0/src/kuyen
+copying src/kuyen.egg-info/PKG-INFO -> kuyen-0.3.0/src/kuyen.egg-info
+copying src/kuyen.egg-info/SOURCES.txt -> kuyen-0.3.0/src/kuyen.egg-info
+copying src/kuyen.egg-info/dependency_links.txt -> kuyen-0.3.0/src/kuyen.egg-info
+copying src/kuyen.egg-info/requires.txt -> kuyen-0.3.0/src/kuyen.egg-info
+copying src/kuyen.egg-info/top_level.txt -> kuyen-0.3.0/src/kuyen.egg-info
+copying src/kuyen/adapters/__init__.py -> kuyen-0.3.0/src/kuyen/adapters
+copying src/kuyen/adapters/openviking.py -> kuyen-0.3.0/src/kuyen/adapters
+copying src/kuyen/adapters/openviking_publication.py -> kuyen-0.3.0/src/kuyen/adapters
+copying src/kuyen/api/__init__.py -> kuyen-0.3.0/src/kuyen/api
+copying src/kuyen/api/memory.py -> kuyen-0.3.0/src/kuyen/api
+copying src/kuyen/backup/__init__.py -> kuyen-0.3.0/src/kuyen/backup
+copying src/kuyen/backup/archive.py -> kuyen-0.3.0/src/kuyen/backup
+copying src/kuyen/config/ontologies/generic-v1.yaml -> kuyen-0.3.0/src/kuyen/config/ontologies
+copying src/kuyen/config/ontologies/profiles/historical-native-v1.yaml -> kuyen-0.3.0/src/kuyen/config/ontologies/profiles
+copying src/kuyen/config/ontologies/profiles/wine-tourism-v1.yaml -> kuyen-0.3.0/src/kuyen/config/ontologies/profiles
+copying src/kuyen/coverage/__init__.py -> kuyen-0.3.0/src/kuyen/coverage
+copying src/kuyen/coverage/metrics.py -> kuyen-0.3.0/src/kuyen/coverage
+copying src/kuyen/coverage/sections.py -> kuyen-0.3.0/src/kuyen/coverage
+copying src/kuyen/editing/__init__.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/applier.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/context.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/diff.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/editors.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/identity.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/operations.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/outcome.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/prompt.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/service.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/editing/validator.py -> kuyen-0.3.0/src/kuyen/editing
+copying src/kuyen/importing/__init__.py -> kuyen-0.3.0/src/kuyen/importing
+copying src/kuyen/importing/historical.py -> kuyen-0.3.0/src/kuyen/importing
+copying src/kuyen/lifecycle/__init__.py -> kuyen-0.3.0/src/kuyen/lifecycle
+copying src/kuyen/lifecycle/antu.py -> kuyen-0.3.0/src/kuyen/lifecycle
+copying src/kuyen/lifecycle/ledger.py -> kuyen-0.3.0/src/kuyen/lifecycle
+copying src/kuyen/lifecycle/unit.py -> kuyen-0.3.0/src/kuyen/lifecycle
+copying src/kuyen/materialization/__init__.py -> kuyen-0.3.0/src/kuyen/materialization
+copying src/kuyen/materialization/contract.py -> kuyen-0.3.0/src/kuyen/materialization
+copying src/kuyen/materialization/materializer.py -> kuyen-0.3.0/src/kuyen/materialization
+copying src/kuyen/materialization/paths.py -> kuyen-0.3.0/src/kuyen/materialization
+copying src/kuyen/models/__init__.py -> kuyen-0.3.0/src/kuyen/models
+copying src/kuyen/models/domain.py -> kuyen-0.3.0/src/kuyen/models
+copying src/kuyen/normalization/__init__.py -> kuyen-0.3.0/src/kuyen/normalization
+copying src/kuyen/normalization/normalizer.py -> kuyen-0.3.0/src/kuyen/normalization
+copying src/kuyen/ports/__init__.py -> kuyen-0.3.0/src/kuyen/ports
+copying src/kuyen/ports/openviking.py -> kuyen-0.3.0/src/kuyen/ports
+copying src/kuyen/ports/publication.py -> kuyen-0.3.0/src/kuyen/ports
+copying src/kuyen/projection/__init__.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/mapping.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/native.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/openviking.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/outbox.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/projector.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/projection/reconciliation.py -> kuyen-0.3.0/src/kuyen/projection
+copying src/kuyen/publication/__init__.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/publication/coordinator.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/publication/models.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/publication/planner.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/publication/registry.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/publication/verifier.py -> kuyen-0.3.0/src/kuyen/publication
+copying src/kuyen/query/__init__.py -> kuyen-0.3.0/src/kuyen/query
+copying src/kuyen/query/graph.py -> kuyen-0.3.0/src/kuyen/query
+copying src/kuyen/recovery/__init__.py -> kuyen-0.3.0/src/kuyen/recovery
+copying src/kuyen/recovery/rebuild.py -> kuyen-0.3.0/src/kuyen/recovery
+copying src/kuyen/schemas/antu.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/coverage.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/evidence.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/execution.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/kuyen.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/mapu.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/publication.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/publication_manifest.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/schemas/result.schema.json -> kuyen-0.3.0/src/kuyen/schemas
+copying src/kuyen/semantics/__init__.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/identity.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/origin.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/predicates.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/schema.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/scope.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/semantics/support.py -> kuyen-0.3.0/src/kuyen/semantics
+copying src/kuyen/serialization/__init__.py -> kuyen-0.3.0/src/kuyen/serialization
+copying src/kuyen/serialization/serializer.py -> kuyen-0.3.0/src/kuyen/serialization
+copying src/kuyen/sidecar/__init__.py -> kuyen-0.3.0/src/kuyen/sidecar
+copying src/kuyen/sidecar/exporter.py -> kuyen-0.3.0/src/kuyen/sidecar
+copying src/kuyen/sidecar/reconstruction.py -> kuyen-0.3.0/src/kuyen/sidecar
+copying src/kuyen/skills/knowledge-graph/SKILL.md -> kuyen-0.3.0/src/kuyen/skills/knowledge-graph
+copying src/kuyen/skills/knowledge-graph/VERSION -> kuyen-0.3.0/src/kuyen/skills/knowledge-graph
+copying src/kuyen/storage/__init__.py -> kuyen-0.3.0/src/kuyen/storage
+copying src/kuyen/storage/commit.py -> kuyen-0.3.0/src/kuyen/storage
+copying src/kuyen/storage/registry.py -> kuyen-0.3.0/src/kuyen/storage
+copying src/kuyen/storage/store.py -> kuyen-0.3.0/src/kuyen/storage
+copying src/kuyen/storage/versions.py -> kuyen-0.3.0/src/kuyen/storage
+copying src/kuyen/validation/__init__.py -> kuyen-0.3.0/src/kuyen/validation
+copying src/kuyen/validation/canonical.py -> kuyen-0.3.0/src/kuyen/validation
+copying src/kuyen/validation/validators.py -> kuyen-0.3.0/src/kuyen/validation
+Writing kuyen-0.3.0/setup.cfg
+Creating tar archive
+removing 'kuyen-0.3.0' (and everything under it)
+Successfully built kuyen-0.3.0-py3-none-any.whl and kuyen-0.3.0.tar.gz

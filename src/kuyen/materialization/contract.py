@@ -1,8 +1,21 @@
-"""Versioned provider-result contract for KÜYEN 0.1.4.
+"""Versioned provider-result contract for KÜYEN.
 
 The provider contract is deliberately small and separate from KÜYEN's canonical
 candidate model. It describes what the agent may propose; KÜYEN decides what can be
 materialized as evidence.
+
+Version history (KUYEN_PRODUCTIVE_GRAPH_11, §5.4):
+
+* `kuyen-provider-result-v1` — polarity POSITIVE/NEGATIVE, scope, temporal, sources and
+  inline evidence. It cannot express modality, attribution or an unknown polarity.
+* `kuyen-provider-result-v2` — additive: `polarity` also admits `UNKNOWN`, `modality`
+  and `attribution` are declared per assertion, and every evidence entry may declare
+  `context` (to disambiguate a repeated quote) and `source_unit_id`. Both versions are
+  accepted; the materialized objects record which contract produced them, so a v1
+  result is never mistaken for a v2 one.
+
+Neither version lets a producer grant itself a verification status: absent polarity is
+`UNKNOWN` in both and such an object is not admitted to the canonical set.
 """
 from __future__ import annotations
 
@@ -11,10 +24,13 @@ from typing import Any
 from ..errors import CandidateMaterializationError
 
 CONTRACT_ID = "kuyen-provider-result-v1"
+CONTRACT_ID_V2 = "kuyen-provider-result-v2"
+SUPPORTED_CONTRACT_IDS = (CONTRACT_ID, CONTRACT_ID_V2)
 NATIVE_CONTRACT_ID = "kuyen-native-files-v1"
 RESULT_FILENAME = "kuyen_result.json"
 LEGACY_SIDECAR = "kuyen_candidates.json"
 
+# Every contract accepts the same top-level shape; v2 only adds item-level fields.
 TOP_LEVEL_KEYS = {"schema_version", "provider", "entities", "relations", "assertions", "coverage"}
 ENTITY_KEYS = {"provider_id", "id", "name", "title", "entity_type", "type", "aliases", "description", "sources", "evidence"}
 # `predicate` is the carrier field. The nine predicate-layer fields below make the
@@ -26,14 +42,18 @@ RELATION_KEYS = {
     "source_predicate", "canonical_predicate", "provider_predicate",
     "display_label", "provider_label", "mapping_status",
     "mapping_rule_id", "mapping_version", "provider_projection_status",
+    "modality", "attribution",
 }
 ASSERTION_KEYS = {
     "subject", "predicate", "object_entity", "value", "polarity", "scope",
     "temporal_scope", "temporal", "sources", "evidence", "epistemic_status", "proposed_status",
+    "modality", "attribution",
 }
 EVIDENCE_KEYS = {
     "quote", "char_start", "char_end", "source_uri", "source_sha256", "mapu_id",
     "evidence_id", "extraction_method", "offset_unit",
+    # v2 additions: both are hints KÜYEN verifies, never authority (see §5.2).
+    "context", "source_unit_id",
 }
 
 
@@ -62,7 +82,9 @@ def normalize_provider_result(data: Any) -> dict[str, Any]:
     """Validate the top-level contract and normalize aliases.
 
     Unknown top-level fields are rejected: a wrapped payload or a different schema
-    must not be guessed. Unknown item-level fields are recorded and ignored.
+    must not be guessed. Unknown item-level fields are recorded and ignored. Both
+    supported contract versions share this shape, so the returned document records
+    which one was declared instead of assuming the newest.
     """
     if not isinstance(data, dict):
         raise CandidateMaterializationError(
@@ -75,10 +97,11 @@ def normalize_provider_result(data: Any) -> dict[str, Any]:
             details={"unknown_fields": unknown_top},
         )
     version = str(data.get("schema_version") or "")
-    if version != CONTRACT_ID:
+    if version not in SUPPORTED_CONTRACT_IDS:
         raise CandidateMaterializationError(
-            f"provider result schema_version must be {CONTRACT_ID}, got {version or '<empty>'}",
-            details={"schema_version": version},
+            f"provider result schema_version must be one of {list(SUPPORTED_CONTRACT_IDS)}, "
+            f"got {version or '<empty>'}",
+            details={"schema_version": version, "supported": list(SUPPORTED_CONTRACT_IDS)},
         )
     entities = _require_list(data, "entities")
     relations = _require_list(data, "relations")

@@ -18,6 +18,14 @@ class EpistemicStatus(str, Enum):
     CONTRADICTED = "CONTRADICTED"
     UNSUPPORTED = "UNSUPPORTED"
     NOT_EVALUATED = "NOT_EVALUATED"
+    # Knowledge that comes from an authorised Antü instruction instead of a document.
+    # It is a real, recorded provenance — it is simply not documentary verification, so
+    # it must never be reported as SOURCE_VERIFIED (KUYEN_PRODUCTIVE_GRAPH_11, §4).
+    INSTRUCTED = "INSTRUCTED"
+    # An earlier statement kept in the record after a correction; `superseded_by`
+    # points at the statement that replaced it.
+    SUPERSEDED = "SUPERSEDED"
+    RETRACTED = "RETRACTED"
 
 
 class CoverageState(str, Enum):
@@ -31,6 +39,21 @@ class CoverageState(str, Enum):
 class Polarity(str, Enum):
     POSITIVE = "POSITIVE"
     NEGATIVE = "NEGATIVE"
+    # Candidate-side only. The canonical schema admits POSITIVE/NEGATIVE; a candidate
+    # whose polarity was never declared stays UNKNOWN and is *not* admitted instead of
+    # being silently turned into an affirmative statement (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+    UNKNOWN = "UNKNOWN"
+
+
+class Modality(str, Enum):
+    """How the source states a claim. Absent modality is UNKNOWN, never FACT."""
+
+    FACT = "FACT"
+    FORECAST = "FORECAST"
+    ESTIMATE = "ESTIMATE"
+    OPINION = "OPINION"
+    CONDITIONAL = "CONDITIONAL"
+    UNKNOWN = "UNKNOWN"
 
 
 def to_primitive(value: Any) -> Any:
@@ -257,6 +280,13 @@ class CandidateEvidence:
     offset_unit: str = "unicode_codepoint"
     extraction_method: str = "llm"
     validation_status: str = "NOT_EVALUATED"
+    # Literal fragment around the quote, used only to disambiguate a repeated quote.
+    context: str | None = None
+    # Optional SOURCE_UNIT declared by the producer; KÜYEN verifies it, never trusts it.
+    source_unit_id: str | None = None
+    # Offsets exactly as the producer declared them. They are auxiliary: the located
+    # quote is the authority for `char_start`/`char_end` (KUYEN_PRODUCTIVE_GRAPH_11, §5.2).
+    declared_offsets: dict[str, Any] | None = None
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "CandidateEvidence":
@@ -271,6 +301,9 @@ class CandidateEvidence:
             offset_unit=str(value.get("offset_unit") or "unicode_codepoint"),
             extraction_method=str(value.get("extraction_method") or "llm"),
             validation_status=str(value.get("validation_status") or "NOT_EVALUATED"),
+            context=value.get("context"),
+            source_unit_id=value.get("source_unit_id"),
+            declared_offsets=dict(value["declared_offsets"]) if value.get("declared_offsets") else None,
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -405,6 +438,13 @@ class Relation:
     provider_projection_status: str | None = None
     source_label: str | None = None
     source_relation_ref: str | None = None
+    # Semantic dimensions and explicit provenance (KUYEN_PRODUCTIVE_GRAPH_11, §4 and §5.4).
+    modality: str = "UNKNOWN"
+    attribution: str | None = None
+    origin: dict[str, Any] | None = None
+    supersedes: str | None = None
+    superseded_by: str | None = None
+    retracted: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return to_primitive(self)
@@ -441,6 +481,12 @@ class Relation:
             provider_projection_status=value.get("provider_projection_status"),
             source_label=value.get("source_label"),
             source_relation_ref=value.get("source_relation_ref"),
+            modality=str(value.get("modality") or "UNKNOWN"),
+            attribution=value.get("attribution"),
+            origin=dict(value["origin"]) if isinstance(value.get("origin"), Mapping) else None,
+            supersedes=value.get("supersedes"),
+            superseded_by=value.get("superseded_by"),
+            retracted=bool(value.get("retracted", False)),
         )
 
 
@@ -464,6 +510,23 @@ class Assertion:
     semantic_status: str = "NOT_ASSESSED"
     support_method: str | None = None
     support_rationale: str | None = None
+    # Predicate layer of an assertion (mirrors `Relation`): the term the producer declared is
+    # preserved instead of being silently replaced by a generic scalar predicate.
+    source_predicate: str | None = None
+    canonical_predicate: str | None = None
+    mapping_status: str = "UNRESOLVED"
+    mapping_rule_id: str | None = None
+    mapping_version: str | None = None
+    # Semantic dimensions of the statement (KUYEN_PRODUCTIVE_GRAPH_11, §5.4). An absent
+    # modality is UNKNOWN, never FACT; attribution names the actor the claim is credited to.
+    modality: str = "UNKNOWN"
+    attribution: str | None = None
+    # Explicit provenance of the statement: document evidence, Antü instruction or a
+    # previous version. Never inferred from the presence of evidence alone.
+    origin: dict[str, Any] | None = None
+    supersedes: str | None = None
+    superseded_by: str | None = None
+    retracted: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return to_primitive(self)
@@ -493,6 +556,17 @@ class Assertion:
             semantic_status=str(value.get("semantic_status") or "NOT_ASSESSED"),
             support_method=value.get("support_method"),
             support_rationale=value.get("support_rationale"),
+            modality=str(value.get("modality") or "UNKNOWN"),
+            attribution=value.get("attribution"),
+            origin=dict(value["origin"]) if isinstance(value.get("origin"), Mapping) else None,
+            supersedes=value.get("supersedes"),
+            superseded_by=value.get("superseded_by"),
+            retracted=bool(value.get("retracted", False)),
+            source_predicate=value.get("source_predicate"),
+            canonical_predicate=value.get("canonical_predicate"),
+            mapping_status=str(value.get("mapping_status") or "UNRESOLVED"),
+            mapping_rule_id=value.get("mapping_rule_id"),
+            mapping_version=value.get("mapping_version"),
         )
 
 
@@ -541,7 +615,9 @@ class CandidateRelation:
     relation: str
     to_entity: str
     label: str = ""
-    polarity: str = "POSITIVE"
+    # No default to POSITIVE: an undeclared polarity stays UNKNOWN and the canonical set
+    # does not admit it (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+    polarity: str = "UNKNOWN"
     scope: str = "document"
     temporal_scope: str | None = None
     temporal: TemporalScope | None = None
@@ -559,6 +635,10 @@ class CandidateRelation:
     mapping_rule_id: str | None = None
     mapping_version: str | None = None
     provider_projection_status: str = "EXACT"
+    # Declared semantic dimensions; absence is UNKNOWN modality and no attribution
+    # (KUYEN_PRODUCTIVE_GRAPH_11, §5.4).
+    modality: str = "UNKNOWN"
+    attribution: str | None = None
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "CandidateRelation":
@@ -567,7 +647,7 @@ class CandidateRelation:
             relation=str(value.get("relation") or ""),
             to_entity=str(value.get("to") or ""),
             label=str(value.get("label") or value.get("relation") or ""),
-            polarity=str(value.get("polarity") or "POSITIVE"),
+            polarity=str(value.get("polarity") or "UNKNOWN"),
             scope=str(value.get("scope") or "document"),
             temporal_scope=value.get("temporal_scope"),
             temporal=TemporalScope.from_dict(value.get("temporal")),
@@ -582,6 +662,8 @@ class CandidateRelation:
             mapping_rule_id=value.get("mapping_rule_id"),
             mapping_version=value.get("mapping_version"),
             provider_projection_status=str(value.get("provider_projection_status") or "EXACT"),
+            modality=str(value.get("modality") or "UNKNOWN"),
+            attribution=value.get("attribution") if isinstance(value.get("attribution"), str) else None,
         )
 
 
@@ -591,13 +673,23 @@ class CandidateAssertion:
     predicate: str
     object_entity: str | None = None
     value: Value | None = None
-    polarity: str = "POSITIVE"
+    # Undeclared polarity is UNKNOWN, never POSITIVE (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+    polarity: str = "UNKNOWN"
     scope: str = "document"
     temporal_scope: str | None = None
     temporal: TemporalScope | None = None
     evidence_refs: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
     proposed_status: str | None = None
+    # Declared semantic dimensions; absence is UNKNOWN modality and no attribution.
+    modality: str = "UNKNOWN"
+    attribution: str | None = None
+    # Predicate layer declared by the producer (native artifacts declare it literally).
+    source_predicate: str | None = None
+    canonical_predicate: str | None = None
+    mapping_status: str = "UNRESOLVED"
+    mapping_rule_id: str | None = None
+    mapping_version: str | None = None
 
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> "CandidateAssertion":
@@ -620,7 +712,7 @@ class CandidateAssertion:
             predicate=str(value.get("predicate") or ""),
             object_entity=value.get("object_entity") or value.get("object"),
             value=parsed_value,
-            polarity=str(value.get("polarity") or "POSITIVE"),
+            polarity=str(value.get("polarity") or "UNKNOWN"),
             scope=str(value.get("scope") or "document"),
             temporal_scope=value.get("temporal_scope"),
             temporal=TemporalScope.from_dict(value.get("temporal")),
@@ -630,6 +722,13 @@ class CandidateAssertion:
                 str(value.get("epistemic_status") or value.get("proposed_status") or value.get("status"))
                 if (value.get("epistemic_status") or value.get("proposed_status") or value.get("status")) else None
             ),
+            modality=str(value.get("modality") or "UNKNOWN"),
+            attribution=value.get("attribution") if isinstance(value.get("attribution"), str) else None,
+            source_predicate=value.get("source_predicate"),
+            canonical_predicate=value.get("canonical_predicate"),
+            mapping_status=str(value.get("mapping_status") or "UNRESOLVED"),
+            mapping_rule_id=value.get("mapping_rule_id"),
+            mapping_version=value.get("mapping_version"),
         )
 
 @dataclass

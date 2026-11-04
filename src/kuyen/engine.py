@@ -118,6 +118,7 @@ class KuyenEngine:
             health = await selected.health()
             if isinstance(health, dict) and health.get("status_code") not in (None, 200):
                 raise AdapterError(f"OpenViking health check returned {health.get('status_code')}")
+            detected_version = _health_version(health)
             source_uris: list[str] = []
             normalized_mapus: list[Mapu] = []
             for mapu in mapu_sources:
@@ -133,7 +134,7 @@ class KuyenEngine:
                 from_uris=[self.config.source_container_uri],
                 to_uri=to_uri,
                 skill_uri=skill_uri,
-                instruction=instruction or _default_instruction(antu_obj),
+                instruction=instruction or _graph_compile_instruction(antu_obj, normalized_mapus, to_uri),
             )
             snapshot = await selected.wait_task(task_id, self.config.task_timeout_s)
             if snapshot.status != "completed":
@@ -189,6 +190,7 @@ class KuyenEngine:
                 antu=antu_obj, mapus=normalized_mapus, actor=actor, bundle=bundle,
                 request_key=execution_key, execution_id=execution_id, skill_sha=skill_sha,
                 task_id=task_id, to_uri=to_uri, materialization=materialization,
+                openviking_version=detected_version,
             )
         except KuyenError:
             raise
@@ -591,6 +593,7 @@ class KuyenEngine:
         task_id: str | None,
         to_uri: str | None,
         materialization: dict[str, Any] | None = None,
+        openviking_version: str | None = None,
     ) -> BuildResult:
         expected_units = self._expected_units(mapus)
         provenance = {
@@ -599,7 +602,7 @@ class KuyenEngine:
             "schema_version": "kuyen-native-v1",
             "ontology": self.ontology.version_id,
             "skill_sha256": skill_sha,
-            "openviking_version": "0.5.2.1",
+            "openviking_version": openviking_version or "unknown",
             "actor": actor.to_dict(),
             "antu_id": antu.antu_id,
             "antu_version": antu.version,
@@ -722,13 +725,77 @@ def _sanitize_secret(value: Any, secret: str | None) -> Any:
     return value
 
 
-def _default_instruction(antu: Antu) -> str:
-    return (
-        f"Build a {antu.output_profile} candidate for Antü {antu.antu_id}@{antu.version}. "
-        "Use only the supplied sources; preserve exact quotes and Unicode offsets; "
-        "write native entities/relations plus a complete kuyen_candidates.json sidecar; "
-        "do not invent endpoints, sources, quotes or coverage."
+def _health_version(health: Any) -> str | None:
+    """Read the provider version from a `/health` response, or None when unreadable.
+
+    Provenance must record the version that actually answered, never an expected one.
+    """
+    if not isinstance(health, dict):
+        return None
+    body = health.get("body")
+    if isinstance(body, dict):
+        return str(body.get("version") or "") or None
+    if isinstance(body, str):
+        try:
+            return str(json.loads(body).get("version") or "") or None
+        except Exception:  # noqa: BLE001
+            return None
+    return None
+
+
+def _graph_compile_instruction(antu: Antu, mapus: list[Mapu], to_uri: str) -> str:
+    """Instruction for the candidate compilation, in the contract the runtime must produce.
+
+    The Skill explains *how* to read and extract; this instruction fixes *what* artifacts
+    KÜYEN materializes and which identity they must carry, so the candidate can be validated
+    instead of guessed:
+
+    * the MAPU identity (`mapu_id`, `source_uri`, `source_sha256`) is given, never taken from
+      the Skill illustration;
+    * the **native tree** is requested (`entities/<slug>.md` + `relations.jsonl` +
+      `assertions.jsonl`), because that is what the Skill actually writes. A monolithic
+      `kuyen_result.json` is neither asked for nor required: a real compilation of a real
+      document produced a malformed one that blocked an otherwise valid tree
+      (KUYEN_PRODUCTIVE_GRAPH_11, §8.1);
+    * every fact carries a literal quote; the offsets are optional because KÜYEN locates an
+      exact quote deterministically, so a runtime that cannot compute them must omit them
+      instead of writing 0;
+    * `polarity` is explicit (`POSITIVE`/`NEGATIVE`) — KÜYEN does not admit an undeclared
+      polarity — and `modality`/`attribution` are declared when the source implies them.
+    """
+    sources = "\n".join(
+        f"- mapu_id={mapu.mapu_id} source_uri={mapu.source_uri} source_sha256={mapu.sha256}"
+        + (f" title={mapu.metadata['title']!r}" if mapu.metadata.get("title") else "")
+        for mapu in mapus
     )
+    return "\n".join([
+        f"Compile the source into a KÜYEN candidate for Antü {antu.antu_id}@{antu.version}.",
+        f"Write the native artifact tree in {to_uri}:",
+        "- one file `entities/<slug>.md` per entity, with a YAML frontmatter block that",
+        '  declares `id`, `name`, `entity_type`, `description`, `aliases`, `sources` and',
+        '  `evidence`, plus the prose body;',
+        "- one file `relations.jsonl` with one JSON object per line;",
+        "- one file `assertions.jsonl` with one JSON object per line.",
+        "Do NOT write `kuyen_result.json` or any other aggregate file.",
+        'Relation line: {"from","to","relation","label","polarity","sources","evidence"}.',
+        'Assertion line: {"subject","predicate","value":{"value_type","value","unit"},'
+        '"polarity","modality","attribution","sources","evidence"}.',
+        "Entity evidence entry: {\"quote\",\"source_uri\",\"mapu_id\"} plus OPTIONAL "
+        "\"char_start\"/\"char_end\" only when both are exact absolute offsets; otherwise omit "
+        "both fields. Never write 0 as a placeholder.",
+        "`quote` MUST be text copied verbatim from the source, character for character: "
+        "KÜYEN locates it in the MAPU and refuses a paraphrase, a summary, a translation or a "
+        "reconstructed sentence. If you cannot copy an exact fragment, omit the evidence.",
+        "`polarity` is mandatory: POSITIVE or NEGATIVE. `modality` is one of FACT, FORECAST, "
+        "ESTIMATE, OPINION, CONDITIONAL, UNKNOWN; a forecast is never FACT. `attribution` is "
+        "the literal name of the third party the claim is credited to, or omit it.",
+        "`sources` and every `evidence.source_uri` must be EXACTLY the source_uri below "
+        "(the file, not its parent directory); `mapu_id` must be exactly the one below:",
+        sources,
+        "Extract only facts the source states. Keep Spanish. A negation stays negative; a "
+        "forecast is not a fact; a claim attributed to a third party keeps that attribution.",
+    ])
+
 
 
 def _coverage_summary(graph: KuyenGraph) -> dict[str, Any]:

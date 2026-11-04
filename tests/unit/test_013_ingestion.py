@@ -273,7 +273,11 @@ class CompileModeTests(unittest.IsolatedAsyncioTestCase):
             skill_uri="viking://agent/skills/knowledge-graph", instruction="extract",
         )
         self.assertEqual(task, "cmp_full")
-        self.assertEqual(client.options["args"]["mode"], "full")
+        # Contract correction (KUYEN_FREE_TEXT_TO_CANONICAL_GRAPH_08): `args` is a
+        # provider-specific extension that the local VikingBot runtime of OpenViking 0.5.0
+        # rejects with INVALID_ARGUMENT. The default mode is therefore expressed by sending
+        # no args at all; only a non-default mode is declared explicitly.
+        self.assertNotIn("args", client.options)
         self.assertEqual(client.options["instruction"], "extract")
 
     async def test_incremental_mode_is_explicit_and_validated(self):

@@ -1,0 +1,83 @@
+{
+  "assertions_replaced": 3,
+  "with_semantic_loss": 3,
+  "properties_lost": 7,
+  "findings": [
+    {
+      "kuyen": "KUYEN-003",
+      "antu": "ANTU-K003-03",
+      "version": "VER-d9e18cb1c3f9",
+      "old": "asrt_de86229d7dd7715c1375",
+      "new": "asrt_ff9f2dedf11b421d7757",
+      "requested": [
+        "modality",
+        "polarity",
+        "value"
+      ],
+      "lost": [
+        {
+          "property": "scope",
+          "before": "document",
+          "after": "instruction"
+        }
+      ]
+    },
+    {
+      "kuyen": "KUYEN-008",
+      "antu": "ANTU-K008-02",
+      "version": "VER-217c851eb7b2",
+      "old": "asrt_345de0e17c4914aec628",
+      "new": "asrt_fe3ee60182ba0e27dc11",
+      "requested": [
+        "modality",
+        "polarity",
+        "predicate",
+        "value"
+      ],
+      "lost": [
+        {
+          "property": "attribution",
+          "before": "Agencia Estatal de Meteorología (AEMET)",
+          "after": null
+        },
+        {
+          "property": "scope",
+          "before": "document",
+          "after": "instruction"
+        }
+      ]
+    },
+    {
+      "kuyen": "KUYEN-008",
+      "antu": "ANTU-K008-04",
+      "version": "VER-a52c2b7af7ab",
+      "old": "asrt_6f18f1426e4004bac744",
+      "new": "asrt_59d501ee3aaa8ebb4828",
+      "requested": [
+        "value"
+      ],
+      "lost": [
+        {
+          "property": "modality",
+          "before": "FACT",
+          "after": "UNKNOWN"
+        },
+        {
+          "property": "attribution",
+          "before": "Agencia Estatal de Meteorología (AEMET)",
+          "after": null
+        },
+        {
+          "property": "scope",
+          "before": "document",
+          "after": "instruction"
+        },
+        {
+          "property": "value.context",
+          "before": "temperatura media en la España peninsular",
+          "after": null
+        }
+      ]
+    }
+  ]
+}

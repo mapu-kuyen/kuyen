@@ -1,0 +1,22 @@
+[antu] KUYEN-002 K002-MOD · La superficie quemada por el incendio es una estimación provisional, no un hecho
+        NO_CHANGES · 4.28s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-003 K003-VAL · Corrige el porcentaje de capacidad de Cantábrico Occidental: debe ser 54,7 %, no
+        NO_CHANGES · 5.03s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-005 K005-REL · Las relaciones que ubican AQUALICIOUS en España y en Noruega son incorrectas: el
+        NO_CHANGES · 4.77s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-008 K008-MOD · La temperatura media de septiembre de 2026 es un dato medido: marca esa afirmaci
+        COMMITTED · 3.7s · version=VER-db7e9865990d · applied=1 · violations=0 · error=None
+[antu] KUYEN-008 K008-VAL · Corrige la temperatura media de septiembre de 2026 a 22,7 °C.
+        NO_CHANGES · 4.63s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-010 K010-SCH · Añade el campo codigo_interno, de tipo texto, al tipo de entidad supplier de est
+        FAILED · Nones · version=None · applied=0 · violations=0 · error=KeyError: 'field'
+[antu] KUYEN-001 K001-VAL · Corrige la tasa de paro del tercer trimestre de 2026: debe ser 10,20 %, no 10,18
+        COMMITTED · 6.73s · version=VER-6d440968cbb3 · applied=1 · violations=0 · error=None
+[antu] KUYEN-004 K004-VAL · Corrige la potencia de bombeo de la central: son 364 MW, no 363,99 MW.
+        NO_CHANGES · 15.08s · version=None · applied=0 · violations=0 · error=None
+[antu] KUYEN-006 K006-MOD · La contribución de Thwaites al aumento del nivel del mar es una proyección, no u
+        REJECTED · 11.4s · version=None · applied=1 · violations=0 · error=None
+[antu] KUYEN-007 K007-REL · Añade que Joel W. Sills trabaja en el Langley Research Center de la NASA.
+        FAILED · Nones · version=None · applied=0 · violations=0 · error=EditorError: the editor response has no content
+[antu] KUYEN-009 K009-SAT · Confirma que la reducción ajustada por volumen de los puntos de requisa evitable
+        NO_CHANGES · 4.56s · version=None · applied=0 · violations=0 · error=None

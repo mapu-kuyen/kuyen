@@ -1,0 +1,289 @@
+{
+  "experiment": "KUYEN_ANTU_OPERATIONAL_COVERAGE_15",
+  "checks": {
+    "relation_added": {
+      "ok": true,
+      "detail": {
+        "relation_id": "rel_58cacec323fc77cc2330",
+        "status": "INSTRUCTED",
+        "origin": "ANTU_INSTRUCTION",
+        "evidence_ids": [],
+        "polarity": "POSITIVE"
+      }
+    },
+    "relation_has_no_documentary_evidence": {
+      "ok": true,
+      "detail": {
+        "actor": null,
+        "antu_id": "K004-REL",
+        "base_version_id": "VER-8732e4ef6f56",
+        "documentary_verification": false,
+        "evidence_ids": [],
+        "instruction": "El Instituto para la Diversificación y Ahorro de la Energía es un organismo adscrito al Ministerio para la Transición Ecológica y el Reto Demográfico: incorpora esa relación de pertenencia entre ambas entidades.",
+        "instruction_sha256": "5f26482e398893be8b2950f631419ab1f35bd6be8325b9637acb51131a75b3a8",
+        "kind": "ANTU_INSTRUCTION",
+        "mapu_ids": [],
+        "model": {
+          "endpoint": "https://api.deepseek.com/v1",
+          "max_tokens": 8192,
+          "model": "deepseek-flash",
+          "proposal_sha256": "ebf2cc3f35f179ec584ea06c2084de75727beaa996daa6839e835f7b7e281a84",
+          "provider": "openai-compatible",
+          "raw_capture": true,
+          "temperature": 0.0,
+          "transport": "urllib"
+        },
+        "operation_id": "op-1",
+        "reason": "No existe relación de pertenencia entre IDAE y MITECO en el grafo vigente; se declara part_of desde el Instituto hacia el Ministerio, en el sentido que indica la instrucción (organismo adscrito a).",
+        "recorded_at": null,
+        "schema_name": "KUYEN_STATEMENT_ORIGIN",
+        "schema_version": "1.0.0"
+      }
+    },
+    "relation_absent_from_the_base_version": {
+      "ok": true,
+      "detail": "VER-8732e4ef6f56"
+    },
+    "relation_count": {
+      "ok": true,
+      "detail": 15
+    },
+    "entity_renamed_in_place": {
+      "ok": true,
+      "detail": {
+        "entity_id": "ent_7e7f581782f7f38e5d7e",
+        "before": "Central Hidráulica Reversible Los Guajares",
+        "after": "Central Hidráulica Reversible Los Guájares",
+        "aliases": [
+          "Los Guajares",
+          "Central Hidráulica Reversible Los Guajares"
+        ]
+      }
+    },
+    "entity_kept_its_relations": {
+      "ok": true,
+      "detail": "ent_7e7f581782f7f38e5d7e"
+    },
+    "entity_revision_records_the_previous_value": {
+      "ok": true,
+      "detail": {
+        "antu_id": "K004-ENT",
+        "changed": [
+          "aliases",
+          "name"
+        ],
+        "instruction_sha256": "788290c1eccd1b7bd4dbf42d1d942aec7332f5660d9942dec852ea6c51cc0331",
+        "operation_id": "op-1",
+        "previous": {
+          "aliases": [
+            "Los Guajares"
+          ],
+          "description": "Central hidráulica reversible cuya construcción autoriza la resolución recogida en el BOE, en la provincia de Granada.",
+          "entity_type": "product",
+          "name": "Central Hidráulica Reversible Los Guajares"
+        },
+        "previous_origin": null,
+        "reason": "La identidad canónica no cambia: sólo se corrige la tilde del nombre y se conserva la denominación anterior como alias, junto con el alias ya existente «Los Guajares».",
+        "recorded_at": null
+      }
+    },
+    "entity_kept_documentary_support": {
+      "ok": true,
+      "detail": {
+        "evidence_ids": 1,
+        "origin": null,
+        "amended": true
+      }
+    },
+    "attribute_declared_in_the_schema": {
+      "ok": true,
+      "detail": {
+        "estado_operativo": "text"
+      }
+    },
+    "attribute_value_committed": {
+      "ok": true,
+      "detail": {
+        "candidate_id": "central-hidraulica-reversible-los-guajares",
+        "estado_operativo": "en mantenimiento"
+      }
+    },
+    "attribute_change_is_versioned": {
+      "ok": true,
+      "detail": {
+        "antu_id": "K004-ATTR",
+        "attribute": "estado_operativo",
+        "current": "en mantenimiento",
+        "declared_by": "instructed",
+        "instruction_sha256": "bc5baf3a2e568a0c63cc268817eada9df229e9150893d2e3c26197cf127a953c",
+        "operation_id": "op-1",
+        "previous": "operativa",
+        "previous_origin": null,
+        "reason": "La entidad product ent_7e7f581782f7f38e5d7e (Central Hidráulica Reversible Los Guájares) tiene hoy metadata.estado_operativo = «operativa»; el campo estado_operativo ya existe en el esquema del tipo product, por lo que no hace falta ADD_FIELD. La identidad canónica no cambia.",
+        "recorded_at": null
+      }
+    },
+    "attribute_did_not_create_assertions": {
+      "ok": true,
+      "detail": {
+        "before": 11,
+        "after": 11
+      }
+    },
+    "long_instruction_committed_three_operations": {
+      "ok": true,
+      "detail": [
+        "ADD_FIELD",
+        "UPDATE_ATTRIBUTE",
+        "ADD_RELATION"
+      ]
+    },
+    "long_instruction_relation_present": {
+      "ok": true,
+      "detail": {
+        "relation_id": "rel_7b32853f77549f7d4586",
+        "status": "INSTRUCTED"
+      }
+    },
+    "long_instruction_attribute_present": {
+      "ok": true,
+      "detail": {
+        "candidate_id": "oscar-monroig",
+        "rol": "investigador del CSIC"
+      }
+    },
+    "long_instruction_schema_present": {
+      "ok": true,
+      "detail": {
+        "declared_by": "ANTU_INSTRUCTION",
+        "description": null,
+        "label": "rol",
+        "name": "rol",
+        "required": false,
+        "value_type": "text"
+      }
+    },
+    "pre_fix_the_model_did_produce_operations": {
+      "ok": true,
+      "detail": {
+        "kuyen_read": 0,
+        "model_wrote": 3
+      }
+    },
+    "post_fix_the_same_request_produced_operations": {
+      "ok": true,
+      "detail": [
+        "ADD_RELATION",
+        "UPDATE_ENTITY"
+      ]
+    },
+    "outcomes_are_distinguished": {
+      "ok": true,
+      "detail": [
+        "ALREADY_SATISFIED",
+        "COMMITTED",
+        "INVALID_PROPOSAL",
+        "NEEDS_CLARIFICATION",
+        "NOT_EVALUATED"
+      ]
+    },
+    "no_limitation_reported_as_no_changes": {
+      "ok": true,
+      "detail": {
+        "K004-DRY-SHORT": [
+          "VALIDATED",
+          "NOT_EVALUATED"
+        ],
+        "K004-DRY-LONG": [
+          "REJECTED",
+          "INVALID_PROPOSAL"
+        ],
+        "K004-REL": [
+          "COMMITTED",
+          "COMMITTED"
+        ],
+        "K004-ENT": [
+          "COMMITTED",
+          "COMMITTED"
+        ],
+        "K004-ATTR-DECL": [
+          "COMMITTED",
+          "COMMITTED"
+        ],
+        "K004-ATTR": [
+          "COMMITTED",
+          "COMMITTED"
+        ],
+        "K004-SAT": [
+          "REJECTED",
+          "INVALID_PROPOSAL"
+        ],
+        "K004-CLAR": [
+          "CLARIFICATION_REQUIRED",
+          "NEEDS_CLARIFICATION"
+        ],
+        "K004-SAT2": [
+          "NO_CHANGES",
+          "ALREADY_SATISFIED"
+        ],
+        "K004-LONG2": [
+          "REJECTED",
+          "INVALID_PROPOSAL"
+        ],
+        "K004-LONG3": [
+          "REJECTED",
+          "INVALID_PROPOSAL"
+        ],
+        "K005-LONG": [
+          "COMMITTED",
+          "COMMITTED"
+        ]
+      }
+    },
+    "ten_memories_verify": {
+      "ok": true,
+      "detail": {
+        "KUYEN-001": true,
+        "KUYEN-002": true,
+        "KUYEN-003": true,
+        "KUYEN-004": true,
+        "KUYEN-005": true,
+        "KUYEN-006": true,
+        "KUYEN-007": true,
+        "KUYEN-008": true,
+        "KUYEN-009": true,
+        "KUYEN-010": true
+      }
+    },
+    "eight_memories_untouched": {
+      "ok": true,
+      "detail": [
+        "KUYEN-001",
+        "KUYEN-002",
+        "KUYEN-003",
+        "KUYEN-006",
+        "KUYEN-007",
+        "KUYEN-008",
+        "KUYEN-009",
+        "KUYEN-010"
+      ]
+    },
+    "versions_only_grew_where_authorised": {
+      "ok": true,
+      "detail": {
+        "KUYEN-004": 5,
+        "KUYEN-005": 5
+      }
+    },
+    "previous_versions_still_readable": {
+      "ok": true,
+      "detail": {
+        "base": "VER-8732e4ef6f56",
+        "current": "VER-05288440f2d2"
+      }
+    }
+  },
+  "accepted": 24,
+  "total": 24,
+  "ok": true
+}

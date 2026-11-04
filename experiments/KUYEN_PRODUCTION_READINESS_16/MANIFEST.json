@@ -1,0 +1,61 @@
+{
+  "experiment": "KUYEN_PRODUCTION_READINESS_16",
+  "decision": "NOT_READY",
+  "pushed": false,
+  "git": {
+    "branch": "work/kuyen-free-text-graph",
+    "head_at_audit_start": "f763f79c91903e6d48ab2a31187c1426ef514941",
+    "head_contains_this_manifest": "the commit that carries this file; a manifest cannot contain its own hash",
+    "origin_main": "5fd8777a8305097792380fceb9ff861de208147a",
+    "ahead_of_origin_main": 27,
+    "version_head": "0.2.0",
+    "version_worktree": "0.2.1rc1"
+  },
+  "clean_checkout": {
+    "path": "/tmp/kuyen_production_clean_16",
+    "suite": "no colecciona: ModuleNotFoundError kuyen.semantics.schema",
+    "first_import_failure": "ModuleNotFoundError: No module named 'kuyen.semantics.schema'"
+  },
+  "workspace_copy": {
+    "path": "/tmp/kuyen16_diag_b",
+    "suite": "527 passed, 3 skipped, 0 failed"
+  },
+  "missing_from_history": [
+    "src/kuyen/provenance.py",
+    "src/kuyen/semantics/schema.py",
+    "src/kuyen/semantics/scope.py",
+    "src/kuyen/vlm.py"
+  ],
+  "working_tree": {
+    "preexisting_total": 69,
+    "preexisting_modified": 27,
+    "preexisting_untracked": 42,
+    "this_audit": 1,
+    "total_now": 70
+  },
+  "ci": {
+    "runs": 2,
+    "conclusions": [
+      "failure"
+    ],
+    "branch_without_run": "work/kuyen-free-text-graph"
+  },
+  "recommended_version": "0.3.0",
+  "artifacts": {
+    "REPORT.md": "1d8a5f1a3c8fd5325667d56156989f1cd7c72317d898dc488937c2365286e673",
+    "evidence/api_surface.json": "45ca5a300517786205cd95dd5f0fc8441c1b5a3efaaab149a1b6b70f3cf8c48d",
+    "evidence/ci_jobs.json": "4f78206c16860be3d4bc2e5872e88357c99af8a5765c25ef151eb9a2541443d7",
+    "evidence/ci_runs.json": "c4527861520f706d2aadccce31f46bc8267c2563bd7852b1e94fd30d91d7c4d0",
+    "evidence/distribution.json": "755e0c2fd64cacced502a556bafc57a637e0e42799e8a8fdfe934ca232b97e7a",
+    "evidence/docs_audit.json": "d5bcc02b9299ccc30e8c973cf9eacf4d0ae5fd13afb58c8f21961b877a7256f9",
+    "evidence/logs/clean_suite.log": "2899a6ea467669a1610286d74974387730842b9b988a15f67611771c9567f009",
+    "evidence/logs/clean_twine.log": "2a3f87dfe2f036477ca38e94caecb75916024e1114022302d17667b732d15e5c",
+    "evidence/logs/clean_wheel_inventory.log": "c28dc6ae2fe922c54392b6e05e6d0d64ac69ad658655a60bea4c819d3f1c6925",
+    "evidence/logs/workspace_suite.log": "f6af6b4c5f150281e8470624bf6afcd57bfb8b6b2b0f0b27c0501401a425e2cf",
+    "evidence/module_gap.json": "30bfcdaa9223953362c0c620dc78d35c774afd577ad91f1c3fd023f1a410552b",
+    "evidence/state_initial.json": "7cbc379445cca90747d3bbc48d9d06764160b4088d5ff1ebf376761240163394",
+    "evidence/working_tree_sha256.json": "9166d8e9326ed297d8fa957a52027e57dd68dbfb99bcd10f69bf9742ab57d359",
+    "scripts/collect.py": "6299c1024815b7932498cb5d91bd171b3e11866d72a3017ad8d6dc7fdb1c7134",
+    "scripts/manifest.py": "1195555573ccefc051071f94ca3fcc8e7e857ced4601e221eb002eba0dfc46de"
+  }
+}

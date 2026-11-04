@@ -15,6 +15,9 @@
     "char_end": {"type": "integer", "minimum": 1},
     "offset_unit": {"const": "unicode_codepoint"},
     "extraction_method": {"type": "string", "minLength": 1},
-    "validation_status": {"enum": ["NOT_EVALUATED", "SOURCE_VERIFIED", "INVALID", "UNRESOLVED"]}
+    "validation_status": {"enum": ["NOT_EVALUATED", "SOURCE_VERIFIED", "INVALID", "UNRESOLVED"]},
+    "context": {"type": ["string", "null"], "description": "Literal fragment around the quote, kept only to disambiguate a repeated quote."},
+    "source_unit_id": {"type": ["string", "null"], "description": "SOURCE_UNIT declared by the producer; KUYEN verified that it contains the resolved span."},
+    "declared_offsets": {"type": ["object", "null"], "description": "Offsets exactly as the producer declared them. Auxiliary: the located quote is the authority for char_start/char_end."}
   }
 }

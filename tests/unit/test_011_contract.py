@@ -79,6 +79,7 @@ class Contract011Tests(unittest.IsolatedAsyncioTestCase):
             value["assertions"] = [{
                 "subject": "asociacion-rio-claro", "predicate": "has_member_count",
                 "value": {"value_type": "integer", "value": 9},
+                "polarity": "POSITIVE",
                 "sources": [SOURCE_URI], "evidence_refs": ["ev-2"], "epistemic_status": "UNRESOLVED",
             }]
             result = await engine_for(tmp).build_from_candidate_async(

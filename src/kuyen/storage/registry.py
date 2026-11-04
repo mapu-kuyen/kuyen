@@ -8,7 +8,7 @@ from __future__ import annotations
 from typing import Any
 
 from .store import CanonicalStore
-from ..canonical import append_line, canonical_json, digest, read_json
+from ..canonical import append_line, canonical_json, digest, iter_lines_reverse, read_json
 from ..errors import StoreError
 from .versions import VersionRecord, list_versions, read_version
 
@@ -25,8 +25,12 @@ def index_version(store: CanonicalStore, manifest: dict[str, Any]) -> None:
         "created_at": manifest["created_at"],
         "mapu_revisions": manifest.get("mapu_revisions") or [],
     }
-    for line in store.index_path.read_text(encoding="utf-8").splitlines() if store.index_path.is_file() else []:
-        if line.strip() and read_json_string(line).get("version_id") == entry["version_id"]:
+    # idempotent: a re-indexed version is the newest entry of a real store (the commit path
+    # and `recover_pending` both re-index the tip), so the lookup walks the file from its
+    # end and stops at the first match. The whole file is only read when the version is not
+    # indexed at all — the case that has to append anyway (KUYEN_RELEASE_CANDIDATE_05, M6).
+    for line in iter_lines_reverse(store.index_path):
+        if read_json_string(line).get("version_id") == entry["version_id"]:
             return
     append_line(store.index_path, canonical_json(entry))
 
@@ -78,7 +82,10 @@ def lineage(store: CanonicalStore, version_id: str) -> list[dict[str, Any]]:
         if not parent or parent in seen:
             break
         seen.add(parent)
-        cursor = read_version(store, parent) if (store.versions_dir / parent / "manifest.json").is_file() else None
+        try:
+            cursor = read_version(store, parent)
+        except StoreError:  # unknown or malformed parent: the chain ends here
+            cursor = None
     return list(reversed(chain))
 
 

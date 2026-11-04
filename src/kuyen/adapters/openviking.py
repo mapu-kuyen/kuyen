@@ -420,12 +420,19 @@ class SdkOpenVikingAdapter:
 
     async def compile(self, *, from_uris: list[str], to_uri: str, skill_uri: str, instruction: str) -> str:
         await self.initialize()
+        # `args` is a provider-specific extension. The local VikingBot runtime of OpenViking
+        # 0.5.0 rejects any `args` with INVALID_ARGUMENT ("does not implement provider-specific
+        # args"), and the compile mode is meaningful only for the external Compile API. The
+        # default mode is therefore expressed by sending nothing.
+        options: dict[str, Any] = {"instruction": instruction}
+        if self.compile_mode != "full":
+            options["args"] = {"mode": self.compile_mode}
         try:
             response = await self._client.compile(
                 from_uris=from_uris,
                 to=to_uri,
                 skill=skill_uri,
-                options={"instruction": instruction, "args": {"mode": self.compile_mode}},
+                options=options,
             )
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"compile request failed: {exc}") from exc
@@ -527,43 +534,23 @@ class SdkOpenVikingAdapter:
         return value
 
     async def read_candidate(self, output_uri: str) -> CandidateBundle:
-        await self.initialize()
-        try:
-            listing = _result(await self._client.ls(output_uri, recursive=True, simple=True))
-        except Exception as exc:  # noqa: BLE001
-            raise AdapterError(f"output listing failed: {output_uri}: {exc}") from exc
-        uris = [str(x) for x in (listing or []) if isinstance(x, str)]
-        sidecar_uri = next((x for x in uris if x.endswith("/kuyen_candidates.json")), None)
-        if sidecar_uri:
-            try:
-                return CandidateBundle.from_dict(json.loads(await self._read_artifact(sidecar_uri)))
-            except Exception as exc:  # noqa: BLE001
-                raise AdapterError(f"candidate sidecar invalid: {exc}") from exc
-        entities = []
-        for uri in uris:
-            if uri.endswith(".md") and "/entities/" in uri:
-                meta, body = parse_frontmatter(await self._read_artifact(uri))
-                sources = meta.get("sources") or []
-                aliases = meta.get("aliases") or []
-                entities.append(
-                    {
-                        "id": meta.get("id") or Path(uri).stem,
-                        "name": meta.get("title") or meta.get("name") or Path(uri).stem,
-                        "entity_type": meta.get("entity_type") or "concept",
-                        "description": meta.get("description") or body.strip(),
-                        "sources": [sources] if isinstance(sources, str) else list(sources),
-                        "aliases": [aliases] if isinstance(aliases, str) else list(aliases),
-                    }
-                )
-        relations = []
-        for uri in uris:
-            if uri.endswith("/relations.jsonl"):
-                for line in (await self._read_artifact(uri)).splitlines():
-                    if line.strip():
-                        relations.append(json.loads(line))
-        return CandidateBundle.from_dict(
-            {"entities": entities, "relations": relations, "evidence": [], "coverage": []}
+        """Deprecated compatibility reader. The productive path is `read_provider_artifacts`.
+
+        This used to parse the native tree on its own and silently dropped assertions and
+        every evidence record (KUYEN_NATIVE_GRAPH_CANDIDATE_09, §9.2). It now delegates to
+        the *single* parser KÜYEN already uses — `CandidateMaterializer` — so entities,
+        relations, assertions and their declared evidence are preserved identically. No
+        MAPU context is available here, so evidence is kept as declared with
+        `validation_status = NOT_EVALUATED` and is never presented as verified
+        (KUYEN_PRODUCTIVE_GRAPH_11, §5.5).
+        """
+        artifacts = await self.read_provider_artifacts(output_uri)
+        from ..materialization import CandidateMaterializer
+
+        materialized = CandidateMaterializer(mapus=None, verify_evidence=False).materialize(
+            artifacts, provider={"output_uri": output_uri, "compatibility_reader": "read_candidate"},
         )
+        return materialized.bundle
 
     async def read_provider_artifacts(self, output_uri: str) -> dict[str, str]:
         """Read the provider output tree once, without writing to it.

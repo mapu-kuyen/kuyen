@@ -31,9 +31,28 @@ def _collect_files(root: Path) -> dict[str, str]:
     return files
 
 
+def _reject_unsafe_target(store: CanonicalStore, target: Path) -> None:
+    """Refuse a target whose removal would destroy the store.
+
+    `create_backup` removes the target before copying, so a target that is the store, lives
+    inside it, contains it, or resolves to it through a symbolic link would delete the
+    source before any copy happens (KUYEN_PACKAGE_HARDENING_01, A3). Paths are compared
+    after `resolve()`, never as text, and nothing is touched before this check passes.
+    """
+    root = store.root.resolve()
+    resolved = target.resolve()
+    if resolved == root:
+        raise BackupError(f"backup target is the store itself: {target}")
+    if root in resolved.parents:
+        raise BackupError(f"backup target is inside the store: {target}")
+    if resolved in root.parents:
+        raise BackupError(f"backup target contains the store: {target}")
+
+
 def create_backup(store: CanonicalStore, target: str | Path, *, created_at: str,
                   include_ledger: bool = True) -> dict[str, Any]:
     target = Path(target)
+    _reject_unsafe_target(store, target)
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(store.root, target)
@@ -119,14 +138,66 @@ def verify_backup(path: str | Path) -> dict[str, Any]:
             "root_hash": manifest.get("root_hash"), "manifest": manifest}
 
 
+def _reject_unsafe_restore_target(backup_path: Path, target: Path) -> None:
+    """Refuse a destination that would write into, over or through the backup itself.
+
+    Restore copies a whole store, so the destination is validated before anything is
+    created, with resolved paths: a destination that *is* the backup, that lives inside it
+    or that contains it would corrupt the backup (A3 discipline, applied to restore).
+    A destination that exists and is not a directory, or that is a symbolic link, is
+    refused: the operation never writes through an indirection.
+    """
+    if target.is_symlink():
+        raise BackupError(f"restore target is a symbolic link: {target}")
+    source = backup_path.resolve()
+    destination = target.resolve()
+    if destination == source:
+        raise BackupError(f"restore target is the backup itself: {target}")
+    if source in destination.parents:
+        raise BackupError(f"restore target is inside the backup: {target}")
+    if destination in source.parents:
+        raise BackupError(f"restore target contains the backup: {target}")
+    if target.exists() and not target.is_dir():
+        raise BackupError(f"restore target exists and is not a directory: {target}")
+
+
+def _remove_children(target: Path) -> None:
+    for child in target.iterdir():
+        if child.is_dir() and not child.is_symlink():
+            shutil.rmtree(child, ignore_errors=True)
+        else:
+            try:
+                child.unlink()
+            except OSError:
+                pass
+
+
 def restore_backup(backup_path: str | Path, target: str | Path, *, created_at: str) -> dict[str, Any]:
+    """Restore a verified backup into a new, empty or non-existent directory.
+
+    An existing *empty* directory is a valid destination — the previous implementation
+    accepted it and then handed it to `copytree`, which refuses to write into an existing
+    directory (B2, KUYEN_RELEASE_CANDIDATE_05). An existing non-empty directory is refused
+    with its contents left byte-for-byte intact, and a failed copy removes only what this
+    operation created.
+    """
     backup_path, target = Path(backup_path), Path(target)
     verification = verify_backup(backup_path)
     if not verification["ok"]:
         raise BackupError(f"refusing to restore a corrupt backup: {verification['problems'][:3]}")
-    if target.exists() and any(target.iterdir()):
+    _reject_unsafe_restore_target(backup_path, target)
+    existed = target.exists()
+    if existed and any(target.iterdir()):
         raise BackupError(f"restore target is not empty: {target}")
-    shutil.copytree(backup_path, target)
+    try:
+        target.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(backup_path, target, dirs_exist_ok=True)
+    except BaseException:
+        if existed:
+            _remove_children(target)
+        else:
+            shutil.rmtree(target, ignore_errors=True)
+        raise
     store = CanonicalStore(target)
     from ..lifecycle.ledger import verify_chain
     from ..storage.registry import verify_registry

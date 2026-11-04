@@ -5,10 +5,28 @@ Secrets are referenced by environment variable name, never stored in config.
 from __future__ import annotations
 
 import os
-import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+try:  # Python 3.11+ ships a TOML reader; 3.10 does not (KUYEN_GIT_HISTORY_RECOVERY_17).
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised on Python 3.10
+    tomllib = None  # type: ignore[assignment]
+
+#: Raised when a TOML configuration is requested on an interpreter without `tomllib`.
+TOML_UNAVAILABLE = (
+    "reading a TOML configuration requires Python 3.11 or newer (the standard library "
+    "`tomllib`): pass the configuration as a mapping with KuyenConfig.from_mapping() or "
+    "run on a supported interpreter"
+)
+
+
+def _read_toml(handle) -> dict[str, Any]:
+    """Read a TOML file, or fail with an explanation instead of an ImportError."""
+    if tomllib is None:  # pragma: no cover - exercised on Python 3.10
+        raise RuntimeError(TOML_UNAVAILABLE)
+    return tomllib.load(handle)
 
 
 @dataclass(frozen=True)
@@ -124,7 +142,7 @@ def load_config(path: str | Path | None = None) -> KuyenConfig:
     target = Path(path or os.environ.get("KUYEN_CONFIG", "config/defaults.toml"))
     if target.is_file():
         with target.open("rb") as handle:
-            data = tomllib.load(handle)
+            data = _read_toml(handle)
         return KuyenConfig.from_mapping(data.get("kuyen", data), base=target.parent.parent)
     # Assets ship as package data so a wheel installed anywhere resolves them the
     # same way the source tree does; an explicit config file always overrides this.

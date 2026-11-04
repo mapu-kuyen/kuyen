@@ -1,0 +1,156 @@
+{
+  "generated_at_utc": "2026-11-03T00:19:56.336255Z",
+  "repository": "/private/tmp/kuyen_hardening_01/kuyen",
+  "artifacts": {
+    "wheel": "/private/tmp/kuyen_hardening_01/kuyen/dist/kuyen-0.2.1rc1-py3-none-any.whl",
+    "sdist": "/private/tmp/kuyen_hardening_01/kuyen/dist/kuyen-0.2.1rc1.tar.gz"
+  },
+  "results": [
+    {
+      "python": "3.11",
+      "artifact": "kuyen-0.2.1rc1-py3-none-any.whl",
+      "kind": "wheel",
+      "interpreter": "Python 3.11.15",
+      "interpreter_matches_request": true,
+      "install_ok": true,
+      "install_log": "\n[notice] A new release of pip is available: 26.1.2 -> 26.3\n[notice] To update, run: /private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-wheel-3.11-yk4qwxd_/venv/bin/python3.11 -m pip install --upgrade pip\n",
+      "pip_check_ok": true,
+      "pip_check": "No broken requirements found.",
+      "example_exit": 0,
+      "example_stdout": "memory created at /var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-wheel-3.11-yk4qwxd_/demo/memory\ncommitted MAPU-DEMO-01 as VER-e95aa365324f (kuyen 1.0.0)\nAnt\u00fc ANTU-DEMO-0002: VALIDATED (nothing written yet)\ncommitted VER-152e1ad799b7 (kuyen 1.1.0), parent VER-e95aa365324f\ngraph: 3 entities, 1 relations, 1 assertions, 2 evidence records\nclaim asrt_b33e90e83cb4df3acb1c: 1200 cajas (2024)\nprovenance: 'exporto 1.200 cajas a Brasil'\n            at 28:56 of MAPU-DEMO-02 <viking://resources/demo/MAPU-DEMO-02.txt>\n            sha256 2a8a26a7fc14b1c5b14ff71b6681df7c06373491c5b49e826808eda1dfd29617\nverify: ok=True problems=[]\nbackup BKP-8883e2847dfd7e38: 2 versions, SEALED\nrestored: 2 versions, verify=True, reconstructed=2 accepted=True\n",
+      "example_stderr": "",
+      "evidence_uri_mismatch": false,
+      "committed_two_versions": true,
+      "verify_line": "verify: ok=True problems=[]",
+      "inspect_ok": true,
+      "state": {
+        "import_path": "/private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-wheel-3.11-yk4qwxd_/venv/lib/python3.11/site-packages/kuyen/__init__.py",
+        "package_version": "0.2.1rc1",
+        "versions": 2,
+        "current": "VER-152e1ad799b7",
+        "parent": "VER-e95aa365324f",
+        "verify_ok": true,
+        "problems": [],
+        "evidence": 2,
+        "evidence_uris_match_mapu": true,
+        "mapu_uris": {
+          "MAPU-DEMO-01": "viking://resources/demo/MAPU-DEMO-01.txt",
+          "MAPU-DEMO-02": "viking://resources/demo/MAPU-DEMO-02.txt"
+        }
+      },
+      "imported_from_site_packages": true,
+      "imported_from_repository": false,
+      "passed": true
+    },
+    {
+      "python": "3.13",
+      "artifact": "kuyen-0.2.1rc1-py3-none-any.whl",
+      "kind": "wheel",
+      "interpreter": "Python 3.13.1",
+      "interpreter_matches_request": true,
+      "install_ok": true,
+      "install_log": "\n[notice] A new release of pip is available: 24.3.1 -> 26.3\n[notice] To update, run: python3.13 -m pip install --upgrade pip\n",
+      "pip_check_ok": true,
+      "pip_check": "No broken requirements found.",
+      "example_exit": 0,
+      "example_stdout": "memory created at /var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-wheel-3.13-wocxi2mu/demo/memory\ncommitted MAPU-DEMO-01 as VER-e95aa365324f (kuyen 1.0.0)\nAnt\u00fc ANTU-DEMO-0002: VALIDATED (nothing written yet)\ncommitted VER-152e1ad799b7 (kuyen 1.1.0), parent VER-e95aa365324f\ngraph: 3 entities, 1 relations, 1 assertions, 2 evidence records\nclaim asrt_b33e90e83cb4df3acb1c: 1200 cajas (2024)\nprovenance: 'exporto 1.200 cajas a Brasil'\n            at 28:56 of MAPU-DEMO-02 <viking://resources/demo/MAPU-DEMO-02.txt>\n            sha256 2a8a26a7fc14b1c5b14ff71b6681df7c06373491c5b49e826808eda1dfd29617\nverify: ok=True problems=[]\nbackup BKP-836882f05848e3a7: 2 versions, SEALED\nrestored: 2 versions, verify=True, reconstructed=2 accepted=True\n",
+      "example_stderr": "",
+      "evidence_uri_mismatch": false,
+      "committed_two_versions": true,
+      "verify_line": "verify: ok=True problems=[]",
+      "inspect_ok": true,
+      "state": {
+        "import_path": "/private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-wheel-3.13-wocxi2mu/venv/lib/python3.13/site-packages/kuyen/__init__.py",
+        "package_version": "0.2.1rc1",
+        "versions": 2,
+        "current": "VER-152e1ad799b7",
+        "parent": "VER-e95aa365324f",
+        "verify_ok": true,
+        "problems": [],
+        "evidence": 2,
+        "evidence_uris_match_mapu": true,
+        "mapu_uris": {
+          "MAPU-DEMO-01": "viking://resources/demo/MAPU-DEMO-01.txt",
+          "MAPU-DEMO-02": "viking://resources/demo/MAPU-DEMO-02.txt"
+        }
+      },
+      "imported_from_site_packages": true,
+      "imported_from_repository": false,
+      "passed": true
+    },
+    {
+      "python": "3.11",
+      "artifact": "kuyen-0.2.1rc1.tar.gz",
+      "kind": "sdist",
+      "interpreter": "Python 3.11.15",
+      "interpreter_matches_request": true,
+      "install_ok": true,
+      "install_log": "\n[notice] A new release of pip is available: 26.1.2 -> 26.3\n[notice] To update, run: /private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-sdist-3.11-c9lx_hvh/venv/bin/python3.11 -m pip install --upgrade pip\n",
+      "pip_check_ok": true,
+      "pip_check": "No broken requirements found.",
+      "example_exit": 0,
+      "example_stdout": "memory created at /var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-sdist-3.11-c9lx_hvh/demo/memory\ncommitted MAPU-DEMO-01 as VER-e95aa365324f (kuyen 1.0.0)\nAnt\u00fc ANTU-DEMO-0002: VALIDATED (nothing written yet)\ncommitted VER-152e1ad799b7 (kuyen 1.1.0), parent VER-e95aa365324f\ngraph: 3 entities, 1 relations, 1 assertions, 2 evidence records\nclaim asrt_b33e90e83cb4df3acb1c: 1200 cajas (2024)\nprovenance: 'exporto 1.200 cajas a Brasil'\n            at 28:56 of MAPU-DEMO-02 <viking://resources/demo/MAPU-DEMO-02.txt>\n            sha256 2a8a26a7fc14b1c5b14ff71b6681df7c06373491c5b49e826808eda1dfd29617\nverify: ok=True problems=[]\nbackup BKP-6faf30f58eeecf9b: 2 versions, SEALED\nrestored: 2 versions, verify=True, reconstructed=2 accepted=True\n",
+      "example_stderr": "",
+      "evidence_uri_mismatch": false,
+      "committed_two_versions": true,
+      "verify_line": "verify: ok=True problems=[]",
+      "inspect_ok": true,
+      "state": {
+        "import_path": "/private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-sdist-3.11-c9lx_hvh/venv/lib/python3.11/site-packages/kuyen/__init__.py",
+        "package_version": "0.2.1rc1",
+        "versions": 2,
+        "current": "VER-152e1ad799b7",
+        "parent": "VER-e95aa365324f",
+        "verify_ok": true,
+        "problems": [],
+        "evidence": 2,
+        "evidence_uris_match_mapu": true,
+        "mapu_uris": {
+          "MAPU-DEMO-01": "viking://resources/demo/MAPU-DEMO-01.txt",
+          "MAPU-DEMO-02": "viking://resources/demo/MAPU-DEMO-02.txt"
+        }
+      },
+      "imported_from_site_packages": true,
+      "imported_from_repository": false,
+      "passed": true
+    },
+    {
+      "python": "3.13",
+      "artifact": "kuyen-0.2.1rc1.tar.gz",
+      "kind": "sdist",
+      "interpreter": "Python 3.13.1",
+      "interpreter_matches_request": true,
+      "install_ok": true,
+      "install_log": "\n[notice] A new release of pip is available: 24.3.1 -> 26.3\n[notice] To update, run: python3.13 -m pip install --upgrade pip\n",
+      "pip_check_ok": true,
+      "pip_check": "No broken requirements found.",
+      "example_exit": 0,
+      "example_stdout": "memory created at /var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-sdist-3.13-m4i7_yju/demo/memory\ncommitted MAPU-DEMO-01 as VER-e95aa365324f (kuyen 1.0.0)\nAnt\u00fc ANTU-DEMO-0002: VALIDATED (nothing written yet)\ncommitted VER-152e1ad799b7 (kuyen 1.1.0), parent VER-e95aa365324f\ngraph: 3 entities, 1 relations, 1 assertions, 2 evidence records\nclaim asrt_b33e90e83cb4df3acb1c: 1200 cajas (2024)\nprovenance: 'exporto 1.200 cajas a Brasil'\n            at 28:56 of MAPU-DEMO-02 <viking://resources/demo/MAPU-DEMO-02.txt>\n            sha256 2a8a26a7fc14b1c5b14ff71b6681df7c06373491c5b49e826808eda1dfd29617\nverify: ok=True problems=[]\nbackup BKP-8cf4763ca3a768bd: 2 versions, SEALED\nrestored: 2 versions, verify=True, reconstructed=2 accepted=True\n",
+      "example_stderr": "",
+      "evidence_uri_mismatch": false,
+      "committed_two_versions": true,
+      "verify_line": "verify: ok=True problems=[]",
+      "inspect_ok": true,
+      "state": {
+        "import_path": "/private/var/folders/6c/vyxy2d2x31s4w52c7l85ldv40000gn/T/kuyen-dist-verify-nttyajyk/kuyen-sdist-3.13-m4i7_yju/venv/lib/python3.13/site-packages/kuyen/__init__.py",
+        "package_version": "0.2.1rc1",
+        "versions": 2,
+        "current": "VER-152e1ad799b7",
+        "parent": "VER-e95aa365324f",
+        "verify_ok": true,
+        "problems": [],
+        "evidence": 2,
+        "evidence_uris_match_mapu": true,
+        "mapu_uris": {
+          "MAPU-DEMO-01": "viking://resources/demo/MAPU-DEMO-01.txt",
+          "MAPU-DEMO-02": "viking://resources/demo/MAPU-DEMO-02.txt"
+        }
+      },
+      "imported_from_site_packages": true,
+      "imported_from_repository": false,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "skipped": []
+}

@@ -1,0 +1,6 @@
+[PASS] wheel py3.11  Python 3.11.15  kuyen-0.2.1rc1-py3-none-any.whl
+[PASS] wheel py3.13  Python 3.13.1  kuyen-0.2.1rc1-py3-none-any.whl
+[PASS] sdist py3.11  Python 3.11.15  kuyen-0.2.1rc1.tar.gz
+[PASS] sdist py3.13  Python 3.13.1  kuyen-0.2.1rc1.tar.gz
+
+all_passed=True  results=4  skipped=[]

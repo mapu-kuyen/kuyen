@@ -20,7 +20,7 @@ KUYEN_CANONICAL_SIDECAR
 ├── projection_manifest_hash / mapping_manifest_hash
 ├── kuyen                               the canonical record
 ├── canonical                           entities, relations, assertions, evidence, source_units, coverage
-├── mapus                               the source texts with their hashes
+├── mapus                               the source texts with their byte and text hashes
 ├── projection                          classification, artifacts, counts, collisions, transformations
 ├── mapping                             object-level correspondences
 └── integrity                           sidecar content hash

@@ -83,11 +83,13 @@ def provider_result(*, offsets: bool = True, uri_only: bool = False, coverage=No
         ],
         "relations": [
             {"from": "alpha", "to": "beta", "predicate": "located_in", "label": "se ubica en",
+             "polarity": "POSITIVE",
              "evidence": [{"source_uri": URI}] if uri_only else [ev(Q1, offsets=offsets)]},
         ],
         "assertions": [
             {"subject": "alpha", "predicate": "has_member_count",
              "value": {"value_type": "integer", "value": 47, "unit": "socios"},
+             "polarity": "POSITIVE",
              "evidence": [{"source_uri": URI}] if uri_only else [ev(Q2, offsets=offsets)]},
         ],
         "coverage": coverage if coverage is not None else [
@@ -174,11 +176,35 @@ class MaterializerTests(unittest.TestCase):
         with self.assertRaises(CandidateMaterializationError):
             PathOwnershipRegistry().assert_unique(["entities/a.md", "entities/a.md"])
 
-    def test_invalid_offsets_are_not_silently_fixed(self):
+    def test_declared_offsets_never_override_the_quote(self):
+        """The quote is the authority; a declared offset that disagrees is recorded, not obeyed.
+
+        This is the documented policy change of KUYEN_PRODUCTIVE_GRAPH_11 §5.2: the model's
+        offsets are a hint. A verifiable exact quote is never discarded because the hint is
+        wrong, and the disagreement is never silent — it is a recorded decision and the
+        declared values are kept as auxiliary information.
+        """
         result = provider_result()
         result["entities"][0]["evidence"][0]["char_end"] = 1
         _, materialized = materialize(result)
-        self.assertIn("INVALID_OFFSET", materialized.manifest["evidence"])
+        self.assertIn("QUOTE_AUTHORITATIVE", materialized.manifest["evidence"])
+        ignored = next(item for item in materialized.manifest["decisions"]
+                       if item["classification"] == "QUOTE_AUTHORITATIVE")
+        self.assertEqual(ignored["char_start"], SOURCE.index(Q1))
+        self.assertEqual(ignored["char_end"], SOURCE.index(Q1) + len(Q1))
+        preserved = next(item for item in materialized.bundle.evidence if item.quote == Q1)
+        self.assertEqual(preserved.char_start, SOURCE.index(Q1))
+        self.assertEqual(preserved.declared_offsets, {"char_start": 0, "char_end": 1})
+        accepted = evaluate(materialized.bundle)
+        self.assertEqual(accepted.status, "ACCEPTED", accepted.validation.to_dict())
+
+    def test_a_quote_that_does_not_exist_is_still_rejected(self):
+        result = provider_result()
+        result["entities"][0]["evidence"][0]["quote"] = "esta frase no está en la fuente"
+        result["entities"][0]["evidence"][0]["char_start"] = 0
+        result["entities"][0]["evidence"][0]["char_end"] = 32
+        _, materialized = materialize(result)
+        self.assertIn("INVALID_QUOTE", materialized.manifest["evidence"])
         rejected = evaluate(materialized.bundle)
         self.assertEqual(rejected.status, "REJECTED")
 
@@ -200,9 +226,9 @@ class MaterializerTests(unittest.TestCase):
         result = provider_result()
         result["relations"] = [
             {"from": "alpha", "to": "alpha", "predicate": "headquartered_in", "label": "tiene sede en",
-             "evidence": [ev(Q1)]},
+             "polarity": "POSITIVE", "evidence": [ev(Q1)]},
             {"from": "alpha", "to": "beta", "predicate": "celebrated_in", "label": "celebra en",
-             "evidence": [ev(Q1)]},
+             "polarity": "POSITIVE", "evidence": [ev(Q1)]},
         ]
         _, materialized = materialize(result)
         evaluated = evaluate(materialized.bundle)
@@ -246,6 +272,67 @@ class MaterializerTests(unittest.TestCase):
         self.assertEqual(len(materialized.bundle.entities), 1)
         self.assertEqual(len(materialized.bundle.assertions), 0)
         self.assertEqual(len(materialized.bundle.evidence), 0)
+
+
+def materialize_tree(artifacts: dict):
+    m = mapu()
+    inventory = {"MAPU-MAT": inventory_sections(SOURCE, mapu_id="MAPU-MAT")}
+    return m, CandidateMaterializer(mapus=[m], antu=_antu_obj(),
+                                   coverage_inventory=inventory).materialize(artifacts)
+
+
+class NativePredicatePreservationTests(unittest.TestCase):
+    """A predicate the producer declares is preserved, never turned into a generic one."""
+
+    def _native_tree(self):
+        import json
+
+        return {
+            "entities/municipalidad.md": (
+                "---\nid: municipalidad\nname: Municipalidad\nentity_type: organization\n"
+                f"sources:\n  - {URI}\n"
+                f"evidence:\n  - quote: \"{Q1}\"\n    source_uri: {URI}\n    mapu_id: MAPU-MAT\n"
+                "---\n\nCuerpo.\n"),
+            "entities/alpha.md": (
+                "---\nid: alpha\nname: Alpha\nentity_type: organization\n"
+                f"sources:\n  - {URI}\n"
+                f"evidence:\n  - quote: \"{Q2}\"\n    source_uri: {URI}\n    mapu_id: MAPU-MAT\n"
+                "---\n\nCuerpo.\n"),
+            "assertions.jsonl": json.dumps({
+                "subject": "alpha", "predicate": "installed_lights",
+                "value": {"value_type": "integer", "value": "47"},
+                "polarity": "POSITIVE", "modality": "FACT",
+                "evidence": [{"quote": Q2, "source_uri": URI, "mapu_id": "MAPU-MAT"}],
+            }) + "\n",
+        }
+
+    def test_a_declared_native_scalar_predicate_is_preserved_with_a_warning(self):
+        _, materialized = materialize_tree(self._native_tree())
+        self.assertEqual(materialized.bundle.assertions[0].source_predicate, "installed_lights")
+        result = evaluate(materialized.bundle)
+        codes = {item.code: item.severity for item in result.validation.issues}
+        self.assertEqual(codes.get("SCALAR_PREDICATE_PRESERVED_UNMAPPED"), "WARNING")
+        self.assertNotIn("SCALAR_PREDICATE_UNKNOWN", codes)
+        self.assertEqual(result.status, "ACCEPTED", result.validation.to_dict())
+
+    def test_an_undeclared_unknown_predicate_stays_an_error(self):
+        bundle = CandidateBundle.from_dict({
+            "entities": [{"id": "a", "name": "A", "entity_type": "organization",
+                          "sources": [URI], "evidence_refs": ["ev-1"]}],
+            "relations": [], "coverage": [],
+            "assertions": [{"subject": "a", "predicate": "invented_scalar",
+                            "value": {"value_type": "integer", "value": 1},
+                            "polarity": "POSITIVE", "sources": [URI],
+                            "evidence_refs": ["ev-1"]}],
+            "evidence": [{"evidence_id": "ev-1", "mapu_id": "MAPU-MAT",
+                          "source_uri": URI, "source_sha256": SHA, "quote": Q1,
+                          "char_start": SOURCE.index(Q1),
+                          "char_end": SOURCE.index(Q1) + len(Q1),
+                          "offset_unit": "unicode_codepoint", "extraction_method": "test"}],
+        })
+        result = evaluate(bundle)
+        self.assertEqual(result.status, "REJECTED")
+        self.assertIn("SCALAR_PREDICATE_UNKNOWN", {item.code for item in result.validation.errors})
 
 
 if __name__ == "__main__":

@@ -1,0 +1,125 @@
+{
+  "_baseline": {
+    "suite_exit": 0,
+    "tail": "..........................                                               [100%]"
+  },
+  "src/kuyen/adapters/openviking.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/backup/archive.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/canonical.py": {
+    "import_ok": false,
+    "import_error": "ImportError: cannot import name 'read_last_line' from 'kuyen.canonical' (/private/tmp/kuyen17_matrix_work/src/kuyen/canonical.py)",
+    "suite_exit": 4,
+    "suite_tail": "",
+    "necessary": true
+  },
+  "src/kuyen/editing/context.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/engine.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 0,
+    "suite_tail": "..........................                                               [100%]",
+    "necessary": false
+  },
+  "src/kuyen/errors.py": {
+    "import_ok": false,
+    "import_error": "ImportError: cannot import name 'AmbiguousSourceUnit' from 'kuyen.errors' (/private/tmp/kuyen17_matrix_work/src/kuyen/errors.py)",
+    "suite_exit": 4,
+    "suite_tail": "",
+    "necessary": true
+  },
+  "src/kuyen/ingest.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/lifecycle/antu.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/lifecycle/unit.py": {
+    "import_ok": false,
+    "import_error": "ImportError: cannot import name 'reconcile_unit_history' from 'kuyen.lifecycle.unit' (/private/tmp/kuyen17_matrix_work/src/kuyen/lifecycle/unit.py)",
+    "suite_exit": 4,
+    "suite_tail": "",
+    "necessary": true
+  },
+  "src/kuyen/product.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/projection/native.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/projection/openviking.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/projection/outbox.py": {
+    "import_ok": false,
+    "import_error": "ImportError: cannot import name 'claim' from 'kuyen.projection.outbox' (/private/tmp/kuyen17_matrix_work/src/kuyen/projection/outbox.py)",
+    "suite_exit": 4,
+    "suite_tail": "",
+    "necessary": true
+  },
+  "src/kuyen/sidecar/__init__.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/storage/commit.py": {
+    "import_ok": false,
+    "import_error": "ImportError: cannot import name 'prepare_commit_artifacts' from 'kuyen.storage.commit' (/private/tmp/kuyen17_matrix_work/src/kuyen/storage/commit.py)",
+    "suite_exit": 4,
+    "suite_tail": "",
+    "necessary": true
+  },
+  "src/kuyen/storage/registry.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  },
+  "src/kuyen/storage/store.py": {
+    "import_ok": true,
+    "import_error": "",
+    "suite_exit": 1,
+    "suite_tail": "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "necessary": true
+  }
+}

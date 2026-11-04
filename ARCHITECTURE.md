@@ -28,7 +28,7 @@ src/kuyen/
 ├── ports/                publication port interfaces
 ├── adapters/             optional OpenViking SDK adapter
 ├── query/                read helpers over a graph
-├── extraction/, importing/, coverage/   optional candidate production
+├── importing/            import of graphs produced by other systems (not an acceptance path)
 └── schemas/, config/, skills/            runtime assets (package data)
 ```
 
@@ -70,3 +70,18 @@ Every stage fails closed. A corrupted object, sidecar, manifest, ledger line, po
 backup is reported as a problem and never silently accepted. `verify()` and
 `recover_from_store()` return data instead of raising, so an operator can see exactly what
 is wrong.
+
+## Two ways of evolving the memory (0.3.0)
+
+```
+document ──► OpenViking + Skill ──► candidate ──► KÜYEN gate ──► ANTÜ commit ──► v(n+1)
+instruction ──► LLM proposal ─────► operations ──► KÜYEN validator ──► APPLY ──► v(n+1)
+```
+
+The first path delegates materialization to OpenViking and keeps identity, evidence,
+admission and versioning in KÜYEN. The second path has no document and no extraction: a
+model proposes operations on the graph that already exists and KÜYEN validates, applies
+and versions them. Both end in the *same* canonical commit protocol, so a version is a
+version whichever way it was produced, and the provenance of every statement says which
+way that was. See [docs/GRAPH_EDIT_ANTU.md](docs/GRAPH_EDIT_ANTU.md) (ES) and
+[docs/GRAPH_EDIT_ANTU.en.md](docs/GRAPH_EDIT_ANTU.en.md) (EN).

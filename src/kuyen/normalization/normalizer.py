@@ -9,6 +9,8 @@ from __future__ import annotations
 from typing import Any
 
 from ..canonical import normalized_name, stable_id
+from ..errors import InvalidRequestError
+from ..semantics.origin import document_origin, document_reference_origin
 from ..models import (
     Assertion,
     EpistemicStatus,
@@ -140,6 +142,9 @@ def normalize_bundle(
             from_entity, canonical_predicate, to_entity, item.polarity, item.scope, item.temporal_scope
         )
         seen_relation_ids.add(relation_id)
+        relation_evidence = [
+            evidence_by_candidate[x] for x in item.evidence_refs if x in evidence_by_candidate
+        ]
         relations.append(
             Relation(
                 relation_id=relation_id,
@@ -179,6 +184,15 @@ def normalize_bundle(
                 mapping_rule_id=item.mapping_rule_id,
                 mapping_version=item.mapping_version,
                 provider_projection_status=item.provider_projection_status or "EXACT",
+                modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
+                attribution=getattr(item, "attribution", None),
+                # The relation comes from the document that produced its evidence.
+                origin=(document_origin(
+                    evidence_ids=[evidence.evidence_id for evidence in relation_evidence],
+                    mapu_ids=sorted({evidence.mapu_id for evidence in relation_evidence
+                                     if evidence.mapu_id}),
+                ) if relation_evidence else document_reference_origin(
+                    mapu_ids=sorted({item.mapu_id for item in mapus}))),
             )
         )
 
@@ -231,6 +245,21 @@ def normalize_bundle(
                 sources=list(dict.fromkeys(item.sources)),
                 proposed_status=proposed,
                 proposed_status_raw=proposed_raw,
+                modality=str(getattr(item, "modality", "UNKNOWN") or "UNKNOWN"),
+                attribution=getattr(item, "attribution", None),
+                source_predicate=getattr(item, "source_predicate", None),
+                canonical_predicate=getattr(item, "canonical_predicate", None),
+                mapping_status=str(getattr(item, "mapping_status", None) or "UNRESOLVED"),
+                mapping_rule_id=getattr(item, "mapping_rule_id", None),
+                mapping_version=getattr(item, "mapping_version", None),
+                origin=(document_origin(
+                    evidence_ids=[evidence_by_candidate[x].evidence_id
+                                  for x in item.evidence_refs if x in evidence_by_candidate],
+                    mapu_ids=sorted({evidence_by_candidate[x].mapu_id
+                                     for x in item.evidence_refs if x in evidence_by_candidate}),
+                ) if any(x in evidence_by_candidate for x in item.evidence_refs)
+                    else document_reference_origin(
+                        mapu_ids=sorted({item.mapu_id for item in mapus}))),
             )
         )
 
@@ -296,7 +325,29 @@ def normalize_bundle(
 
 
 def _polarity(value: str) -> Polarity:
+    """Strict mapping of a candidate polarity onto the canonical domain.
+
+    There is no default. `UNKNOWN` (and anything else the canonical schema cannot carry)
+    is refused instead of being stored as an affirmative statement: the materializer is
+    the layer that decides whether such an object is admitted at all, and this function
+    never invents a value on its behalf (KUYEN_PRODUCTIVE_GRAPH_11, §5.3).
+    """
+    text = str(value or "").strip().upper()
+    if not text:
+        raise InvalidRequestError(
+            "candidate object has no polarity; it cannot enter the canonical set",
+            details={"code": "POLARITY_REQUIRED"},
+        )
     try:
-        return Polarity(value)
-    except ValueError:
-        return Polarity.POSITIVE
+        polarity = Polarity(text)
+    except ValueError as exc:
+        raise InvalidRequestError(
+            f"polarity {value!r} is not part of the canonical domain",
+            details={"code": "POLARITY_INVALID", "polarity": text},
+        ) from exc
+    if polarity is Polarity.UNKNOWN:
+        raise InvalidRequestError(
+            "polarity UNKNOWN cannot be stored in the canonical set; the object stays pending",
+            details={"code": "POLARITY_UNKNOWN_NOT_ADMITTED", "polarity": text},
+        )
+    return polarity

@@ -69,6 +69,7 @@ def request_key(
 
 # --- storage/lifecycle primitives (additive; existing functions unchanged) ---
 
+import itertools as _itertools
 import os as _os
 from pathlib import Path as _Path
 
@@ -118,18 +119,45 @@ def fsync_dir(path: str | _Path) -> None:
         _os.close(descriptor)
 
 
+_TEMP_SEQUENCE = _itertools.count()
+
+
+def temporary_name(target: _Path) -> Path:
+    """A temporary path that no other writer of this process can reuse.
+
+    The PID alone identified the temporary of every thread of a process, so two writers of
+    the same destination fought over one file: one replaced it while the other was still
+    writing, which lost data and raised `FileNotFoundError` on the loser
+    (KUYEN_TRANSACTION_BOUNDARY_HARDENING_03, front 2).
+    """
+    return target.parent / (f".tmp-{target.name}-{_os.getpid()}-"
+                            f"{next(_TEMP_SEQUENCE):x}-{_os.urandom(4).hex()}")
+
+
 def write_atomic(path: str | _Path, data: bytes | str, *, mode: int = 0o644) -> str:
-    """Write through a temporary file, fsync it, rename it and fsync the directory."""
+    """Write through a unique temporary file, fsync it, rename it and fsync the directory.
+
+    The destination holds the previous content or the new one, never a mixture: the
+    replacement is a single `os.replace` of a fully written and fsynced temporary. A failed
+    write removes its own temporary so a leftover can never be mistaken for a result.
+    """
     target = _Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     payload = data.encode("utf-8") if isinstance(data, str) else data
-    temporary = target.parent / f".tmp-{target.name}-{_os.getpid()}"
-    with temporary.open("wb") as handle:
-        handle.write(payload)
-        handle.flush()
-        _os.fsync(handle.fileno())
-    _os.chmod(temporary, mode)
-    _os.replace(temporary, target)
+    temporary = temporary_name(target)
+    try:
+        with temporary.open("wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            _os.fsync(handle.fileno())
+        _os.chmod(temporary, mode)
+        _os.replace(temporary, target)
+    except BaseException:
+        try:
+            temporary.unlink()
+        except OSError:
+            pass
+        raise
     fsync_dir(target.parent)
     return sha256_bytes(payload)
 
@@ -140,6 +168,80 @@ def append_line(path: str | _Path, line: str) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open("a", encoding="utf-8") as handle:
         handle.write(line.rstrip("\n") + "\n")
+
+
+REVERSE_CHUNK = 8192
+
+
+def read_last_line(path: str | _Path, *, chunk: int = REVERSE_CHUNK) -> dict[str, Any]:
+    """Inspect the *end* of an append-only JSONL file without reading all of it.
+
+    Returns `line` (the last newline-terminated record, or None), `trailing` (bytes after
+    the last newline: an interrupted write, in a file that is always written with a final
+    newline) and `size`. The window grows until two newlines are inside it, so a record
+    larger than one chunk is still returned whole; for a file of any size the cost is the
+    cost of its last record, not the cost of the file.
+
+    This is what lets an append avoid re-parsing the entire history
+    (KUYEN_RELEASE_CANDIDATE_05, M6).
+    """
+    target = _Path(path)
+    if not target.is_file():
+        return {"line": None, "trailing": b"", "size": 0}
+    with target.open("rb") as handle:
+        handle.seek(0, _os.SEEK_END)
+        size = handle.tell()
+        if size == 0:
+            return {"line": None, "trailing": b"", "size": 0}
+        window = max(chunk, 1)
+        while True:
+            start = max(0, size - window)
+            handle.seek(start)
+            data = handle.read(size - start)
+            if data.endswith(b"\n"):
+                trailing = b""
+                body = data[:-1]
+            else:
+                cut = data.rfind(b"\n")
+                trailing = data[cut + 1:] if cut >= 0 else data
+                body = data[:cut] if cut >= 0 else b""
+            boundary = body.rfind(b"\n")
+            if boundary >= 0:
+                return {"line": body[boundary + 1:].decode("utf-8", "replace"),
+                        "trailing": trailing, "size": size}
+            if start == 0:
+                # the whole file is one record: it is the last line, terminated or not
+                return {"line": body.decode("utf-8", "replace") if body else None,
+                        "trailing": trailing, "size": size}
+            window *= 2
+
+
+def iter_lines_reverse(path: str | _Path, *, chunk: int = REVERSE_CHUNK):
+    """Yield the lines of an append-only file from the last one backwards, lazily.
+
+    A lookup of the most recently written entry therefore reads one chunk instead of the
+    whole file, while an entry that is not there still ends at the beginning of the file
+    (KUYEN_RELEASE_CANDIDATE_05, M6).
+    """
+    target = _Path(path)
+    if not target.is_file():
+        return
+    with target.open("rb") as handle:
+        handle.seek(0, _os.SEEK_END)
+        position = handle.tell()
+        pending = b""
+        while position > 0:
+            step = min(chunk, position)
+            position -= step
+            handle.seek(position)
+            pending = handle.read(step) + pending
+            parts = pending.split(b"\n")
+            pending = parts[0]
+            for part in reversed(parts[1:]):
+                if part.strip():
+                    yield part.decode("utf-8", "replace")
+        if pending.strip():
+            yield pending.decode("utf-8", "replace")
         handle.flush()
         _os.fsync(handle.fileno())
     fsync_dir(target.parent)

@@ -30,6 +30,7 @@ SUPPORTED_GRAPH_SCHEMAS = ("kuyen-native-v1",)
 NATIVE_RELATION_KEYS = ("from", "relation", "label", "to", "evidence")
 NATIVE_ENTITY_KEYS = ("type", "id", "title", "entity_type", "description", "aliases", "sources")
 EVENT_TYPES = ("ANTU_RECEIVED", "ANTU_REJECTED", "ANTU_COMPLETED", "ANTU_NO_SEMANTIC_CHANGE",
+               "ANTU_CLARIFICATION_REQUIRED", "ANTU_EDIT_PROPOSED",
                "VERSION_COMMITTED", "PROJECTION_ENQUEUED", "PROJECTION_COMPLETED",
                "PROJECTION_FAILED", "RECONCILIATION", "BACKUP_CREATED", "RESTORE_VERIFIED")
 
